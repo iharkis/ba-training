@@ -17,7 +17,7 @@ interface CodeEditorProps {
     whatIsHappening: string
     whyItMatters: string
     realWorldConnection: string
-    keyTerms: { [term: string]: string }
+    keyTerms: { [term: string]: string | undefined }
   }
   onComplete?: () => void
   stepId?: string  // Add stepId for progress tracking
@@ -80,7 +80,7 @@ const CodeInterface = ({
     whatIsHappening: string
     whyItMatters: string
     realWorldConnection: string
-    keyTerms: { [term: string]: string }
+    keyTerms: { [term: string]: string | undefined }
   }
   onComplete?: () => void
   startingCode: string

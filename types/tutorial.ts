@@ -38,7 +38,7 @@ export interface CodeExplanation {
   whatIsHappening: string; // Main explanation
   whyItMatters: string; // Business relevance
   realWorldConnection: string; // How this applies to BA work
-  keyTerms: { [term: string]: string }; // Glossary of terms
+  keyTerms: { [term: string]: string | undefined }; // Glossary of terms
 }
 
 export interface TutorialProgress {
