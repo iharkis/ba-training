@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-gov-grey-light text-gov-black font-sans;
+    font-family: "GDS Transport", arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.47;
+  }
+
+  /* GOV.UK Focus styles for accessibility */
+  *:focus {
+    outline: 3px solid #ffbf47 !important; /* gov-yellow */
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 2px;
+  }
+  
+  /* GOV.UK Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    line-height: 1.25;
+  }
+  
+  h1 {
+    font-size: 2.25rem; /* 36px */
+    margin-bottom: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem; /* 28px */
+    margin-bottom: 1.25rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem; /* 24px */
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    margin-bottom: 1.25rem;
+    line-height: 1.47;
+  }
+
+  /* Code block styling */
+  pre {
+    @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm;
+  }
+
+  code {
+    @apply bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-sm;
+  }
+
+  pre code {
+    @apply bg-transparent text-inherit p-0;
+  }
+}
+
+@layer components {
+  /* GOV.UK-style components */
+  .tutorial-card {
+    @apply bg-gov-white border border-gray-300 p-6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .tutorial-button {
+    @apply px-6 py-3 font-bold text-center no-underline border-2 cursor-pointer;
+    font-size: 19px;
+    line-height: 1;
+    border-radius: 0; /* GOV.UK uses square corners */
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+  }
+
+  .tutorial-button-primary {
+    @apply tutorial-button bg-gov-green text-white border-gov-green;
+  }
+  
+  .tutorial-button-primary:hover {
+    background-color: #005a30; /* darker green */
+    border-color: #005a30;
+  }
+  
+  .tutorial-button-primary:focus {
+    background-color: #ffbf47; /* gov-yellow */
+    border-color: #0b0c0c;
+    color: #0b0c0c;
+  }
+
+  .tutorial-button-secondary {
+    @apply tutorial-button bg-gov-grey text-white border-gov-grey;
+  }
+  
+  .tutorial-button-secondary:hover {
+    background-color: #454a4c;
+    border-color: #454a4c;
+  }
+
+  .tutorial-button-success {
+    @apply tutorial-button bg-gov-green text-white border-gov-green;
+  }
+
+  .tutorial-input {
+    @apply w-full px-3 py-2 border-2 border-gov-black text-lg;
+    border-radius: 0; /* GOV.UK uses square corners */
+    font-size: 19px;
+  }
+  
+  .tutorial-input:focus {
+    outline: 3px solid #ffbf47;
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 2px;
+  }
+
+  /* GOV.UK Progress indicators */
+  .progress-bar {
+    @apply w-full bg-gray-300 h-2;
+    border-radius: 0; /* square corners */
+  }
+
+  .progress-fill {
+    @apply bg-gov-green h-2 transition-all duration-300 ease-out;
+    border-radius: 0; /* square corners */
+  }
+
+  /* GOV.UK Step indicators */
+  .step-indicator {
+    @apply flex items-center justify-center w-8 h-8 text-sm font-bold border-2;
+    border-radius: 0; /* square corners */
+  }
+
+  .step-completed {
+    @apply step-indicator bg-gov-green text-white border-gov-green;
+  }
+
+  .step-current {
+    @apply step-indicator bg-gov-blue text-white border-gov-blue;
+  }
+
+  .step-upcoming {
+    @apply step-indicator bg-white text-gov-black border-gov-black;
+  }
+
+  /* GOV.UK Code editor styling */
+  .code-editor {
+    @apply border-2 border-gov-black overflow-hidden;
+    border-radius: 0; /* square corners */
+  }
+
+  .code-preview {
+    @apply border-2 border-gov-black bg-white p-4;
+    border-radius: 0; /* square corners */
+  }
+
+  /* GOV.UK Explanation boxes */
+  .explanation-box {
+    @apply bg-blue-50 border-l-4 border-gov-blue p-6 my-6;
+    border-radius: 0; /* square corners */
+  }
+
+  .explanation-title {
+    @apply font-bold text-gov-blue mb-3 text-xl;
+  }
+
+  .explanation-text {
+    @apply text-gov-black leading-relaxed;
+  }
+
+  /* GOV.UK Concept callouts */
+  .concept-callout {
+    @apply bg-yellow-50 border-4 border-gov-yellow p-6 my-6;
+    border-radius: 0; /* square corners */
+  }
+
+  .concept-title {
+    @apply font-bold text-gov-black mb-3 flex items-center text-lg;
+  }
+
+  .concept-text {
+    @apply text-gov-black;
+  }
+
+  /* GOV.UK Success/completion styling */
+  .success-box {
+    @apply bg-green-50 border-4 border-gov-green p-6 my-6;
+    border-radius: 0; /* square corners */
+  }
+
+  .success-title {
+    @apply font-bold text-gov-green mb-3 text-lg;
+  }
+
+  .success-text {
+    @apply text-gov-black;
+  }
+
+  /* Ministry of Silly Walks theming */
+  .ministry-header {
+    @apply bg-gov-blue text-white p-6;
+    border-radius: 0; /* square corners */
+  }
+
+  .ministry-content {
+    @apply bg-white border-2 border-gov-blue p-6;
+    border-top: none;
+    border-radius: 0; /* square corners */
+  }
+
+  /* Responsive grid for tutorial layout */
+  .tutorial-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .tutorial-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .tutorial-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  /* Animation classes */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  /* GOV.UK Alert/Notice styles */
+  .gov-notification-banner {
+    @apply bg-gov-blue text-white p-4 mb-6;
+    border-radius: 0;
+    border: 5px solid #003078; /* gov-blue-dark */
+  }
+  
+  .gov-warning-text {
+    @apply text-gov-black font-bold;
+  }
+  
+  .gov-warning-text::before {
+    content: "! ";
+    font-weight: bold;
+  }
+  
+  /* GOV.UK Inset text */
+  .gov-inset-text {
+    @apply border-l-4 border-gray-300 pl-4 my-4;
+    font-size: 19px;
+  }
+  
+  /* GOV.UK Details/Summary styling */
+  .gov-details {
+    @apply mb-6;
+    border-radius: 0;
+  }
+  
+  .gov-details summary {
+    @apply cursor-pointer font-bold text-gov-blue underline;
+    font-size: 19px;
+  }
+  
+  .gov-details[open] summary {
+    @apply mb-3;
+  }
+
+  /* Print styles for handouts */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    
+    .tutorial-card {
+      @apply shadow-none border-2;
+    }
+    
+    /* GOV.UK print optimizations */
+    .tutorial-button {
+      border: 2px solid #0b0c0c !important;
+      background: transparent !important;
+      color: #0b0c0c !important;
+    }
+  }
+}
