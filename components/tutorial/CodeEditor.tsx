@@ -6,6 +6,9 @@ import { saveCodeProgress, getCodeProgress } from '@/lib/progress'
 import CodeExplanationModal from './CodeExplanationModal'
 import FileTreeViewer from './FileTreeViewer'
 
+type FileContentsMap = Map<string, string>
+type SetFileContentsFunction = React.Dispatch<React.SetStateAction<FileContentsMap>>
+
 interface CodeEditorProps {
   title: string
   description: string
@@ -102,8 +105,8 @@ const CodeInterface = ({
   currentChapter?: number
   selectedFileName?: string
   setSelectedFileName?: (name: string) => void
-  fileContents?: Map<string, string>
-  setFileContents?: React.Dispatch<React.SetStateAction<Map<string, string>>>
+  fileContents?: FileContentsMap
+  setFileContents?: SetFileContentsFunction
   getFileStartingContent?: (fileName: string, language?: string) => string
 }) => (
   <div className="space-y-6">
