@@ -60,7 +60,9 @@ const CodeInterface = ({
   setCode,
   setIsComplete,
   setShowExplanation: setShowExplanationLocal,
-  instructions
+  instructions,
+  showFileTree,
+  currentChapter
 }: {
   code: string
   handleCodeChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
@@ -91,6 +93,8 @@ const CodeInterface = ({
   setCode: (code: string) => void
   setIsComplete: (complete: boolean) => void
   instructions?: string[]
+  showFileTree?: boolean
+  currentChapter?: number
 }) => (
   <div className="space-y-6">
     {/* Top toolbar */}
@@ -552,6 +556,8 @@ export default function CodeEditor({
             setCode={setCode}
             setIsComplete={setIsComplete}
             instructions={instructions}
+            showFileTree={showFileTree}
+            currentChapter={currentChapter}
           />
         </div>
       ) : (
@@ -636,6 +642,8 @@ export default function CodeEditor({
             setCode={setCode}
             setIsComplete={setIsComplete}
             instructions={instructions}
+            showFileTree={showFileTree}
+            currentChapter={currentChapter}
           />
           </div>
         </div>
