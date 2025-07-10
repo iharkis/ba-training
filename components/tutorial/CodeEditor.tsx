@@ -62,7 +62,9 @@ const CodeInterface = ({
   setShowExplanation: setShowExplanationLocal,
   instructions,
   showFileTree,
-  currentChapter
+  currentChapter,
+  selectedFileName,
+  setSelectedFileName
 }: {
   code: string
   handleCodeChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
@@ -95,6 +97,8 @@ const CodeInterface = ({
   instructions?: string[]
   showFileTree?: boolean
   currentChapter?: number
+  selectedFileName?: string
+  setSelectedFileName?: (name: string) => void
 }) => (
   <div className="space-y-6">
     {/* Top toolbar */}
@@ -188,7 +192,7 @@ const CodeInterface = ({
     )}
 
     {/* Main coding area */}
-    <div className={`grid gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-3 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1 lg:grid-cols-2'}`}>
+    <div className={`grid gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-5 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 lg:grid-cols-5' : 'grid-cols-1 lg:grid-cols-2'}`}>
       {/* File Tree (only show if enabled) */}
       {showFileTree && (
         <div className="flex flex-col">
@@ -200,9 +204,14 @@ const CodeInterface = ({
           <div className="flex-1">
             <FileTreeViewer 
               currentChapter={currentChapter}
+              selectedFile={selectedFileName}
               onFileSelect={(filePath, content, language) => {
                 // When a file is selected, show its content in the editor
                 setCode(content)
+                setSelectedFileName(filePath)
+                // Reset completion status when switching files
+                setIsComplete(false)
+                setShowExplanation(false)
               }}
             />
           </div>
@@ -210,21 +219,48 @@ const CodeInterface = ({
       )}
       
       {/* Code Editor */}
-      <div className="flex flex-col">
+      <div className="flex flex-col lg:col-span-2">
         <div className="flex items-center justify-between mb-3">
           <label className="text-base font-medium text-gray-700">
-            {language.toUpperCase()} Code Editor
+            {selectedFileName ? `Editing: ${selectedFileName}` : `${language.toUpperCase()} Code Editor`}
           </label>
+          {selectedFileName && (
+            <button
+              onClick={() => {
+                setCode(startingCode)
+                setSelectedFileName('')
+                setIsComplete(false)
+                setShowExplanation(false)
+              }}
+              className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded border border-gray-300"
+            >
+              Return to Exercise
+            </button>
+          )}
         </div>
         
         <div className="code-editor border-2 border-gray-200 rounded-lg overflow-hidden flex-1">
           <div className="bg-gray-800 text-white px-4 py-3 text-sm flex items-center justify-between">
             <span>
-              {language === 'html' && '📄 index.html'}
-              {language === 'css' && '🎨 styles.css'}
-              {language === 'typescript' && '⚡ app.ts'}
-              {language === 'javascript' && '⚡ app.js'}
-              {language === 'json' && '📦 package.json'}
+              {selectedFileName ? (
+                <>
+                  {selectedFileName.endsWith('.html') && '📄'}
+                  {selectedFileName.endsWith('.css') && '🎨'}
+                  {selectedFileName.endsWith('.js') && '⚡'}
+                  {selectedFileName.endsWith('.ts') && '⚡'}
+                  {selectedFileName.endsWith('.json') && '📦'}
+                  {!selectedFileName.match(/\.(html|css|js|ts|json)$/) && '📄'}
+                  {' '}{selectedFileName}
+                </>
+              ) : (
+                <>
+                  {language === 'html' && '📄 index.html'}
+                  {language === 'css' && '🎨 styles.css'}
+                  {language === 'typescript' && '⚡ app.ts'}
+                  {language === 'javascript' && '⚡ app.js'}
+                  {language === 'json' && '📦 package.json'}
+                </>
+              )}
             </span>
             {isComplete && (
               <div className="flex items-center text-green-400">
@@ -271,7 +307,7 @@ const CodeInterface = ({
       </div>
 
       {/* Preview */}
-      <div className="flex flex-col">
+      <div className="flex flex-col lg:col-span-2">
         <div className="flex items-center justify-between mb-3">
           <label className="text-base font-medium text-gray-700">
             Live Preview
@@ -380,6 +416,7 @@ export default function CodeEditor({
   const [currentHint, setCurrentHint] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showCodeExplanation, setShowCodeExplanation] = useState(false)
+  const [selectedFileName, setSelectedFileName] = useState<string>('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Load saved code progress on mount
@@ -558,6 +595,8 @@ export default function CodeEditor({
             instructions={instructions}
             showFileTree={showFileTree}
             currentChapter={currentChapter}
+            selectedFileName={selectedFileName}
+            setSelectedFileName={setSelectedFileName}
           />
         </div>
       ) : (
@@ -644,6 +683,8 @@ export default function CodeEditor({
             instructions={instructions}
             showFileTree={showFileTree}
             currentChapter={currentChapter}
+            selectedFileName={selectedFileName}
+            setSelectedFileName={setSelectedFileName}
           />
           </div>
         </div>
