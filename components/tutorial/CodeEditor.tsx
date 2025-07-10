@@ -213,12 +213,18 @@ const CodeInterface = ({
               selectedFile={selectedFileName}
               onFileSelect={(filePath, content, language) => {
                 // Save current file content before switching
-                if (selectedFileName && code !== startingCode) {
-                  setFileContents(prev => new Map(prev).set(selectedFileName, code))
+                if (selectedFileName) {
+                  console.log('Saving content for:', selectedFileName, 'Content:', code.substring(0, 50) + '...')
+                  setFileContents(prev => {
+                    const newMap = new Map(prev)
+                    newMap.set(selectedFileName, code)
+                    return newMap
+                  })
                 }
                 
                 // Load the file content (either saved content or starting content)
                 const savedContent = fileContents.get(filePath)
+                console.log('Loading file:', filePath, 'Saved content exists:', !!savedContent)
                 const fileContent = savedContent || getFileStartingContent(filePath, language)
                 
                 setCode(fileContent)
@@ -226,7 +232,7 @@ const CodeInterface = ({
                 // Reset completion status when switching files
                 setIsComplete(false)
                 setShowExplanation(false)
-              }}
+              }
               useStartingContent={true}
             />
           </div>
@@ -520,7 +526,12 @@ export default function CodeEditor({
     
     // Save to file contents if we're editing a specific file
     if (selectedFileName) {
-      setFileContents(prev => new Map(prev).set(selectedFileName, newCode))
+      setFileContents(prev => {
+        const newMap = new Map(prev)
+        newMap.set(selectedFileName, newCode)
+        console.log('File contents updated for:', selectedFileName, 'Map size:', newMap.size)
+        return newMap
+      })
     }
     
     // Save progress automatically as user types (for exercise mode)
