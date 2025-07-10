@@ -62,7 +62,7 @@ const CodeInterface = ({
   targetCode,
   setCode,
   setIsComplete,
-  setShowExplanation: setShowExplanationLocal,
+  setShowExplanation,
   instructions,
   showFileTree,
   currentChapter,
@@ -125,7 +125,7 @@ const CodeInterface = ({
           onClick={() => {
             setCode(startingCode)
             setIsComplete(false)
-            setShowExplanationLocal(false)
+            setShowExplanation(false)
           }}
           className="text-sm text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 rounded border border-gray-300"
         >
@@ -136,7 +136,7 @@ const CodeInterface = ({
           onClick={() => {
             setCode(targetCode)
             setIsComplete(true)
-            setShowExplanationLocal(true)
+            setShowExplanation(true)
             onComplete?.()
           }}
           className="text-sm text-green-600 hover:text-green-900 flex items-center px-3 py-2 rounded border border-green-300"
