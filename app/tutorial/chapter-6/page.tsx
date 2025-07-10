@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, CheckCircle, Database, Lightbulb, Code, HardDrive, Shield } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
+import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter6() {

@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import { CheckCircle, AlertCircle, Lightbulb, Eye, Code, Maximize2, Minimize2, X } from 'lucide-react'
 import { saveCodeProgress, getCodeProgress } from '@/lib/progress'
 import CodeExplanationModal from './CodeExplanationModal'
+import FileTreeViewer from './FileTreeViewer'
 
 interface CodeEditorProps {
   title: string
@@ -29,6 +30,8 @@ interface CodeEditorProps {
       businessContext?: string
     }[]
   }
+  currentChapter?: number  // Add chapter number for file tree
+  showFileTree?: boolean  // Toggle file tree visibility
 }
 
 // Move CodeInterface outside to prevent recreation
@@ -181,7 +184,27 @@ const CodeInterface = ({
     )}
 
     {/* Main coding area */}
-    <div className={`grid gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-2 h-[calc(100vh-12rem)]' : 'grid-cols-1 lg:grid-cols-2'}`}>
+    <div className={`grid gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-3 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1 lg:grid-cols-2'}`}>
+      {/* File Tree (only show if enabled) */}
+      {showFileTree && (
+        <div className="flex flex-col">
+          <div className="mb-3">
+            <label className="text-base font-medium text-gray-700">
+              Project Files
+            </label>
+          </div>
+          <div className="flex-1">
+            <FileTreeViewer 
+              currentChapter={currentChapter}
+              onFileSelect={(filePath, content, language) => {
+                // When a file is selected, show its content in the editor
+                setCode(content)
+              }}
+            />
+          </div>
+        </div>
+      )}
+      
       {/* Code Editor */}
       <div className="flex flex-col">
         <div className="flex items-center justify-between mb-3">
@@ -342,7 +365,9 @@ export default function CodeEditor({
   explanation,
   onComplete,
   stepId,
-  codeBlock
+  codeBlock,
+  currentChapter = 1,
+  showFileTree = true
 }: CodeEditorProps) {
   const [code, setCode] = useState(startingCode)
   const [showHints, setShowHints] = useState(false)

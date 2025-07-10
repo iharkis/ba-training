@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, CheckCircle, Zap, Lightbulb, Code } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
+import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import CodeExplanationModal from '@/components/tutorial/CodeExplanationModal'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
@@ -552,7 +553,10 @@ export default function Chapter3() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Breadcrumb Navigation */}
+      <TutorialBreadcrumb />
+      
+      {/* Header */
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
@@ -692,6 +696,8 @@ export default function Chapter3() {
                 <CodeEditor
                   {...steps[currentStep].exercise!}
                   stepId={steps[currentStep].id}
+                  currentChapter={3}
+                  showFileTree={true}
                   onComplete={() => {
                     markStepCompleteLocal(currentStep)
                     setTimeout(() => {
