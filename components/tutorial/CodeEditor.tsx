@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
+import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import { CheckCircle, AlertCircle, Lightbulb, Eye, Code, Maximize2, Minimize2, X } from 'lucide-react'
 import { saveCodeProgress, getCodeProgress } from '@/lib/progress'
 import CodeExplanationModal from './CodeExplanationModal'
@@ -37,41 +37,8 @@ interface CodeEditorProps {
   showFileTree?: boolean  // Toggle file tree visibility
 }
 
-// Move CodeInterface outside to prevent recreation
-const CodeInterface = ({
-  code,
-  handleCodeChange,
-  textareaRef,
-  textareaKey,
-  language,
-  isComplete,
-  showHints,
-  setShowHints,
-  hints,
-  currentHint,
-  setCurrentHint,
-  checkCode,
-  isFullscreen,
-  setIsFullscreen,
-  iframeSrcDoc,
-  showExplanation,
-  setShowExplanation,
-  explanation,
-  onComplete,
-  startingCode,
-  targetCode,
-  setCode,
-  setIsComplete,
-  setShowExplanation,
-  instructions,
-  showFileTree,
-  currentChapter,
-  selectedFileName,
-  setSelectedFileName,
-  fileContents,
-  setFileContents,
-  getFileStartingContent
-}: {
+// CodeInterface component props type
+interface CodeInterfaceProps {
   code: string
   handleCodeChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
   textareaRef: React.RefObject<HTMLTextAreaElement>
@@ -108,321 +75,211 @@ const CodeInterface = ({
   fileContents?: FileContentsMap
   setFileContents?: SetFileContentsFunction
   getFileStartingContent?: (fileName: string, language?: string) => string
-}) => (
-  <div className="space-y-6">
-    {/* Top toolbar */}
-    <div className="flex items-center justify-between">
-      <div className="flex items-center space-x-4">
-        <button
-          onClick={() => setShowHints(!showHints)}
-          className="text-sm text-tutorial-primary hover:text-blue-700 flex items-center px-3 py-2 rounded border border-tutorial-primary"
-        >
-          <Lightbulb className="w-4 h-4 mr-1" />
-          Need Help? ({hints.length} hints)
-        </button>
-        
-        <button
-          onClick={() => {
-            setCode(startingCode)
-            setIsComplete(false)
-            setShowExplanation(false)
-          }}
-          className="text-sm text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 rounded border border-gray-300"
-        >
-          Reset
-        </button>
-        
-        <button
-          onClick={() => {
-            setCode(targetCode)
-            setIsComplete(true)
-            setShowExplanation(true)
-            onComplete?.()
-          }}
-          className="text-sm text-green-600 hover:text-green-900 flex items-center px-3 py-2 rounded border border-green-300"
-        >
-          Complete Step
-        </button>
-        
-        {!isComplete ? (
-          <button
-            onClick={checkCode}
-            className="tutorial-button-primary"
-          >
-            Check My Work
-          </button>
-        ) : (
-          <button
-            onClick={() => onComplete?.()}
-            className="tutorial-button-primary"
-          >
-            Next Step
-          </button>
-        )}
-      </div>
-      
-      {!isFullscreen && (
-        <button
-          onClick={() => setIsFullscreen(true)}
-          className="text-sm text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 rounded border border-gray-300"
-        >
-          <Maximize2 className="w-4 h-4 mr-1" />
-          Full Screen
-        </button>
-      )}
-    </div>
+}
 
-    {/* Hints - moved to top in fullscreen */}
-    {showHints && (
-      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="font-medium text-yellow-800">
-            Hint {currentHint + 1} of {hints.length}
-          </h4>
-          <div className="flex space-x-2">
+// Move CodeInterface outside to prevent recreation  
+const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
+  const {
+    code,
+    handleCodeChange,
+    textareaRef,
+    textareaKey,
+    language,
+    isComplete,
+    showHints,
+    setShowHints,
+    hints,
+    currentHint,
+    setCurrentHint,
+    checkCode,
+    isFullscreen,
+    setIsFullscreen,
+    iframeSrcDoc,
+    showExplanation,
+    setShowExplanation,
+    explanation,
+    onComplete,
+    startingCode,
+    targetCode,
+    setCode,
+    setIsComplete,
+    instructions,
+    showFileTree = false,
+    currentChapter = 1,
+    selectedFileName = '',
+    setSelectedFileName = () => {},
+    fileContents = new Map(),
+    setFileContents = () => {},
+    getFileStartingContent = () => ''
+  } = props
+
+  return (
+    <div className="space-y-6">
+      {/* Top toolbar */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => setShowHints(!showHints)}
+            className="text-sm text-tutorial-primary hover:text-blue-700 flex items-center px-3 py-2 rounded border border-tutorial-primary"
+          >
+            <Lightbulb className="w-4 h-4 mr-1" />
+            Need Help? ({hints.length} hints)
+          </button>
+          
+          <button
+            onClick={() => {
+              setCode(startingCode)
+              setIsComplete(false)
+              setShowExplanation(false)
+            }}
+            className="text-sm text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 rounded border border-gray-300"
+          >
+            Reset
+          </button>
+          
+          {!isComplete ? (
             <button
-              onClick={() => setCurrentHint(Math.max(0, currentHint - 1))}
-              disabled={currentHint === 0}
-              className="text-sm text-yellow-700 disabled:text-yellow-400"
+              onClick={checkCode}
+              className="tutorial-button-primary"
             >
-              Previous
+              Check My Work
             </button>
+          ) : (
             <button
-              onClick={() => setCurrentHint(Math.min(hints.length - 1, currentHint + 1))}
-              disabled={currentHint === hints.length - 1}
-              className="text-sm text-yellow-700 disabled:text-yellow-400"
+              onClick={() => onComplete?.()}
+              className="tutorial-button-primary"
             >
-              Next
+              Next Step
             </button>
+          )}
+        </div>
+      </div>
+
+      {/* Main coding area */}
+      <div className={`grid gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-5 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 lg:grid-cols-5' : 'grid-cols-1 lg:grid-cols-2'}`}>
+        {/* File Tree (only show if enabled) */}
+        {showFileTree && (
+          <div className="flex flex-col">
+            <div className="mb-3">
+              <label className="text-base font-medium text-gray-700">
+                Project Files
+              </label>
+            </div>
+            <div className="flex-1">
+              <FileTreeViewer 
+                currentChapter={currentChapter}
+                selectedFile={selectedFileName}
+                onFileSelect={(filePath, content, language) => {
+                  // Create updated file contents map with current file saved
+                  const updatedFileContents = new Map(fileContents)
+                  if (selectedFileName) {
+                    updatedFileContents.set(selectedFileName, code)
+                  }
+                  
+                  // Load the file content (either saved content or starting content)
+                  const savedContent = updatedFileContents.get(filePath)
+                  const fileContent = savedContent || getFileStartingContent(filePath, language)
+                  
+                  // Update state
+                  setFileContents(updatedFileContents)
+                  setCode(fileContent)
+                  setSelectedFileName(filePath)
+                  setIsComplete(false)
+                  setShowExplanation(false)
+                }}
+                useStartingContent={true}
+              />
+            </div>
+          </div>
+        )}
+        
+        {/* Code Editor */}
+        <div className="flex flex-col lg:col-span-2">
+          <div className="flex items-center justify-between mb-3">
+            <label className="text-base font-medium text-gray-700">
+              {selectedFileName ? `Editing: ${selectedFileName}` : `${language.toUpperCase()} Code Editor`}
+            </label>
+            {selectedFileName && (
+              <button
+                onClick={() => {
+                  // Save current file content before returning to exercise
+                  if (selectedFileName) {
+                    setFileContents(prev => new Map(prev).set(selectedFileName, code))
+                  }
+                  
+                  // Return to exercise mode
+                  setCode(startingCode)
+                  setSelectedFileName('')
+                  setIsComplete(false)
+                  setShowExplanation(false)
+                }}
+                className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded border border-gray-300"
+              >
+                Return to Exercise
+              </button>
+            )}
+          </div>
+          
+          <div className="code-editor border-2 border-gray-200 rounded-lg overflow-hidden flex-1">
+            <div className="bg-gray-800 text-white px-4 py-3 text-sm flex items-center justify-between">
+              <span>
+                {language === 'html' && '📄 index.html'}
+                {language === 'css' && '🎨 styles.css'}
+                {language === 'typescript' && '⚡ app.ts'}
+                {language === 'javascript' && '⚡ app.js'}
+                {language === 'json' && '📦 package.json'}
+              </span>
+            </div>
+            <div className="relative bg-white h-full">
+              <textarea
+                key={textareaKey}
+                ref={textareaRef}
+                value={code}
+                onChange={handleCodeChange}
+                className="w-full p-6 font-mono text-base border-0 focus:ring-0 focus:outline-none resize-none bg-gray-50 h-full min-h-[600px]"
+                spellCheck={false}
+                placeholder="Type your code here..."
+              />
+            </div>
           </div>
         </div>
-        <p className="text-yellow-700">{hints[currentHint]}</p>
-      </div>
-    )}
 
-    {/* Main coding area */}
-    <div className={`grid gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-5 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 lg:grid-cols-5' : 'grid-cols-1 lg:grid-cols-2'}`}>
-      {/* File Tree (only show if enabled) */}
-      {showFileTree && (
-        <div className="flex flex-col">
-          <div className="mb-3">
+        {/* Preview */}
+        <div className="flex flex-col lg:col-span-2">
+          <div className="flex items-center justify-between mb-3">
             <label className="text-base font-medium text-gray-700">
-              Project Files
+              Live Preview
             </label>
           </div>
-          <div className="flex-1">
-            <FileTreeViewer 
-              currentChapter={currentChapter}
-              selectedFile={selectedFileName}
-              onFileSelect={(filePath, content, language) => {
-                // Create updated file contents map with current file saved
-                const updatedFileContents = new Map(fileContents)
-                if (selectedFileName) {
-                  console.log('Saving content for:', selectedFileName, 'Content:', code.substring(0, 50) + '...')
-                  updatedFileContents.set(selectedFileName, code)
-                }
-                
-                // Load the file content (either saved content or starting content)
-                const savedContent = updatedFileContents.get(filePath)
-                console.log('Loading file:', filePath, 'Saved content exists:', !!savedContent)
-                const fileContent = savedContent || getFileStartingContent(filePath, language)
-                
-                // Update state
-                setFileContents(updatedFileContents)
-                setCode(fileContent)
-                setSelectedFileName(filePath)
-                // Reset completion status when switching files
-                setIsComplete(false)
-                setShowExplanation(false)
-              }
-              useStartingContent={true}
-            />
-          </div>
-        </div>
-      )}
-      
-      {/* Code Editor */}
-      <div className="flex flex-col lg:col-span-2">
-        <div className="flex items-center justify-between mb-3">
-          <label className="text-base font-medium text-gray-700">
-            {selectedFileName ? `Editing: ${selectedFileName}` : `${language.toUpperCase()} Code Editor`}
-          </label>
-          {selectedFileName && (
-            <button
-              onClick={() => {
-                // Save current file content before returning to exercise
-                if (selectedFileName) {
-                  setFileContents(prev => new Map(prev).set(selectedFileName, code))
-                }
-                
-                // Return to exercise mode
-                setCode(startingCode)
-                setSelectedFileName('')
-                setIsComplete(false)
-                setShowExplanation(false)
-              }}
-              className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded border border-gray-300"
-            >
-              Return to Exercise
-            </button>
-          )}
-        </div>
-        
-        <div className="code-editor border-2 border-gray-200 rounded-lg overflow-hidden flex-1">
-          <div className="bg-gray-800 text-white px-4 py-3 text-sm flex items-center justify-between">
-            <span>
-              {selectedFileName ? (
-                <>
-                  {selectedFileName.endsWith('.html') && '📄'}
-                  {selectedFileName.endsWith('.css') && '🎨'}
-                  {selectedFileName.endsWith('.js') && '⚡'}
-                  {selectedFileName.endsWith('.ts') && '⚡'}
-                  {selectedFileName.endsWith('.json') && '📦'}
-                  {!selectedFileName.match(/\.(html|css|js|ts|json)$/) && '📄'}
-                  {' '}{selectedFileName}
-                </>
+          
+          <div className="border-2 border-gray-200 rounded-lg overflow-hidden bg-white flex-1 min-h-[600px]">
+            <div className="bg-gray-100 px-4 py-2 text-sm text-gray-600 border-b">
+              🌐 Live Website Preview
+            </div>
+            <div className="p-4 h-full">
+              {language === 'html' ? (
+                <iframe
+                  key="preview-iframe"
+                  srcDoc={iframeSrcDoc}
+                  className="w-full h-full border-0 bg-white"
+                  title="HTML Preview"
+                  sandbox="allow-same-origin allow-scripts"
+                />
               ) : (
-                <>
-                  {language === 'html' && '📄 index.html'}
-                  {language === 'css' && '🎨 styles.css'}
-                  {language === 'typescript' && '⚡ app.ts'}
-                  {language === 'javascript' && '⚡ app.js'}
-                  {language === 'json' && '📦 package.json'}
-                </>
-              )}
-            </span>
-            {isComplete && (
-              <div className="flex items-center text-green-400">
-                <CheckCircle className="w-4 h-4 mr-1" />
-                Complete!
-              </div>
-            )}
-          </div>
-          <div className="relative bg-white h-full">
-            <textarea
-              key={textareaKey}
-              ref={textareaRef}
-              value={code}
-              onChange={handleCodeChange}
-              className={`w-full p-6 font-mono text-base border-0 focus:ring-0 focus:outline-none resize-none bg-gray-50 h-full ${
-                isFullscreen ? 'min-h-[calc(100vh-16rem)]' : 'min-h-[600px]'
-              }`}
-              spellCheck={false}
-              placeholder="Type your code here..."
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              data-gramm="false"
-              data-gramm_editor="false"
-              data-enable-grammarly="false"
-            />
-          </div>
-        </div>
-
-        {/* Status */}
-        <div className="mt-3">
-          {isComplete ? (
-            <div className="flex items-center text-green-600 bg-green-50 p-3 rounded-lg">
-              <CheckCircle className="w-5 h-5 mr-2" />
-              <span className="font-medium">Excellent work! Your code is correct.</span>
-            </div>
-          ) : (
-            <div className="flex items-center text-gray-600 bg-gray-50 p-3 rounded-lg">
-              <Code className="w-5 h-5 mr-2" />
-              <span>Keep going! Add the code step by step.</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Preview */}
-      <div className="flex flex-col lg:col-span-2">
-        <div className="flex items-center justify-between mb-3">
-          <label className="text-base font-medium text-gray-700">
-            Live Preview
-          </label>
-          <button
-            onClick={() => setShowExplanation(!showExplanation)}
-            className="text-sm text-tutorial-primary hover:text-blue-700 flex items-center px-3 py-1 rounded border border-tutorial-primary"
-          >
-            <Eye className="w-4 h-4 mr-1" />
-            {showExplanation ? 'Hide' : 'Show'} Explanation
-          </button>
-        </div>
-        
-        <div className={`border-2 border-gray-200 rounded-lg overflow-hidden bg-white flex-1 ${
-          isFullscreen ? 'min-h-[calc(100vh-16rem)]' : 'min-h-[600px]'
-        }`}>
-          <div className="bg-gray-100 px-4 py-2 text-sm text-gray-600 border-b">
-            🌐 Live Website Preview
-          </div>
-          <div className="p-4 h-full">
-            {language === 'html' ? (
-              <iframe
-                key="preview-iframe"
-                srcDoc={iframeSrcDoc}
-                className="w-full h-full border-0 bg-white"
-                title="HTML Preview"
-                sandbox="allow-same-origin allow-scripts"
-              />
-            ) : (
-              <div className="h-full flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <Code className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>Preview will appear when you add HTML code</p>
+                <div className="h-full flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <Code className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                    <p>Preview will appear when you add HTML code</p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    {/* Explanation */}
-    {showExplanation && isComplete && (
-      <div className="space-y-4">
-        <div className="explanation-box">
-          <div className="explanation-title">What's Happening?</div>
-          <div className="explanation-text">
-            {explanation.whatIsHappening}
-          </div>
-        </div>
-
-        <div className="concept-callout">
-          <div className="concept-title">
-            <Lightbulb className="w-5 h-5 mr-2" />
-            Why This Matters
-          </div>
-          <div className="concept-text">
-            {explanation.whyItMatters}
-          </div>
-        </div>
-
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h4 className="font-medium text-green-800 mb-2">Real-World Connection</h4>
-          <p className="text-green-700 text-sm">
-            {explanation.realWorldConnection}
-          </p>
-        </div>
-
-        {Object.keys(explanation.keyTerms).length > 0 && (
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <h4 className="font-medium text-gray-800 mb-3">Key Terms</h4>
-            <dl className="space-y-2">
-              {Object.entries(explanation.keyTerms).map(([term, definition]) => (
-                <div key={term}>
-                  <dt className="font-medium text-gray-900 text-sm">{term}</dt>
-                  <dd className="text-gray-700 text-sm ml-4">{definition}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        )}
-      </div>
-    )}
-  </div>
-)
-
+  )
+}
 export default function CodeEditor({
   title,
   description,
