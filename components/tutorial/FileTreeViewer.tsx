@@ -17,6 +17,7 @@ interface FileTreeViewerProps {
   selectedFile?: string | null
   onFileSelect?: (filePath: string, content: string, language?: string) => void
   currentChapter?: number
+  useStartingContent?: boolean
 }
 
 // Define the project structure that builds up throughout the tutorial
@@ -488,7 +489,8 @@ export default function FileTreeViewer({
   projectStructure, 
   selectedFile, 
   onFileSelect,
-  currentChapter = 1
+  currentChapter = 1,
+  useStartingContent = false
 }: FileTreeViewerProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['silly-walks-task-manager']))
   const [showContent, setShowContent] = useState(false)
@@ -511,10 +513,51 @@ export default function FileTreeViewer({
     setExpandedFolders(newExpanded)
   }
 
+  const getFileStartingContent = (fileName: string, language?: string): string => {
+    if (fileName.endsWith('index.html') || language === 'html') {
+      return `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministry of Silly Walks - Task Manager</title>
+</head>
+<body>
+    <!-- Your HTML content goes here -->
+</body>
+</html>`
+    }
+    if (fileName.endsWith('styles.css') || language === 'css') {
+      return `/* Ministry of Silly Walks - Task Manager Styles */
+
+/* Add your CSS styles here */`
+    }
+    if (fileName.endsWith('script.js') || language === 'javascript') {
+      return `// Ministry of Silly Walks - Task Manager JavaScript
+
+// Add your JavaScript code here`
+    }
+    if (fileName.endsWith('package.json') || language === 'json') {
+      return `{
+  "name": "silly-walks-task-manager",
+  "version": "1.0.0",
+  "description": "Task manager for the Ministry of Silly Walks"
+}`
+    }
+    return '// Add your code here'
+  }
+
   const handleFileClick = (filePath: string, content: string, language?: string) => {
-    setSelectedFileContent({ name: filePath, content, language })
-    setShowContent(true)
-    onFileSelect?.(filePath, content, language)
+    if (useStartingContent) {
+      // Use starting content instead of completed content for file editing mode
+      const startingContent = getFileStartingContent(filePath, language)
+      onFileSelect?.(filePath, startingContent, language)
+    } else {
+      // Show modal with completed content for viewing mode
+      setSelectedFileContent({ name: filePath, content, language })
+      setShowContent(true)
+      onFileSelect?.(filePath, content, language)
+    }
   }
 
   const renderFileTree = (nodes: FileNode[], basePath = ''): JSX.Element => {

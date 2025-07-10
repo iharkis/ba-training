@@ -64,7 +64,10 @@ const CodeInterface = ({
   showFileTree,
   currentChapter,
   selectedFileName,
-  setSelectedFileName
+  setSelectedFileName,
+  fileContents,
+  setFileContents,
+  getFileStartingContent
 }: {
   code: string
   handleCodeChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
@@ -99,6 +102,9 @@ const CodeInterface = ({
   currentChapter?: number
   selectedFileName?: string
   setSelectedFileName?: (name: string) => void
+  fileContents?: Map<string, string>
+  setFileContents?: (contents: Map<string, string>) => void
+  getFileStartingContent?: (fileName: string, language?: string) => string
 }) => (
   <div className="space-y-6">
     {/* Top toolbar */}
@@ -206,13 +212,22 @@ const CodeInterface = ({
               currentChapter={currentChapter}
               selectedFile={selectedFileName}
               onFileSelect={(filePath, content, language) => {
-                // When a file is selected, show its content in the editor
-                setCode(content)
+                // Save current file content before switching
+                if (selectedFileName && code !== startingCode) {
+                  setFileContents(prev => new Map(prev).set(selectedFileName, code))
+                }
+                
+                // Load the file content (either saved content or starting content)
+                const savedContent = fileContents.get(filePath)
+                const fileContent = savedContent || getFileStartingContent(filePath, language)
+                
+                setCode(fileContent)
                 setSelectedFileName(filePath)
                 // Reset completion status when switching files
                 setIsComplete(false)
                 setShowExplanation(false)
               }}
+              useStartingContent={true}
             />
           </div>
         </div>
@@ -227,6 +242,12 @@ const CodeInterface = ({
           {selectedFileName && (
             <button
               onClick={() => {
+                // Save current file content before returning to exercise
+                if (selectedFileName) {
+                  setFileContents(prev => new Map(prev).set(selectedFileName, code))
+                }
+                
+                // Return to exercise mode
                 setCode(startingCode)
                 setSelectedFileName('')
                 setIsComplete(false)
@@ -417,6 +438,7 @@ export default function CodeEditor({
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showCodeExplanation, setShowCodeExplanation] = useState(false)
   const [selectedFileName, setSelectedFileName] = useState<string>('')
+  const [fileContents, setFileContents] = useState<Map<string, string>>(new Map())
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Load saved code progress on mount
@@ -496,11 +518,51 @@ export default function CodeEditor({
     const newCode = e.target.value
     setCode(newCode)
     
-    // Save progress automatically as user types
-    if (stepId) {
+    // Save to file contents if we're editing a specific file
+    if (selectedFileName) {
+      setFileContents(prev => new Map(prev).set(selectedFileName, newCode))
+    }
+    
+    // Save progress automatically as user types (for exercise mode)
+    if (stepId && !selectedFileName) {
       saveCodeProgress(stepId, newCode)
     }
-  }, [stepId])
+  }, [stepId, selectedFileName])
+
+  // Get starting content for a file (empty template, not completed content)
+  const getFileStartingContent = useCallback((fileName: string, language?: string) => {
+    if (fileName.endsWith('index.html') || language === 'html') {
+      return `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministry of Silly Walks - Task Manager</title>
+</head>
+<body>
+    <!-- Your HTML content goes here -->
+</body>
+</html>`
+    }
+    if (fileName.endsWith('styles.css') || language === 'css') {
+      return `/* Ministry of Silly Walks - Task Manager Styles */
+
+/* Add your CSS styles here */`
+    }
+    if (fileName.endsWith('script.js') || language === 'javascript') {
+      return `// Ministry of Silly Walks - Task Manager JavaScript
+
+// Add your JavaScript code here`
+    }
+    if (fileName.endsWith('package.json') || language === 'json') {
+      return `{
+  "name": "silly-walks-task-manager",
+  "version": "1.0.0",
+  "description": "Task manager for the Ministry of Silly Walks"
+}`
+    }
+    return '// Add your code here'
+  }, [])
 
   // Memoize the iframe srcDoc to prevent unnecessary re-renders
   const iframeSrcDoc = useMemo(() => {
@@ -597,6 +659,9 @@ export default function CodeEditor({
             currentChapter={currentChapter}
             selectedFileName={selectedFileName}
             setSelectedFileName={setSelectedFileName}
+            fileContents={fileContents}
+            setFileContents={setFileContents}
+            getFileStartingContent={getFileStartingContent}
           />
         </div>
       ) : (
@@ -685,6 +750,9 @@ export default function CodeEditor({
             currentChapter={currentChapter}
             selectedFileName={selectedFileName}
             setSelectedFileName={setSelectedFileName}
+            fileContents={fileContents}
+            setFileContents={setFileContents}
+            getFileStartingContent={getFileStartingContent}
           />
           </div>
         </div>
