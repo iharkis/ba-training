@@ -212,21 +212,20 @@ const CodeInterface = ({
               currentChapter={currentChapter}
               selectedFile={selectedFileName}
               onFileSelect={(filePath, content, language) => {
-                // Save current file content before switching
+                // Create updated file contents map with current file saved
+                const updatedFileContents = new Map(fileContents)
                 if (selectedFileName) {
                   console.log('Saving content for:', selectedFileName, 'Content:', code.substring(0, 50) + '...')
-                  setFileContents(prev => {
-                    const newMap = new Map(prev)
-                    newMap.set(selectedFileName, code)
-                    return newMap
-                  })
+                  updatedFileContents.set(selectedFileName, code)
                 }
                 
                 // Load the file content (either saved content or starting content)
-                const savedContent = fileContents.get(filePath)
+                const savedContent = updatedFileContents.get(filePath)
                 console.log('Loading file:', filePath, 'Saved content exists:', !!savedContent)
                 const fileContent = savedContent || getFileStartingContent(filePath, language)
                 
+                // Update state
+                setFileContents(updatedFileContents)
                 setCode(fileContent)
                 setSelectedFileName(filePath)
                 // Reset completion status when switching files
