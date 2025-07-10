@@ -13,6 +13,7 @@ interface CodeExplanationModalProps {
     businessContext?: string
   }[]
   title: string
+  language?: 'javascript' | 'css' | 'html' | 'typescript' | 'json'
 }
 
 export default function CodeExplanationModal({
@@ -20,7 +21,8 @@ export default function CodeExplanationModal({
   onClose,
   code,
   explanations,
-  title
+  title,
+  language = 'javascript'
 }: CodeExplanationModalProps) {
   if (!isOpen) return null
 
@@ -84,9 +86,31 @@ export default function CodeExplanationModal({
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <h4 className="font-medium text-gray-900 mb-2">Key Takeaway</h4>
               <p className="text-gray-700 text-sm">
-                This JavaScript code transforms your static webpage into an interactive application. 
-                When you write requirements like "users should be able to add tasks" or "validate input before saving," 
-                this is the type of code that developers write to make those requirements work.
+                {language === 'css' ? (
+                  <>
+                    This CSS code transforms the visual appearance of your webpage to meet professional standards. 
+                    When you write requirements like "the system should look professional" or "use a clean, readable layout," 
+                    this is the type of styling that developers implement to make those requirements work.
+                  </>
+                ) : language === 'html' ? (
+                  <>
+                    This HTML code creates the structure and content of your webpage. 
+                    When you write requirements like "users should see a form" or "display a list of tasks," 
+                    this is the type of markup that developers write to create those user interfaces.
+                  </>
+                ) : language === 'json' ? (
+                  <>
+                    This JSON code defines data structures and configuration for your application. 
+                    When you write requirements like "store user preferences" or "define API responses," 
+                    this is the type of structured data format that developers use to organize information.
+                  </>
+                ) : (
+                  <>
+                    This {language === 'typescript' ? 'TypeScript' : 'JavaScript'} code transforms your static webpage into an interactive application. 
+                    When you write requirements like "users should be able to add tasks" or "validate input before saving," 
+                    this is the type of code that developers write to make those requirements work.
+                  </>
+                )}
               </p>
             </div>
           </div>

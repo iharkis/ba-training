@@ -109,7 +109,7 @@ export default function Chapter3() {
           'Find the comment "<!-- Step 1: Add a button here -->" after the input field',
           'Replace it with: <button id="addTaskBtn">Add Task</button>',
           'The button will sit next to the input field',
-          'We\'ll also add some CSS styling for the button in the style section',
+          'The CSS styling for the button is already provided in the style section',
           'This gives users a clear way to submit their task'
         ],
         language: 'html' as const,

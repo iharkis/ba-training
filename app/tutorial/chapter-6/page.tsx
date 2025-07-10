@@ -346,12 +346,185 @@ startServer();`,
         title: 'Update CRUD Endpoints for Database',
         description: 'Now let\'s update all our API endpoints to use the database instead of the in-memory array.',
         instructions: [
-          'Update GET /tasks to query the database',
-          'Update POST /tasks to insert into database',
-          'Update PUT /tasks/:id to update database records',
-          'Update DELETE /tasks/:id to remove from database'
+          'Replace the GET /tasks route with database query functionality',
+          'Replace the POST /tasks route with database insert functionality', 
+          'Replace the PUT /tasks/:id route with database update functionality',
+          'Replace the DELETE /tasks/:id route with database delete functionality',
+          'Copy each route from the code block and replace the corresponding route in your editor'
         ],
         language: 'javascript' as const,
+        codeBlock: {
+          code: `// GET all tasks
+app.get('/tasks', (req, res) => {
+  db.all("SELECT * FROM tasks ORDER BY createdAt DESC", (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: rows,
+      count: rows.length
+    });
+  });
+});
+
+// POST new task
+app.post('/tasks', (req, res) => {
+  const { title, description, assignedTo } = req.body;
+  
+  if (!title) {
+    return res.status(400).json({
+      success: false,
+      error: 'Title is required'
+    });
+  }
+  
+  db.run(\`
+    INSERT INTO tasks (title, description, assignedTo) 
+    VALUES (?, ?, ?)
+  \`, [title, description || 'Status: Pending', assignedTo || 'Current User'], function(err) {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    // Get the inserted task
+    db.get("SELECT * FROM tasks WHERE id = ?", [this.lastID], (err, row) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.status(201).json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});
+
+// PUT update task
+app.put('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  const updates = req.body;
+  
+  // Build dynamic update query
+  const fields = Object.keys(updates).map(key => \`\${key} = ?\`).join(', ');
+  const values = Object.values(updates);
+  values.push(taskId);
+  
+  db.run(\`
+    UPDATE tasks 
+    SET \${fields}, updatedAt = CURRENT_TIMESTAMP 
+    WHERE id = ?
+  \`, values, function(err) {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    if (this.changes === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Task not found'
+      });
+    }
+    
+    // Get the updated task
+    db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});
+
+// DELETE task
+app.delete('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  
+  // Get task before deleting for confirmation
+  db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    if (!row) {
+      return res.status(404).json({
+        success: false,
+        error: 'Task not found'
+      });
+    }
+    
+    db.run("DELETE FROM tasks WHERE id = ?", [taskId], function(err) {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});`,
+          explanations: [
+            {
+              line: "db.all(\"SELECT * FROM tasks ORDER BY createdAt DESC\", (err, rows) => {",
+              explanation: "Query all tasks from the database, ordered by creation date (newest first).",
+              businessContext: "This provides a chronological view of tasks, helping users see recent activity first."
+            },
+            {
+              line: "db.run(`INSERT INTO tasks (title, description, assignedTo) VALUES (?, ?, ?)`, [title, description || 'Status: Pending', assignedTo || 'Current User'], function(err) {",
+              explanation: "Insert a new task into the database using parameterized queries to prevent SQL injection.",
+              businessContext: "Parameterized queries are essential for security - they prevent malicious users from damaging the database."
+            },
+            {
+              line: "db.get(\"SELECT * FROM tasks WHERE id = ?\", [this.lastID], (err, row) => {",
+              explanation: "Retrieve the newly inserted task using the auto-generated ID to return it to the client.",
+              businessContext: "This confirms the task was created successfully and provides the client with the complete task data including the database-generated ID."
+            },
+            {
+              line: "const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');",
+              explanation: "Build a dynamic UPDATE query that can handle partial updates to any task fields.",
+              businessContext: "This flexibility allows the API to update only specific fields rather than requiring all data, making it more efficient for frontend applications."
+            },
+            {
+              line: "if (this.changes === 0) {",
+              explanation: "Check if the UPDATE operation actually modified any rows - if not, the task ID doesn't exist.",
+              businessContext: "This provides proper error handling when users try to update non-existent tasks, improving the user experience."
+            },
+            {
+              line: "db.get(\"SELECT * FROM tasks WHERE id = ?\", [taskId], (err, row) => {",
+              explanation: "Retrieve the task before deleting it to return confirmation of what was removed.",
+              businessContext: "This provides an audit trail and confirmation to users about what was deleted, which is important for data governance."
+            }
+          ]
+        },
         startingCode: `// Previous database setup code...
 
 // GET all tasks - UPDATE TO USE DATABASE

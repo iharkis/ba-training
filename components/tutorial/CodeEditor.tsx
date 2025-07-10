@@ -617,15 +617,25 @@ export default function CodeEditor({
       )}
       
       {/* Code Explanation Modal */}
-      {codeBlock && (
-        <CodeExplanationModal
-          isOpen={showCodeExplanation}
-          onClose={() => setShowCodeExplanation(false)}
-          title="Understanding the JavaScript Code"
-          code={codeBlock.code}
-          explanations={codeBlock.explanations}
-        />
-      )}
+      {codeBlock && (() => {
+        // Detect if the codeBlock contains CSS (starts with CSS selectors like "body {", "h1 {", etc.)
+        const isCSSContent = codeBlock.code.trim().match(/^[a-zA-Z][a-zA-Z0-9\-_]*\s*{/) || 
+                            codeBlock.code.includes('{') && codeBlock.code.includes(':') && 
+                            codeBlock.code.includes(';') && !codeBlock.code.includes('<')
+        
+        const detectedLanguage = isCSSContent ? 'css' : language
+        
+        return (
+          <CodeExplanationModal
+            isOpen={showCodeExplanation}
+            onClose={() => setShowCodeExplanation(false)}
+            title={`Understanding the ${detectedLanguage === 'html' ? 'HTML' : detectedLanguage === 'css' ? 'CSS' : detectedLanguage === 'typescript' ? 'TypeScript' : detectedLanguage === 'json' ? 'JSON' : 'JavaScript'} Code`}
+            code={codeBlock.code}
+            explanations={codeBlock.explanations}
+            language={detectedLanguage}
+          />
+        )
+      })()}
     </>
   )
 }

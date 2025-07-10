@@ -556,13 +556,13 @@ app.listen(PORT, () => {
       title: 'Step 3: Testing the API',
       type: 'coding',
       exercise: {
-        title: 'Test API Endpoints with Simple HTML',
-        description: 'Let\'s create a simple test page that demonstrates how to call our API endpoints using JavaScript fetch requests.',
+        title: 'Test API Endpoints with Mock Data',
+        description: 'Let\'s create a test page that demonstrates how API endpoints work by simulating server responses with mock data and realistic API patterns.',
         instructions: [
-          'Create an HTML page with buttons to test each API endpoint',
-          'Use JavaScript fetch() to make HTTP requests to the API',
-          'Display the API responses in a readable format',
-          'Test GET, POST, PUT, and DELETE operations'
+          'Create an HTML page with buttons to test each API operation',
+          'Use JavaScript to simulate realistic API responses with mock data',
+          'Display the API responses in a readable format to show data structure',
+          'Test GET, POST, PUT, and DELETE operations with simulated server delay'
         ],
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
@@ -624,7 +624,116 @@ app.listen(PORT, () => {
             output.textContent = \`\${title}:\\n\${JSON.stringify(data, null, 2)}\`;
         }
         
-        // Step 3: Add API test functions here
+        // Mock API data for demo purposes
+        let mockTasks = [
+            {
+                id: 1,
+                title: "Evaluate Mr. Smith's Silly Walk Application",
+                description: "Review submitted video and assess walk silliness level",
+                assignedTo: "John Cleese",
+                status: "pending",
+                priority: "high",
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 2,
+                title: "Process Mrs. Johnson's Walk Certification",
+                description: "Complete certification paperwork for approved walk",
+                assignedTo: "Terry Jones",
+                status: "in-progress",
+                priority: "medium",
+                createdAt: new Date().toISOString()
+            }
+        ];
+        
+        let nextId = 3;
+        
+        // Mock API function to simulate server delay
+        function simulateApiCall(data, delay = 500) {
+            return new Promise((resolve) => {
+                setTimeout(() => resolve(data), delay);
+            });
+        }
+        
+        async function getAllTasks() {
+            try {
+                const response = {
+                    success: true,
+                    data: mockTasks,
+                    count: mockTasks.length
+                };
+                const data = await simulateApiCall(response);
+                displayOutput('GET /api/tasks', data);
+            } catch (error) {
+                displayOutput('Error', { error: error.message });
+            }
+        }
+        
+        async function createTask() {
+            try {
+                const newTask = {
+                    id: nextId++,
+                    title: 'Test Terry Jones Walk Review',
+                    description: 'Assess comedic timing and silly factor',
+                    assignedTo: 'Ministry Reviewer',
+                    status: 'pending',
+                    priority: 'medium',
+                    createdAt: new Date().toISOString()
+                };
+                
+                mockTasks.push(newTask);
+                
+                const response = {
+                    success: true,
+                    data: newTask
+                };
+                const data = await simulateApiCall(response);
+                displayOutput('POST /api/tasks', data);
+            } catch (error) {
+                displayOutput('Error', { error: error.message });
+            }
+        }
+        
+        async function updateTask() {
+            try {
+                if (mockTasks.length === 0) {
+                    throw new Error('No tasks to update');
+                }
+                
+                const taskToUpdate = mockTasks[0];
+                taskToUpdate.status = 'completed';
+                taskToUpdate.description = 'Updated: ' + taskToUpdate.description;
+                
+                const response = {
+                    success: true,
+                    data: taskToUpdate
+                };
+                const data = await simulateApiCall(response);
+                displayOutput('PUT /api/tasks/' + taskToUpdate.id, data);
+            } catch (error) {
+                displayOutput('Error', { error: error.message });
+            }
+        }
+        
+        async function deleteTask() {
+            try {
+                if (mockTasks.length === 0) {
+                    throw new Error('No tasks to delete');
+                }
+                
+                const taskToDelete = mockTasks.pop();
+                
+                const response = {
+                    success: true,
+                    message: 'Task deleted successfully',
+                    deletedTask: taskToDelete
+                };
+                const data = await simulateApiCall(response);
+                displayOutput('DELETE /api/tasks/' + taskToDelete.id, data);
+            } catch (error) {
+                displayOutput('Error', { error: error.message });
+            }
+        }
         
     </script>
 </body>
@@ -681,18 +790,51 @@ app.listen(PORT, () => {
     <div id="output">Click a button to test the API...</div>
     
     <script>
-        const API_BASE = 'http://localhost:3000';
+        // Mock API data for demo purposes
+        let mockTasks = [
+            {
+                id: 1,
+                title: "Evaluate Mr. Smith's Silly Walk Application",
+                description: "Review submitted video and assess walk silliness level",
+                assignedTo: "John Cleese",
+                status: "pending",
+                priority: "high",
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 2,
+                title: "Process Mrs. Johnson's Walk Certification",
+                description: "Complete certification paperwork for approved walk",
+                assignedTo: "Terry Jones",
+                status: "in-progress",
+                priority: "medium",
+                createdAt: new Date().toISOString()
+            }
+        ];
+        
+        let nextId = 3;
         
         function displayOutput(title, data) {
             const output = document.getElementById('output');
             output.textContent = \`\${title}:\\n\${JSON.stringify(data, null, 2)}\`;
         }
         
+        // Mock API function to simulate server delay
+        function simulateApiCall(data, delay = 500) {
+            return new Promise((resolve) => {
+                setTimeout(() => resolve(data), delay);
+            });
+        }
+        
         async function getAllTasks() {
             try {
-                const response = await fetch(\`\${API_BASE}/tasks\`);
-                const data = await response.json();
-                displayOutput('GET /tasks', data);
+                const response = {
+                    success: true,
+                    data: mockTasks,
+                    count: mockTasks.length
+                };
+                const data = await simulateApiCall(response);
+                displayOutput('GET /api/tasks', data);
             } catch (error) {
                 displayOutput('Error', { error: error.message });
             }
@@ -700,19 +842,26 @@ app.listen(PORT, () => {
         
         async function createTask() {
             try {
-                const response = await fetch(\`\${API_BASE}/tasks\`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        title: 'Test Terry Jones Walk Review',
-                        description: 'Assess comedic timing and silly factor',
-                        assignedTo: 'Ministry Reviewer'
-                    })
-                });
-                const data = await response.json();
-                displayOutput('POST /tasks', data);
+                const newTask = {
+                    id: nextId++,
+                    title: 'Test Terry Jones Walk Review',
+                    description: 'Assess comedic timing and silly factor',
+                    assignedTo: 'Ministry Reviewer',
+                    status: 'pending',
+                    priority: 'medium',
+                    createdAt: new Date().toISOString()
+                };
+                
+                mockTasks.push(newTask);
+                
+                const response = {
+                    success: true,
+                    data: newTask,
+                    message: "Task created successfully"
+                };
+                
+                const data = await simulateApiCall(response);
+                displayOutput('POST /api/tasks', data);
             } catch (error) {
                 displayOutput('Error', { error: error.message });
             }
@@ -720,18 +869,30 @@ app.listen(PORT, () => {
         
         async function updateTask() {
             try {
-                const response = await fetch(\`\${API_BASE}/tasks/1\`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        completed: true,
-                        description: 'COMPLETED: Approved with high silliness rating'
-                    })
-                });
-                const data = await response.json();
-                displayOutput('PUT /tasks/1', data);
+                const taskId = 1;
+                const taskIndex = mockTasks.findIndex(t => t.id === taskId);
+                
+                if (taskIndex === -1) {
+                    throw new Error('Task not found');
+                }
+                
+                // Update the task
+                mockTasks[taskIndex] = {
+                    ...mockTasks[taskIndex],
+                    completed: true,
+                    description: 'COMPLETED: Approved with high silliness rating',
+                    status: 'completed',
+                    updatedAt: new Date().toISOString()
+                };
+                
+                const response = {
+                    success: true,
+                    data: mockTasks[taskIndex],
+                    message: "Task updated successfully"
+                };
+                
+                const data = await simulateApiCall(response);
+                displayOutput('PUT /api/tasks/1', data);
             } catch (error) {
                 displayOutput('Error', { error: error.message });
             }
@@ -739,11 +900,24 @@ app.listen(PORT, () => {
         
         async function deleteTask() {
             try {
-                const response = await fetch(\`\${API_BASE}/tasks/2\`, {
-                    method: 'DELETE'
-                });
-                const data = await response.json();
-                displayOutput('DELETE /tasks/2', data);
+                const taskId = 2;
+                const taskIndex = mockTasks.findIndex(t => t.id === taskId);
+                
+                if (taskIndex === -1) {
+                    throw new Error('Task not found');
+                }
+                
+                // Delete the task
+                const deletedTask = mockTasks.splice(taskIndex, 1)[0];
+                
+                const response = {
+                    success: true,
+                    data: deletedTask,
+                    message: "Task deleted successfully"
+                };
+                
+                const data = await simulateApiCall(response);
+                displayOutput('DELETE /api/tasks/2', data);
             } catch (error) {
                 displayOutput('Error', { error: error.message });
             }
@@ -752,20 +926,20 @@ app.listen(PORT, () => {
 </body>
 </html>`,
         hints: [
-          "Use async/await with fetch() to make HTTP requests",
-          "Include Content-Type: application/json header for POST and PUT requests",
-          "Use JSON.stringify() to convert JavaScript objects to JSON for sending",
-          "Each function should call displayOutput() to show the results",
-          "The try/catch blocks handle network errors gracefully"
+          "Use mock data stored in JavaScript variables to simulate a database",
+          "Use async/await with simulateApiCall() to create realistic response timing",
+          "Each function should manipulate the mockTasks array to simulate server operations",
+          "Call displayOutput() to show the API response format",
+          "The try/catch blocks handle errors gracefully, just like real API calls"
         ],
         explanation: {
-          whatIsHappening: "You've created a test interface that demonstrates how frontends communicate with backends! The JavaScript fetch() function makes HTTP requests to your API endpoints, and the responses are displayed in a readable format. Each button tests a different CRUD operation, showing how data flows between frontend and backend.",
-          whyItMatters: "This demonstrates the complete request-response cycle that powers modern web applications. Testing APIs is crucial for ensuring reliability - in real projects, automated tests would replace this manual testing. Understanding this communication pattern helps you write better requirements about data exchange and system integration.",
-          realWorldConnection: "This testing approach mirrors how Quality Assurance teams validate APIs and how different systems integrate with each other. When you write requirements about 'system testing' or 'API documentation,' this is the type of validation that ensures requirements are properly implemented. Understanding API testing helps you define acceptance criteria more effectively.",
+          whatIsHappening: "You've created a test interface that demonstrates how API endpoints work by simulating realistic server responses! The mock data approach shows how backends store and manipulate data, while the simulated delays make it feel like real network requests. Each button demonstrates a different CRUD operation, showing how data flows between frontend and backend systems.",
+          whyItMatters: "This demonstrates the complete request-response cycle that powers modern web applications. While this uses mock data, the patterns are identical to real API interactions - the same JSON structures, async operations, and error handling. Understanding these patterns helps you write better requirements about data exchange and system integration.",
+          realWorldConnection: "This testing approach mirrors how development teams prototype APIs and how Quality Assurance teams validate endpoints. When you write requirements about 'system testing' or 'API documentation,' this is the type of validation that ensures requirements are properly implemented. The mock approach also shows how frontend and backend development can proceed in parallel.",
           keyTerms: {
-            "Fetch API": "Modern JavaScript method for making HTTP requests to servers",
+            "Mock API": "Simulated server responses used for testing and development",
             "Async/await": "JavaScript pattern for handling asynchronous operations like API calls",
-            "Content-Type header": "Tells the server what type of data is being sent",
+            "CRUD operations": "Create, Read, Update, Delete - the fundamental data operations",
             "API testing": "Verifying that endpoints work correctly and handle errors properly"
           }
         }

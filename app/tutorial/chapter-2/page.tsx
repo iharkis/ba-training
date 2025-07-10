@@ -105,10 +105,51 @@ export default function Chapter2() {
         instructions: [
           'Find the comment "<!-- Step 1: Add styles here -->" in the <head> section',
           'Replace it with a <style> tag opening: <style>',
-          'Add some basic styling for the body',
+          'Copy and paste the CSS code shown below',
           'Close with: </style>',
           'This will make our page look much more professional'
         ],
+        codeBlock: {
+          code: `body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}`,
+          explanations: [
+            {
+              line: "body {",
+              explanation: "This targets the <body> element, which contains all the visible content on the page.",
+              businessContext: "This lets you control the overall appearance of the entire application."
+            },
+            {
+              line: "font-family: Arial, sans-serif;",
+              explanation: "Sets the font to Arial (or similar if Arial isn't available) for better readability.",
+              businessContext: "Professional applications need consistent, readable fonts - this fulfills your requirement for a 'professional appearance'."
+            },
+            {
+              line: "max-width: 800px;",
+              explanation: "Limits the content width to 800 pixels so text lines aren't too long to read comfortably.",
+              businessContext: "This improves usability - users can read content more easily, reducing eye strain and increasing productivity."
+            },
+            {
+              line: "margin: 0 auto;",
+              explanation: "Centers the content horizontally on the page by setting top/bottom margins to 0 and left/right margins to automatic.",
+              businessContext: "Centered layouts look more professional and polished - important for government applications that need to appear trustworthy."
+            },
+            {
+              line: "padding: 20px;",
+              explanation: "Adds 20 pixels of space inside the body element, preventing content from touching the edges.",
+              businessContext: "White space makes interfaces feel less cramped and more professional - users find well-spaced layouts easier to use."
+            },
+            {
+              line: "background-color: #f8f9fa;",
+              explanation: "Sets a light gray background color (#f8f9fa) instead of pure white for a softer appearance.",
+              businessContext: "Subtle background colors reduce eye strain and give a more modern, professional look that users expect from quality applications."
+            }
+          ]
+        },
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
 <html lang="en-GB">
@@ -167,7 +208,7 @@ export default function Chapter2() {
         hints: [
           "Look for the comment '<!-- Step 1: Add styles here -->' in the <head> section",
           "Replace the entire comment with <style> to start the CSS section",
-          "Add the body styling exactly as shown",
+          "Copy and paste the CSS code from the code block above",
           "Don't forget to close with </style>",
           "The styles will center the content and add a professional look"
         ],
@@ -193,11 +234,58 @@ export default function Chapter2() {
         description: 'Now let\'s style our headings to follow government design standards. We\'ll add colors and spacing that make the hierarchy clear.',
         instructions: [
           'Find the comment "/* Step 2: Add heading styles here */" inside the <style> tag',
-          'Replace it with styling for h1 (the main title)',
-          'Add h1 { color: #003d7a; margin-bottom: 10px; }',
-          'Then add styling for h2 headings',
-          'Add h2 { color: #4b5563; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; }'
+          'Replace it with the CSS code shown below',
+          'This will style both h1 and h2 headings with government colors',
+          'The styling creates clear visual hierarchy for your users'
         ],
+        codeBlock: {
+          code: `h1 {
+    color: #003d7a;
+    margin-bottom: 10px;
+}
+h2 {
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+}`,
+          explanations: [
+            {
+              line: "h1 {",
+              explanation: "This targets all <h1> elements (main headings) on the page.",
+              businessContext: "The main title of your application needs to stand out and establish authority - this targets that specific element."
+            },
+            {
+              line: "color: #003d7a;",
+              explanation: "Sets the text color to a deep government blue (#003d7a), commonly used in UK government websites.",
+              businessContext: "Professional applications need consistent branding - this blue color establishes trust and government authority that users expect."
+            },
+            {
+              line: "margin-bottom: 10px;",
+              explanation: "Adds 10 pixels of space below the main heading to separate it from content below.",
+              businessContext: "Proper spacing improves readability and helps users quickly scan the page hierarchy - essential for busy civil servants."
+            },
+            {
+              line: "h2 {",
+              explanation: "This targets all <h2> elements (section headings) throughout the page.",
+              businessContext: "Section headings like 'Add New Task' and 'Current Tasks' need to be visually distinct but secondary to the main title."
+            },
+            {
+              line: "color: #4b5563;",
+              explanation: "Sets section headings to a professional gray color that's darker than body text but lighter than the main heading.",
+              businessContext: "Visual hierarchy helps users understand the page structure - gray section headings are prominent but don't compete with the main blue title."
+            },
+            {
+              line: "border-bottom: 2px solid #e5e7eb;",
+              explanation: "Adds a subtle gray line under each section heading to visually separate sections.",
+              businessContext: "Visual separators help users quickly identify different sections like 'Add Task' vs 'View Tasks' - reducing cognitive load and improving task completion speed."
+            },
+            {
+              line: "padding-bottom: 5px;",
+              explanation: "Adds 5 pixels of space between the heading text and the border line.",
+              businessContext: "Small details like proper spacing make interfaces feel polished and professional - important for government applications that need to appear trustworthy."
+            }
+          ]
+        },
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
 <html lang="en-GB">
@@ -273,8 +361,8 @@ export default function Chapter2() {
 </html>`,
         hints: [
           "Find the comment '/* Step 2: Add heading styles here */' inside the <style> section",
-          "Replace it with h1 { color: #003d7a; margin-bottom: 10px; }",
-          "Then add h2 { color: #4b5563; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; }",
+          "Copy and paste the CSS code from the code block above",
+          "Make sure to include both the h1 and h2 style rules",
           "Each style rule targets different heading levels",
           "The colors follow government design guidelines - blue for main headings, gray for sections"
         ],
@@ -300,11 +388,101 @@ export default function Chapter2() {
         description: 'Let\'s make the input field look professional and create a proper task card design that makes tasks easy to read and manage.',
         instructions: [
           'Find the comment "/* Step 3: Add input and task styles here */"',
-          'Add styling for the input field to make it look professional',
-          'Add styling for the task div to create a card-like appearance',
-          'The input should be wider and have proper padding',
-          'The task card should have a background, border, and spacing'
+          'Replace it with the CSS code shown below',
+          'This will style both the input field and task cards',
+          'The input will become full-width with professional padding',
+          'The div will become a card with white background and subtle shadow'
         ],
+        codeBlock: {
+          code: `input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+div {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}`,
+          explanations: [
+            {
+              line: "input {",
+              explanation: "This targets all <input> elements on the page, making the text input field look professional.",
+              businessContext: "The input field is where users enter their task descriptions - it needs to be prominent and easy to use for quick data entry."
+            },
+            {
+              line: "width: 100%;",
+              explanation: "Makes the input field stretch to fill the full width of its container.",
+              businessContext: "Wide input fields allow users to see more of what they're typing, reducing errors and improving the user experience when creating tasks."
+            },
+            {
+              line: "padding: 10px;",
+              explanation: "Adds 10 pixels of space inside the input field, making it easier to click and type in.",
+              businessContext: "Adequate padding makes form fields feel more clickable and professional - important for a tool civil servants will use daily."
+            },
+            {
+              line: "border: 1px solid #d1d5db;",
+              explanation: "Adds a subtle gray border around the input field to define its boundaries clearly.",
+              businessContext: "Clear visual boundaries help users understand where they can click to interact - essential for efficient task creation workflow."
+            },
+            {
+              line: "border-radius: 4px;",
+              explanation: "Rounds the corners of the input field by 4 pixels for a modern, softer appearance.",
+              businessContext: "Rounded corners feel more modern and approachable than sharp corners - making the government tool feel user-friendly rather than austere."
+            },
+            {
+              line: "font-size: 16px;",
+              explanation: "Sets the text size inside the input to 16 pixels, ensuring good readability.",
+              businessContext: "Proper font size prevents zoom-in on mobile devices and ensures readability for users of all ages - important for accessibility compliance."
+            },
+            {
+              line: "margin-bottom: 20px;",
+              explanation: "Adds 20 pixels of space below the input field to separate it from content below.",
+              businessContext: "Proper spacing between interface elements prevents users from accidentally clicking the wrong thing - crucial for efficient task management."
+            },
+            {
+              line: "div {",
+              explanation: "This targets all <div> elements, turning them into professional-looking task cards.",
+              businessContext: "Each task needs to be visually distinct and easy to scan - cards help users quickly identify and read individual tasks."
+            },
+            {
+              line: "background-color: white;",
+              explanation: "Sets the background of each task card to white, making them stand out from the gray page background.",
+              businessContext: "White cards on a gray background create clear visual separation - helping users focus on one task at a time."
+            },
+            {
+              line: "border: 1px solid #e5e7eb;",
+              explanation: "Adds a subtle light gray border around each task card to define its boundaries.",
+              businessContext: "Clear card boundaries help users understand where one task ends and another begins - essential for scanning task lists quickly."
+            },
+            {
+              line: "border-radius: 8px;",
+              explanation: "Rounds the corners of task cards by 8 pixels for a modern card-like appearance.",
+              businessContext: "Card-style design makes each task feel like a separate, manageable item - psychologically helping users feel organized and in control."
+            },
+            {
+              line: "padding: 15px;",
+              explanation: "Adds 15 pixels of space inside each task card, preventing text from touching the edges.",
+              businessContext: "Internal padding makes task content more readable and gives the interface breathing room - reducing visual stress for busy civil servants."
+            },
+            {
+              line: "margin-bottom: 15px;",
+              explanation: "Adds 15 pixels of space below each task card to separate it from the next task.",
+              businessContext: "Spacing between tasks helps users scan the list and prevents them from reading the wrong task - crucial for accurate work assignment."
+            },
+            {
+              line: "box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);",
+              explanation: "Adds a subtle shadow below each task card to create depth and make it appear raised from the page.",
+              businessContext: "Subtle shadows make task cards feel more interactive and important - helping users understand these are actionable items they can work with."
+            }
+          ]
+        },
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
 <html lang="en-GB">
@@ -405,8 +583,8 @@ export default function Chapter2() {
 </html>`,
         hints: [
           "Find the comment '/* Step 3: Add input and task styles here */'",
-          "Add input styling: input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 16px; margin-bottom: 20px; }",
-          "Add div styling for task cards: div { background-color: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }",
+          "Copy and paste the CSS code from the code block above",
+          "Make sure to include both the input and div style rules",
           "The input will become full-width with professional padding",
           "The div will become a card with white background and subtle shadow"
         ],

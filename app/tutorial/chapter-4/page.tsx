@@ -750,10 +750,104 @@ function displayTasks() {
         title: 'Add Edit Buttons and Functionality',
         description: 'Let\'s add the ability to edit existing tasks. Users can click an edit button to modify the task description.',
         instructions: [
-          'Add an editTask function that prompts for new task text',
-          'Update displayTasks to include edit buttons',
-          'Style the edit buttons to look distinct from add/delete buttons'
+          'Find the comment "// Step 3: Add editTask function here"',
+          'Replace it with the editTask function shown below',
+          'Then find the displayTasks function and the taskDiv.innerHTML section',
+          'Add this edit button BEFORE the delete button: <button class="edit-btn" onclick="editTask(${index})">Edit</button>',
+          'The edit button should appear before the delete button on the same line'
         ],
+        codeBlock: {
+          code: `// Edit a task by index
+function editTask(index) {
+    const tasks = loadTasks();
+    const currentTitle = tasks[index].title;
+    
+    // Replace the task's h3 element with an input field
+    const taskList = document.getElementById('taskList');
+    const taskDiv = taskList.children[index];
+    const h3Element = taskDiv.querySelector('h3');
+    
+    // Create input field with current title
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = currentTitle;
+    input.style.width = '100%';
+    input.style.padding = '5px';
+    input.style.fontSize = '16px';
+    
+    // Replace h3 with input
+    h3Element.replaceWith(input);
+    input.focus();
+    input.select();
+    
+    // Save on Enter key or when input loses focus
+    function saveEdit() {
+        const newTitle = input.value.trim();
+        if (newTitle !== '' && newTitle !== currentTitle) {
+            tasks[index].title = newTitle;
+            saveTasks(tasks);
+        }
+        displayTasks();
+    }
+    
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            saveEdit();
+        } else if (e.key === 'Escape') {
+            displayTasks(); // Cancel edit
+        }
+    });
+    
+    input.addEventListener('blur', saveEdit);
+}`,
+          explanations: [
+            {
+              line: "function editTask(index) {",
+              explanation: "Creates a function that takes the index (position) of the task to edit in the tasks array.",
+              businessContext: "When users click an edit button, we need to know which specific task they want to modify - the index tells us exactly which one."
+            },
+            {
+              line: "const tasks = loadTasks(); const currentTitle = tasks[index].title;",
+              explanation: "Loads the current tasks and gets the title of the task being edited.",
+              businessContext: "We need the current task data to work with and the original title for comparison and pre-filling the edit field."
+            },
+            {
+              line: "const taskDiv = taskList.children[index]; const h3Element = taskDiv.querySelector('h3');",
+              explanation: "Finds the specific task's HTML elements in the display - the task container and its title heading.",
+              businessContext: "To edit inline, we need to locate exactly which title element on the page corresponds to this task."
+            },
+            {
+              line: "const input = document.createElement('input'); input.value = currentTitle;",
+              explanation: "Creates a new text input field and pre-fills it with the current task title.",
+              businessContext: "Inline editing feels more natural to users - they can edit directly where they see the text, and pre-filling saves them from retyping everything."
+            },
+            {
+              line: "h3Element.replaceWith(input); input.focus(); input.select();",
+              explanation: "Replaces the title heading with the input field, focuses on it, and selects all text for easy editing.",
+              businessContext: "This creates a smooth editing experience - users immediately see they're in edit mode and can start typing or make quick corrections."
+            },
+            {
+              line: "function saveEdit() { const newTitle = input.value.trim();",
+              explanation: "Creates a helper function to save the edit, getting the new title and removing extra spaces.",
+              businessContext: "Having a reusable save function means we can trigger saves on both Enter key and when the user clicks elsewhere."
+            },
+            {
+              line: "if (newTitle !== '' && newTitle !== currentTitle) { tasks[index].title = newTitle; saveTasks(tasks); }",
+              explanation: "Only saves if the new title is valid and actually different from the original.",
+              businessContext: "This prevents saving empty tasks and avoids unnecessary database writes when users don't actually change anything."
+            },
+            {
+              line: "input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { saveEdit(); }",
+              explanation: "Listens for keyboard shortcuts - Enter to save, Escape to cancel the edit.",
+              businessContext: "Keyboard shortcuts make the interface efficient for power users who prefer not to reach for the mouse constantly."
+            },
+            {
+              line: "input.addEventListener('blur', saveEdit);",
+              explanation: "Automatically saves when the user clicks elsewhere or tabs away from the input field.",
+              businessContext: "This creates intuitive behavior - users expect their edits to be saved when they're done editing, without requiring an explicit save action."
+            }
+          ]
+        },
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
 <html lang="en-GB">
@@ -1033,13 +1127,45 @@ function displayTasks() {
         // Edit a task by index
         function editTask(index) {
             const tasks = loadTasks();
-            const newTitle = prompt('Edit task description:', tasks[index].title);
+            const currentTitle = tasks[index].title;
             
-            if (newTitle && newTitle.trim() !== '') {
-                tasks[index].title = newTitle.trim();
-                saveTasks(tasks);
+            // Replace the task's h3 element with an input field
+            const taskList = document.getElementById('taskList');
+            const taskDiv = taskList.children[index];
+            const h3Element = taskDiv.querySelector('h3');
+            
+            // Create input field with current title
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentTitle;
+            input.style.width = '100%';
+            input.style.padding = '5px';
+            input.style.fontSize = '16px';
+            
+            // Replace h3 with input
+            h3Element.replaceWith(input);
+            input.focus();
+            input.select();
+            
+            // Save on Enter key or when input loses focus
+            function saveEdit() {
+                const newTitle = input.value.trim();
+                if (newTitle !== '' && newTitle !== currentTitle) {
+                    tasks[index].title = newTitle;
+                    saveTasks(tasks);
+                }
                 displayTasks();
             }
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    saveEdit();
+                } else if (e.key === 'Escape') {
+                    displayTasks(); // Cancel edit
+                }
+            });
+            
+            input.addEventListener('blur', saveEdit);
         }
         
         // Display all tasks
@@ -1094,20 +1220,20 @@ function displayTasks() {
 </body>
 </html>`,
         hints: [
-          "Add an editTask function that takes an index parameter",
-          "Use prompt('Edit task description:', tasks[index].title) to get new text",
-          "Check if the user entered valid text before updating",
-          "Update the task's title property and save/redisplay",
-          "Add the edit button before the delete button in displayTasks"
+          "Copy and paste the editTask function from the code block above",
+          "Place it where the comment '// Step 3: Add editTask function here' is located",
+          "In the displayTasks function, find the taskDiv.innerHTML section",
+          "Add the edit button HTML before the delete button line",
+          "The edit button should use class='edit-btn' and onclick='editTask(${index})'"
         ],
         explanation: {
-          whatIsHappening: "You've completed full CRUD functionality! The editTask function uses the browser's prompt dialog to get new text from users, validates the input, updates the task object, and refreshes the display. The green edit button follows UI conventions for modification actions, distinct from the blue primary and red destructive actions.",
-          whyItMatters: "This implements the user story 'As a staff member, I want to correct or update task descriptions after creating them.' Real workplace tools need this flexibility - people make typos, requirements change, or additional details emerge. The immediate visual feedback confirms the edit was successful.",
-          realWorldConnection: "This demonstrates how requirements like 'users should be able to modify their entries' translate into technical implementation. While prompt() is simple, real applications might use modal dialogs or inline editing. Understanding data modification patterns helps you specify requirements for more sophisticated edit interfaces and discuss user experience trade-offs.",
+          whatIsHappening: "You've completed full CRUD functionality! The editTask function implements inline editing - when users click Edit, the task title transforms into an input field where they can make changes directly. The function handles keyboard shortcuts (Enter to save, Escape to cancel) and automatically saves when users click elsewhere. This creates a smooth, professional editing experience.",
+          whyItMatters: "This implements the user story 'As a staff member, I want to correct or update task descriptions after creating them.' The inline editing approach feels more natural and efficient than popup dialogs - users can see their changes in context and make quick corrections without disrupting their workflow. This is especially important for busy civil servants who need to process many tasks quickly.",
+          realWorldConnection: "This demonstrates how requirements like 'users should be able to modify their entries' translate into technical implementation. Inline editing is a common pattern in modern web applications because it provides immediate visual feedback and reduces cognitive load. Understanding these interaction patterns helps you specify requirements for sophisticated edit interfaces and discuss user experience trade-offs with development teams.",
           keyTerms: {
-            "Prompt dialog": "A simple browser dialog that asks users for text input",
-            "Data validation": "Checking user input before processing to ensure it meets requirements",
-            "UI conventions": "Standard design patterns that users expect (green for edit, red for delete)",
+            "Inline editing": "Editing content directly in place rather than in a separate dialog or form",
+            "Event listeners": "JavaScript functions that respond to user actions like clicks or key presses",
+            "DOM manipulation": "Dynamically changing HTML elements on the page using JavaScript",
             "Complete CRUD": "Full Create, Read, Update, Delete functionality for data management"
           }
         }

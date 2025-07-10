@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CheckCircle, Users, FileText, Lightbulb, Target } from 'lucide-react'
 import { getProgress, markSectionComplete, isSectionComplete } from '@/lib/progress'
 
 export default function TutorialIntroduction() {
+  const router = useRouter()
   const [currentSection, setCurrentSection] = useState(0)
   const [completedSections, setCompletedSections] = useState<number[]>([])
 
@@ -501,6 +503,9 @@ export default function TutorialIntroduction() {
                     markSectionCompleteLocal(currentSection)
                     if (currentSection < sections.length - 1) {
                       setCurrentSection(currentSection + 1)
+                    } else {
+                      // If this is the last section and it's being completed, navigate to Chapter 1
+                      router.push('/tutorial/chapter-1')
                     }
                   }}
                   className="tutorial-button-primary"
