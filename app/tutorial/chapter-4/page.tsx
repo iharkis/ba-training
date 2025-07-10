@@ -11,15 +11,6 @@ export default function Chapter4() {
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
 
-  // Load progress on mount
-  useEffect(() => {
-    const progress = getProgress()
-    const completed = steps
-      .map((step, index) => isStepComplete(step.id) ? index : -1)
-      .filter(index => index !== -1)
-    setCompletedSteps(completed)
-  }, [])
-
   const steps = [
     {
       id: 'data-management-introduction',
@@ -135,9 +126,9 @@ function displayTasks() {
     tasks.forEach((task, index) => {
         const taskDiv = document.createElement('div');
         taskDiv.innerHTML = \`
-            <h3>\${task.title}</h3>
-            <p>\${task.description || 'Status: Pending'}</p>
-            <p>Assigned to: \${task.assignedTo || 'Current User'}</p>
+            <h3>\\\\\${task.title}</h3>
+            <p>\\\\\${task.description || 'Status: Pending'}</p>
+            <p>Assigned to: \\\\\${task.assignedTo || 'Current User'}</p>
         \`;
         taskList.appendChild(taskDiv);
     });
@@ -159,7 +150,7 @@ function displayTasks() {
               businessContext: "This ensures the interface always shows the current, accurate task list - preventing user confusion."
             },
             {
-              line: "tasks.forEach((task, index) => {\n        const taskDiv = document.createElement('div');\n        taskDiv.innerHTML = \`<h3>\${task.title}</h3>...`;",
+              line: "tasks.forEach((task, index) => {\n        const taskDiv = document.createElement('div');\n        taskDiv.innerHTML = \`<h3>\\\\${task.title}</h3>...`;",
               explanation: "Loop through each saved task and create HTML elements to display them in the interface.",
               businessContext: "This renders the user's task list in a consistent format, making their work visible and manageable."
             }
@@ -251,7 +242,7 @@ function displayTasks() {
             const taskList = document.getElementById('taskList');
             const newTask = document.createElement('div');
             newTask.innerHTML = \`
-                <h3>\${taskText}</h3>
+                <h3>\\\${taskText}</h3>
                 <p>Status: Pending</p>
                 <p>Assigned to: Current User</p>
             \`;
@@ -357,9 +348,9 @@ function displayTasks() {
             tasks.forEach((task, index) => {
                 const taskDiv = document.createElement('div');
                 taskDiv.innerHTML = \`
-                    <h3>\${task.title}</h3>
-                    <p>\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \${task.assignedTo || 'Current User'}</p>
+                    <h3>\\\${task.title}</h3>
+                    <p>\\\${task.description || 'Status: Pending'}</p>
+                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
                 \`;
                 taskList.appendChild(taskDiv);
             });
@@ -535,9 +526,9 @@ function displayTasks() {
             tasks.forEach((task, index) => {
                 const taskDiv = document.createElement('div');
                 taskDiv.innerHTML = \`
-                    <h3>\${task.title}</h3>
-                    <p>\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \${task.assignedTo || 'Current User'}</p>
+                    <h3>\\\${task.title}</h3>
+                    <p>\\\${task.description || 'Status: Pending'}</p>
+                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
                 \`;
                 taskList.appendChild(taskDiv);
             });
@@ -685,10 +676,10 @@ function displayTasks() {
             tasks.forEach((task, index) => {
                 const taskDiv = document.createElement('div');
                 taskDiv.innerHTML = \`
-                    <h3>\${task.title}</h3>
-                    <p>\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \${task.assignedTo || 'Current User'}</p>
-                    <button class="delete-btn" onclick="deleteTask(\${index})">Delete Task</button>
+                    <h3>\\\${task.title}</h3>
+                    <p>\\\${task.description || 'Status: Pending'}</p>
+                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
+                    <button class="delete-btn" onclick="deleteTask(\\\${index})">Delete Task</button>
                 \`;
                 taskList.appendChild(taskDiv);
             });
@@ -727,7 +718,7 @@ function displayTasks() {
           "Add a deleteTask function that takes an index parameter",
           "Use tasks.splice(index, 1) to remove one item at that index",
           "Update displayTasks to include a delete button in each task's HTML",
-          "Use onclick=\"deleteTask(${index})\" to wire up the button",
+          "Use onclick=\"deleteTask(\\${index})\" to wire up the button",
           "The red delete button styling is already provided in the CSS"
         ],
         explanation: {
@@ -754,7 +745,7 @@ function displayTasks() {
           'Find the comment "// Step 3: Add editTask function here"',
           'Replace it with the editTask function shown below',
           'Then find the displayTasks function and the taskDiv.innerHTML section',
-          'Add this edit button BEFORE the delete button: <button class="edit-btn" onclick="editTask(${index})">Edit</button>',
+          'Add this edit button BEFORE the delete button: <button class="edit-btn" onclick="editTask(\\${index})">Edit</button>',
           'The edit button should appear before the delete button on the same line'
         ],
         codeBlock: {
@@ -976,10 +967,10 @@ function editTask(index) {
             tasks.forEach((task, index) => {
                 const taskDiv = document.createElement('div');
                 taskDiv.innerHTML = \`
-                    <h3>\${task.title}</h3>
-                    <p>\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \${task.assignedTo || 'Current User'}</p>
-                    <button class="delete-btn" onclick="deleteTask(\${index})">Delete Task</button>
+                    <h3>\\\${task.title}</h3>
+                    <p>\\\${task.description || 'Status: Pending'}</p>
+                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
+                    <button class="delete-btn" onclick="deleteTask(\\\${index})">Delete Task</button>
                 \`;
                 taskList.appendChild(taskDiv);
             });
@@ -1181,11 +1172,11 @@ function editTask(index) {
             tasks.forEach((task, index) => {
                 const taskDiv = document.createElement('div');
                 taskDiv.innerHTML = \`
-                    <h3>\${task.title}</h3>
-                    <p>\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \${task.assignedTo || 'Current User'}</p>
-                    <button class="edit-btn" onclick="editTask(\${index})">Edit</button>
-                    <button class="delete-btn" onclick="deleteTask(\${index})">Delete Task</button>
+                    <h3>\\\${task.title}</h3>
+                    <p>\\\${task.description || 'Status: Pending'}</p>
+                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
+                    <button class="edit-btn" onclick="editTask(\\\${index})">Edit</button>
+                    <button class="delete-btn" onclick="deleteTask(\\\${index})">Delete Task</button>
                 \`;
                 taskList.appendChild(taskDiv);
             });
@@ -1225,7 +1216,7 @@ function editTask(index) {
           "Place it where the comment '// Step 3: Add editTask function here' is located",
           "In the displayTasks function, find the taskDiv.innerHTML section",
           "Add the edit button HTML before the delete button line",
-          "The edit button should use class='edit-btn' and onclick='editTask(${index})'"
+          "The edit button should use class='edit-btn' and onclick='editTask(\\${index})'"
         ],
         explanation: {
           whatIsHappening: "You've completed full CRUD functionality! The editTask function implements inline editing - when users click Edit, the task title transforms into an input field where they can make changes directly. The function handles keyboard shortcuts (Enter to save, Escape to cancel) and automatically saves when users click elsewhere. This creates a smooth, professional editing experience.",
@@ -1242,6 +1233,15 @@ function editTask(index) {
     }
   ]
 
+  // Load progress on mount
+  useEffect(() => {
+    const progress = getProgress()
+    const completed = steps
+      .map((step, index) => isStepComplete(step.id) ? index : -1)
+      .filter(index => index !== -1)
+    setCompletedSteps(completed)
+  }, [steps])
+
   const markStepCompleteLocal = (index: number) => {
     if (!completedSteps.includes(index)) {
       const newCompleted = [...completedSteps, index]
@@ -1250,7 +1250,7 @@ function editTask(index) {
     }
   }
 
-  const allStepsComplete = completedSteps.length === steps.length
+  const allStepsComplete = completedSteps.length === steps.length;
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -13,15 +13,6 @@ export default function Chapter3() {
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
   const [showCodeExplanation, setShowCodeExplanation] = useState(false)
 
-  // Load progress on mount
-  useEffect(() => {
-    const progress = getProgress()
-    const completed = steps
-      .map((step, index) => isStepComplete(step.id) ? index : -1)
-      .filter(index => index !== -1)
-    setCompletedSteps(completed)
-  }, [])
-
   const steps = [
     {
       id: 'javascript-introduction',
@@ -308,7 +299,7 @@ export default function Chapter3() {
     const taskList = document.getElementById('taskList');
     const newTask = document.createElement('div');
     newTask.innerHTML = \`
-        <h3>\${taskText}</h3>
+        <h3>\\\${taskText}</h3>
         <p>Status: Pending</p>
         <p>Assigned to: Current User</p>
     \`;
@@ -338,7 +329,7 @@ export default function Chapter3() {
               businessContext: "This prepares to add the new task to the user's visible task list."
             },
             {
-              line: "newTask.innerHTML = \\`\n    <h3>\\${taskText}</h3>\n    <p>Status: Pending</p>\n    <p>Assigned to: Current User</p>\n\\`;",
+              line: "newTask.innerHTML = \\`\n    <h3>\\\\${taskText}</h3>\n    <p>Status: Pending</p>\n    <p>Assigned to: Current User</p>\n\\`;",
               explanation: "Create the HTML structure for the new task, including the user's text and default values.",
               businessContext: "This formats the task exactly like existing tasks, maintaining consistency in your interface."
             },
@@ -507,7 +498,7 @@ export default function Chapter3() {
             const taskList = document.getElementById('taskList');
             const newTask = document.createElement('div');
             newTask.innerHTML = \`
-                <h3>\${taskText}</h3>
+                <h3>\\\${taskText}</h3>
                 <p>Status: Pending</p>
                 <p>Assigned to: Current User</p>
             \`;
@@ -541,6 +532,15 @@ export default function Chapter3() {
     }
   ]
 
+  // Load progress on mount
+  useEffect(() => {
+    const progress = getProgress()
+    const completed = steps
+      .map((step, index) => isStepComplete(step.id) ? index : -1)
+      .filter(index => index !== -1)
+    setCompletedSteps(completed)
+  }, [steps])
+
   const markStepCompleteLocal = (index: number) => {
     if (!completedSteps.includes(index)) {
       const newCompleted = [...completedSteps, index]
@@ -549,7 +549,7 @@ export default function Chapter3() {
     }
   }
 
-  const allStepsComplete = completedSteps.length === steps.length
+  const allStepsComplete = completedSteps.length === steps.length;
 
   return (
     <div className="min-h-screen bg-gray-50">

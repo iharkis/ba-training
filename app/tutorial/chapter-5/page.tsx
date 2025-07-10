@@ -11,15 +11,6 @@ export default function Chapter5() {
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
 
-  // Load progress on mount
-  useEffect(() => {
-    const progress = getProgress()
-    const completed = steps
-      .map((step, index) => isStepComplete(step.id) ? index : -1)
-      .filter(index => index !== -1)
-    setCompletedSteps(completed)
-  }, [])
-
   const steps = [
     {
       id: 'backend-api-introduction',
@@ -149,7 +140,7 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\${PORT}\`);
+  console.log(\`Server running on http://localhost:\\\${PORT}\`);
 });`,
           explanations: [
             {
@@ -244,7 +235,7 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\${PORT}\`);
+  console.log(\`Server running on http://localhost:\\\${PORT}\`);
 });`,
         hints: [
           "Uncomment each section step by step, starting with the imports",
@@ -419,7 +410,7 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\${PORT}\`);
+  console.log(\`Server running on http://localhost:\\\${PORT}\`);
 });`,
         targetCode: `const express = require('express');
 const cors = require('cors');
@@ -530,7 +521,7 @@ app.delete('/tasks/:id', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\${PORT}\`);
+  console.log(\`Server running on http://localhost:\\\${PORT}\`);
 });`,
         hints: [
           "Add the four CRUD endpoints after the welcome route",
@@ -622,7 +613,7 @@ app.listen(PORT, () => {
         
         function displayOutput(title, data) {
             const output = document.getElementById('output');
-            output.textContent = \`\${title}:\\n\${JSON.stringify(data, null, 2)}\`;
+            output.textContent = \`\\\${title}:\\n\\\${JSON.stringify(data, null, 2)}\`;
         }
         
         // Mock API data for demo purposes
@@ -817,7 +808,7 @@ app.listen(PORT, () => {
         
         function displayOutput(title, data) {
             const output = document.getElementById('output');
-            output.textContent = \`\${title}:\\n\${JSON.stringify(data, null, 2)}\`;
+            output.textContent = \`\\\${title}:\\n\\\${JSON.stringify(data, null, 2)}\`;
         }
         
         // Mock API function to simulate server delay
@@ -948,6 +939,15 @@ app.listen(PORT, () => {
     }
   ]
 
+  // Load progress on mount
+  useEffect(() => {
+    const progress = getProgress()
+    const completed = steps
+      .map((step, index) => isStepComplete(step.id) ? index : -1)
+      .filter(index => index !== -1)
+    setCompletedSteps(completed)
+  }, [steps])
+
   const markStepCompleteLocal = (index: number) => {
     if (!completedSteps.includes(index)) {
       const newCompleted = [...completedSteps, index]
@@ -956,7 +956,7 @@ app.listen(PORT, () => {
     }
   }
 
-  const allStepsComplete = completedSteps.length === steps.length
+  const allStepsComplete = completedSteps.length === steps.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
