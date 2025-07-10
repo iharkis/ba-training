@@ -103,7 +103,7 @@ const CodeInterface = ({
   selectedFileName?: string
   setSelectedFileName?: (name: string) => void
   fileContents?: Map<string, string>
-  setFileContents?: (contents: Map<string, string>) => void
+  setFileContents?: React.Dispatch<React.SetStateAction<Map<string, string>>>
   getFileStartingContent?: (fileName: string, language?: string) => string
 }) => (
   <div className="space-y-6">
