@@ -5,6 +5,7 @@ import { CheckCircle, AlertCircle, Lightbulb, Eye, Code, Maximize2, Minimize2, X
 import { saveCodeProgress, getCodeProgress } from '@/lib/progress'
 import CodeExplanationModal from './CodeExplanationModal'
 import FileTreeViewer from './FileTreeViewer'
+import { useSearchParams } from 'next/navigation'
 
 type FileContentsMap = Map<string, string>
 type SetFileContentsFunction = React.Dispatch<React.SetStateAction<FileContentsMap>>
@@ -13,7 +14,7 @@ interface CodeEditorProps {
   title: string
   description: string
   instructions?: string[]  // Step-by-step instructions
-  language: 'html' | 'css' | 'typescript' | 'javascript' | 'json'
+  language: 'html' | 'css' | 'typescript' | 'json'
   startingCode: string
   targetCode: string
   hints: string[]
@@ -75,6 +76,7 @@ interface CodeInterfaceProps {
   fileContents?: FileContentsMap
   setFileContents?: SetFileContentsFunction
   getFileStartingContent?: (fileName: string, language?: string) => string
+  isEditMode?: boolean
 }
 
 // Move CodeInterface outside to prevent recreation  
@@ -110,7 +112,8 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
     setSelectedFileName = () => {},
     fileContents = new Map(),
     setFileContents = () => {},
-    getFileStartingContent = () => ''
+    getFileStartingContent = () => '',
+    isEditMode = false
   } = props
 
   return (
@@ -152,6 +155,21 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
               Next Step
             </button>
           )}
+          
+          {/* Edit mode: Force complete button */}
+          {isEditMode && (
+            <button
+              onClick={() => {
+                setIsComplete(true)
+                setShowExplanation(true)
+                onComplete?.()
+              }}
+              className="text-sm text-red-600 hover:text-red-800 flex items-center px-3 py-2 rounded border border-red-300 bg-red-50"
+            >
+              <CheckCircle className="w-4 h-4 mr-1" />
+              Force Complete
+            </button>
+          )}
         </div>
         
         {!isFullscreen && (
@@ -166,7 +184,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
       </div>
 
       {/* Main coding area */}
-      <div className={`grid gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-5 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 lg:grid-cols-5' : 'grid-cols-1 lg:grid-cols-2'}`}>
+      <div className={`grid gap-4 md:gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-5 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 md:grid-cols-3 lg:grid-cols-5' : 'grid-cols-1 lg:grid-cols-2'}`}>
         {/* File Tree (only show if enabled) */}
         {showFileTree && (
           <div className="flex flex-col">
@@ -179,16 +197,39 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
               <FileTreeViewer 
                 currentChapter={currentChapter}
                 selectedFile={selectedFileName}
-                onFileSelect={(filePath, content, language) => {
-                  // Create updated file contents map with current file saved
+                currentExerciseLanguage={language}
+                fileContents={fileContents}
+                onFileSelect={(filePath, content, fileLanguage) => {
+                  // Check if this file corresponds to the current exercise
+                  const isCurrentExerciseFile = (
+                    (filePath.includes('index.html') && language === 'html') ||
+                    (filePath.includes('styles.css') && language === 'css') ||
+                    (filePath.includes('script.js') && language === 'typescript')
+                  )
+                  
+                  // Always save current content before switching
                   const updatedFileContents = new Map(fileContents)
-                  if (selectedFileName) {
+                  
+                  // Save current exercise content if we're in exercise mode
+                  if (!selectedFileName && language === 'html') {
+                    updatedFileContents.set('silly-walks-task-manager/index.html', code)
+                  } else if (!selectedFileName && language === 'css') {
+                    updatedFileContents.set('silly-walks-task-manager/styles.css', code)
+                  } else if (!selectedFileName && language === 'typescript') {
+                    updatedFileContents.set('silly-walks-task-manager/script.js', code)
+                  } else if (selectedFileName) {
+                    // Save currently selected file
                     updatedFileContents.set(selectedFileName, code)
+                  }
+                  
+                  // If user clicks on the file they're currently working on in an exercise, don't switch to file mode
+                  if (isCurrentExerciseFile && !selectedFileName) {
+                    return
                   }
                   
                   // Load the file content (either saved content or starting content)
                   const savedContent = updatedFileContents.get(filePath)
-                  const fileContent = savedContent || getFileStartingContent(filePath, language)
+                  const fileContent = savedContent || getFileStartingContent(filePath, fileLanguage)
                   
                   // Update state
                   setFileContents(updatedFileContents)
@@ -204,7 +245,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
         )}
         
         {/* Code Editor */}
-        <div className="flex flex-col lg:col-span-2">
+        <div className="flex flex-col md:col-span-1 lg:col-span-2">
           <div className="flex items-center justify-between mb-3">
             <label className="text-base font-medium text-gray-700">
               {selectedFileName ? `Editing: ${selectedFileName}` : `${language.toUpperCase()} Code Editor`}
@@ -217,8 +258,13 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
                     setFileContents(prev => new Map(prev).set(selectedFileName, code))
                   }
                   
-                  // Return to exercise mode
-                  setCode(startingCode)
+                  // Return to exercise mode - restore the current exercise progress
+                  const exerciseFile = language === 'html' ? 'silly-walks-task-manager/index.html' :
+                                     language === 'css' ? 'silly-walks-task-manager/styles.css' :
+                                     'silly-walks-task-manager/script.js'
+                  const exerciseContent = fileContents.get(exerciseFile) || startingCode
+                  
+                  setCode(exerciseContent)
                   setSelectedFileName('')
                   setIsComplete(false)
                   setShowExplanation(false)
@@ -233,11 +279,20 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
           <div className="code-editor border-2 border-gray-200 rounded-lg overflow-hidden flex-1">
             <div className="bg-gray-800 text-white px-4 py-3 text-sm flex items-center justify-between">
               <span>
-                {language === 'html' && '📄 index.html'}
-                {language === 'css' && '🎨 styles.css'}
-                {language === 'typescript' && '⚡ app.ts'}
-                {language === 'javascript' && '⚡ app.js'}
-                {language === 'json' && '📦 package.json'}
+                {selectedFileName ? (
+                  selectedFileName.includes('index.html') ? '📄 index.html' :
+                  selectedFileName.includes('styles.css') ? '🎨 styles.css' :
+                  selectedFileName.includes('script.js') ? '⚡ script.js' :
+                  selectedFileName.includes('.json') ? '📦 package.json' :
+                  `📄 ${selectedFileName.split('/').pop()}`
+                ) : (
+                  language === 'html' ? '📄 index.html' :
+                  language === 'css' ? '🎨 styles.css' :
+                  language === 'typescript' ? '⚡ script.js' :
+                  language === 'javascript' ? '⚡ script.js' :
+                  language === 'json' ? '📦 package.json' :
+                  `📄 ${language} file`
+                )}
               </span>
             </div>
             <div className="relative bg-white h-full">
@@ -246,7 +301,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
                 ref={textareaRef}
                 value={code}
                 onChange={handleCodeChange}
-                className="w-full p-6 font-mono text-base border-0 focus:ring-0 focus:outline-none resize-none bg-gray-50 h-full min-h-[600px]"
+                className="w-full p-6 font-mono text-base border-0 focus:ring-0 focus:outline-none resize-none bg-gray-50 h-full min-h-[400px] md:min-h-[500px] lg:min-h-[600px]"
                 spellCheck={false}
                 placeholder="Type your code here..."
               />
@@ -255,24 +310,24 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
         </div>
 
         {/* Preview */}
-        <div className="flex flex-col lg:col-span-2">
+        <div className="flex flex-col md:col-span-1 lg:col-span-2">
           <div className="flex items-center justify-between mb-3">
             <label className="text-base font-medium text-gray-700">
               Live Preview
             </label>
           </div>
           
-          <div className="border-2 border-gray-200 rounded-lg overflow-hidden bg-white flex-1 min-h-[600px]">
+          <div className="border-2 border-gray-200 rounded-lg overflow-hidden bg-white flex-1 min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
             <div className="bg-gray-100 px-4 py-2 text-sm text-gray-600 border-b">
               🌐 Live Website Preview
             </div>
             <div className="p-4 h-full">
-              {language === 'html' ? (
+              {(language === 'html' || language === 'css'  || language === 'typescript') ? (
                 <iframe
                   key="preview-iframe"
                   srcDoc={iframeSrcDoc}
                   className="w-full h-full border-0 bg-white"
-                  title="HTML Preview"
+                  title="Preview"
                   sandbox="allow-same-origin allow-scripts"
                 />
               ) : (
@@ -315,6 +370,8 @@ export default function CodeEditor({
   const [selectedFileName, setSelectedFileName] = useState<string>('')
   const [fileContents, setFileContents] = useState<Map<string, string>>(new Map())
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const searchParams = useSearchParams()
+  const isEditMode = searchParams.get('edit') !== null
 
   // Load saved code progress on mount
   useEffect(() => {
@@ -328,7 +385,158 @@ export default function CodeEditor({
         setCode(startingCode)
       }
     }
-  }, [stepId, startingCode])
+    
+    // Auto-populate HTML content from Chapter 1 when starting CSS exercises in Chapter 2
+    if (currentChapter === 2 && language === 'css') {
+      // Check if user has completed HTML exercises and load that content into the HTML file
+      const htmlStepIds = ['html-basics', 'add-subtitle', 'simple-form', 'display-sample-task'] // Chapter 1 step IDs
+      let latestHtmlContent = null
+      
+      // Find the most recent HTML content from Chapter 1
+      for (const htmlStepId of htmlStepIds) {
+        const htmlContent = getCodeProgress(htmlStepId)
+        if (htmlContent && htmlContent.includes('<body>')) {
+          latestHtmlContent = htmlContent
+        }
+      }
+      
+      // If we found completed HTML content, save it to the HTML file
+      if (latestHtmlContent) {
+        setFileContents(prev => {
+          const newMap = new Map(prev)
+          newMap.set('silly-walks-task-manager/index.html', latestHtmlContent)
+          return newMap
+        })
+      } else {
+        // If no HTML content found, provide a complete fallback based on Chapter 1 completion
+        const fallbackHtmlContent = `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministry of Silly Walks - Task Manager</title>
+</head>
+<body>
+    <h1>Ministry of Silly Walks</h1>
+    <p>Task Management System</p>
+    
+    <h2>Add New Task</h2>
+    <input type="text" placeholder="Enter task description">
+    
+    <h2>Current Tasks</h2>
+    <div>
+        <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+        <p>Review submitted video and assess walk silliness level.</p>
+        <p>Assigned to: John Cleese</p>
+    </div>
+</body>
+</html>`
+        
+        setFileContents(prev => {
+          const newMap = new Map(prev)
+          newMap.set('silly-walks-task-manager/index.html', fallbackHtmlContent)
+          return newMap
+        })
+      }
+    }
+    
+    // Auto-populate HTML and CSS content from previous chapters when starting Chapter 3+
+    if (currentChapter >= 3) {
+      // Load HTML content from Chapter 1
+      const htmlStepIds = ['html-basics', 'add-subtitle', 'simple-form', 'display-sample-task']
+      let latestHtmlContent = null
+      
+      for (const htmlStepId of htmlStepIds) {
+        const htmlContent = getCodeProgress(htmlStepId)
+        if (htmlContent && htmlContent.includes('<body>') && htmlContent.includes('Ministry of Silly Walks')) {
+          latestHtmlContent = htmlContent
+        }
+      }
+      
+      // Load CSS content from Chapter 2
+      const cssStepIds = ['add-basic-styles', 'style-headings', 'style-form-task']
+      let latestCssContent = null
+      
+      // Check in reverse order to get the latest progress
+      for (let i = cssStepIds.length - 1; i >= 0; i--) {
+        const cssStepId = cssStepIds[i]
+        const cssContent = getCodeProgress(cssStepId)
+        if (cssContent && cssContent.trim().length > 50 && 
+            (cssContent.includes('body {') || cssContent.includes('/* Ministry of Silly Walks'))) {
+          latestCssContent = cssContent
+          break // Use the latest one found
+        }
+      }
+      
+      // Save both HTML and CSS content
+      setFileContents(prev => {
+        const newMap = new Map(prev)
+        if (latestHtmlContent) {
+          newMap.set('silly-walks-task-manager/index.html', latestHtmlContent)
+        }
+        if (latestCssContent) {
+          newMap.set('silly-walks-task-manager/styles.css', latestCssContent)
+        } else {
+          // If no CSS found from Chapter 2, provide a basic working stylesheet
+          const fallbackCssContent = `/* Ministry of Silly Walks - Task Manager Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #003d7a;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #003d7a;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #002a5c;
+}
+
+#taskList > div {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}`
+          newMap.set('silly-walks-task-manager/styles.css', fallbackCssContent)
+        }
+        return newMap
+      })
+    }
+  }, [stepId, startingCode, currentChapter, language])
 
   const checkCode = () => {
     // More forgiving comparison for beginners
@@ -398,7 +606,17 @@ export default function CodeEditor({
       setFileContents(prev => {
         const newMap = new Map(prev)
         newMap.set(selectedFileName, newCode)
-        console.log('File contents updated for:', selectedFileName, 'Map size:', newMap.size)
+        return newMap
+      })
+    } else {
+      // Also save exercise content to the corresponding file for later retrieval
+      const exerciseFile = language === 'html' ? 'silly-walks-task-manager/index.html' :
+                         language === 'css' ? 'silly-walks-task-manager/styles.css' :
+                         language === 'typescript' ? 'silly-walks-task-manager/script.js' :
+                         'silly-walks-task-manager/script.js'
+      setFileContents(prev => {
+        const newMap = new Map(prev)
+        newMap.set(exerciseFile, newCode)
         return newMap
       })
     }
@@ -407,33 +625,113 @@ export default function CodeEditor({
     if (stepId && !selectedFileName) {
       saveCodeProgress(stepId, newCode)
     }
-  }, [stepId, selectedFileName])
+  }, [stepId, selectedFileName, language])
 
-  // Get starting content for a file (empty template, not completed content)
+  // Get starting content for a file - ALWAYS prioritize existing user content
   const getFileStartingContent = useCallback((fileName: string, language?: string) => {
+    // CRITICAL: ALWAYS check if user has existing content first!
+    const existingContent = fileContents.get(fileName)
+    if (existingContent && existingContent.trim().length > 0) {
+      return existingContent
+    }
+
+    // Check for completed content from previous chapters/steps
     if (fileName.endsWith('index.html') || language === 'html') {
-      return `<!DOCTYPE html>
+      // For Chapter 2+, try to load completed HTML content from Chapter 1
+      if (currentChapter >= 2) {
+        const htmlStepIds = ['html-basics', 'add-subtitle', 'simple-form', 'display-sample-task']
+        for (const htmlStepId of htmlStepIds) {
+          const htmlContent = getCodeProgress(htmlStepId)
+          if (htmlContent && htmlContent.includes('<body>') && htmlContent.includes('Ministry of Silly Walks')) {
+            // Ensure CSS and JS links are present for separation of concerns
+            let updatedContent = htmlContent
+            if (currentChapter >= 2 && !htmlContent.includes('styles.css')) {
+              updatedContent = updatedContent.replace(
+                '</head>',
+                '    <link rel="stylesheet" href="styles.css">\n</head>'
+              )
+            }
+            if (currentChapter >= 3 && !htmlContent.includes('script.js')) {
+              updatedContent = updatedContent.replace(
+                '</body>',
+                '    <script src="script.js"></script>\n</body>'
+              )
+            }
+            return updatedContent
+          }
+        }
+      }
+      
+      // Provide base template with appropriate links for separation of concerns
+      let baseTemplate = `<!DOCTYPE html>
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
+    <title>Ministry of Silly Walks - Task Manager</title>`
+      
+      if (currentChapter >= 2) {
+        baseTemplate += `
+    <link rel="stylesheet" href="styles.css">`
+      }
+      
+      baseTemplate += `
 </head>
 <body>
-    <!-- Your HTML content goes here -->
+    <!-- Your HTML content goes here -->`
+      
+      if (currentChapter >= 3) {
+        baseTemplate += `
+    <script src="script.js"></script>`
+      }
+      
+      baseTemplate += `
 </body>
 </html>`
+      
+      return baseTemplate
     }
+    
     if (fileName.endsWith('styles.css') || language === 'css') {
+      // For Chapter 2+, try to load completed CSS from previous steps
+      if (currentChapter >= 2) {
+        const cssStepIds = ['add-basic-styles', 'style-headings', 'style-form-task']
+        // Check in reverse order to get the latest progress
+        for (let i = cssStepIds.length - 1; i >= 0; i--) {
+          const cssStepId = cssStepIds[i]
+          const savedContent = getCodeProgress(cssStepId)
+          if (savedContent && savedContent.trim().length > 50 && 
+              (savedContent.includes('body {') || savedContent.includes('/* Ministry of Silly Walks'))) {
+            return savedContent
+          }
+        }
+      }
       return `/* Ministry of Silly Walks - Task Manager Styles */
 
 /* Add your CSS styles here */`
     }
-    if (fileName.endsWith('script.js') || language === 'javascript') {
+    
+    if (fileName.endsWith('script.js') || fileName.endsWith('scripts.js')) {
+      // For Chapter 3+, try to load completed JavaScript from previous steps
+      if (currentChapter >= 3) {
+        const jsStepIds = ['add-javascript', 'add-button']
+        for (const jsStepId of jsStepIds) {
+          const jsContent = getCodeProgress(jsStepId)
+          if (jsContent && jsContent.includes('addEventListener')) {
+            // Extract just the JavaScript part, not the full HTML
+            const scriptMatch = jsContent.match(/<script>([\s\S]*?)<\/script>/)
+            if (scriptMatch) {
+              return scriptMatch[1].trim()
+            }
+          }
+        }
+      }
+      
       return `// Ministry of Silly Walks - Task Manager JavaScript
 
 // Add your JavaScript code here`
     }
+    
     if (fileName.endsWith('package.json') || language === 'json') {
       return `{
   "name": "silly-walks-task-manager",
@@ -441,13 +739,98 @@ export default function CodeEditor({
   "description": "Task manager for the Ministry of Silly Walks"
 }`
     }
+    
     return '// Add your code here'
-  }, [])
+  }, [currentChapter, fileContents])
 
   // Memoize the iframe srcDoc to prevent unnecessary re-renders
   const iframeSrcDoc = useMemo(() => {
-    return code
-  }, [code])
+    // Always try to construct a complete HTML document with all files combined
+    
+    // Get HTML content - prioritize current editor content if editing HTML, otherwise use saved content
+    let htmlContent
+    if (language === 'html' || (selectedFileName && selectedFileName.includes('index.html'))) {
+      // User is editing HTML file directly - use current editor content
+      htmlContent = code
+    } else {
+      // Use saved HTML content from file
+      htmlContent = fileContents.get('silly-walks-task-manager/index.html')
+    }
+    
+    // If no saved HTML content, create a complete fallback with typical Chapter 1 completion content
+    if (!htmlContent || htmlContent.length < 50) {
+      htmlContent = `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministry of Silly Walks - Task Manager</title>
+</head>
+<body>
+    <h1>Ministry of Silly Walks</h1>
+    <p>Task Management System</p>
+    
+    <h2>Add New Task</h2>
+    <input type="text" id="taskInput" placeholder="Enter task description">
+    <button id="addTaskBtn">Add Task</button>
+    
+    <h2>Current Tasks</h2>
+    <div id="taskList">
+        <div>
+            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+            <p>Review submitted video and assess walk silliness level.</p>
+            <p>Assigned to: John Cleese</p>
+        </div>
+    </div>
+</body>
+</html>`
+    }
+
+    // Get CSS content - prioritize current editor content if editing CSS, otherwise use saved content
+    let cssContent
+    if (language === 'css' || (selectedFileName && selectedFileName.includes('styles.css'))) {
+      // User is editing CSS file directly - use current editor content
+      cssContent = code
+    } else {
+      // Use saved CSS content from file
+      cssContent = fileContents.get('silly-walks-task-manager/styles.css')
+    }
+    
+    // Get JavaScript content - prioritize current editor content if editing JS, otherwise use saved content
+    let jsContent
+    if (language === 'typescript' || (selectedFileName && selectedFileName.includes('script.js'))) {
+      // User is editing JS file directly - use current editor content
+      jsContent = code
+    } else {
+      // Use saved JS content from file
+      jsContent = fileContents.get('silly-walks-task-manager/script.js')
+    }
+    
+    // Start with the HTML content
+    let combinedHtml = htmlContent
+    
+    // Add CSS inline for preview if we have CSS content
+    if (cssContent && cssContent.trim().length > 0) {
+      if (!combinedHtml.includes('<style>')) {
+        combinedHtml = combinedHtml.replace(
+          '</head>',
+          `    <style>\n${cssContent}\n    </style>\n</head>`
+        )
+      }
+    }
+    
+    // Add JavaScript inline for preview if we have JS content
+    if (jsContent && jsContent.trim().length > 0) {
+      if (!combinedHtml.includes('<script>')) {
+        combinedHtml = combinedHtml.replace(
+          '</body>',
+          `    <script>\n${jsContent}\n    </script>\n</body>`
+        )
+      }
+    }
+    
+    return combinedHtml
+  }, [code, language, fileContents, selectedFileName])
 
   // Create a stable key for the textarea to prevent recreation
   const textareaKey = useMemo(() => `textarea-${language}`, [language])
@@ -542,6 +925,7 @@ export default function CodeEditor({
             fileContents={fileContents}
             setFileContents={setFileContents}
             getFileStartingContent={getFileStartingContent}
+            isEditMode={isEditMode}
           />
         </div>
       ) : (
@@ -635,6 +1019,7 @@ export default function CodeEditor({
               fileContents={fileContents}
               setFileContents={setFileContents}
               getFileStartingContent={getFileStartingContent}
+              isEditMode={isEditMode}
             />
           </div>
         </div>

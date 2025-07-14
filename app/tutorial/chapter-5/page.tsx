@@ -2,951 +2,564 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, CheckCircle, Server, Lightbulb, Code, Globe, Database } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter5() {
+  const searchParams = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
 
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
+
   const steps = [
     {
-      id: 'backend-api-introduction',
-      title: 'Understanding Backend APIs',
+      id: 'testing-introduction',
+      title: 'Understanding Testing',
       type: 'explanation',
       content: (
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Chapter 5: Building the Backend API</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Chapter 5: Testing & Quality Assurance</h2>
           <p className="text-lg text-gray-600">
-            Great work! Your task manager now has full CRUD functionality with persistent storage. But what happens when John Cleese wants to share tasks with Terry Jones? Or when the Ministry needs to generate reports? We need a backend API.
+            Your task manager works perfectly... or does it? What happens when someone enters an empty task? What if the database is down? This is where testing comes in!
           </p>
 
           <div className="explanation-box">
-            <div className="explanation-title">What is a Backend API?</div>
+            <div className="explanation-title">What is Software Testing?</div>
             <div className="explanation-text">
               <p className="mb-3">
-                An API (Application Programming Interface) is like a waiter in a restaurant. Your frontend (the customer) makes requests, the API takes those requests to the backend kitchen (server/database), and brings back the response.
+                Software testing is the process of checking that your application works correctly in different situations, including when things go wrong.
               </p>
-              <ul className="list-disc list-inside space-y-2">
-                <li><strong>Frontend:</strong> What users see and interact with (your HTML/CSS/JavaScript)</li>
-                <li><strong>Backend:</strong> Server that processes requests, manages data, and enforces business rules</li>
-                <li><strong>API:</strong> The interface that lets frontend and backend communicate</li>
-                <li><strong>Database:</strong> Where data is permanently stored and organized</li>
-              </ul>
-              <p className="mt-3">
-                Think of it like a government office: citizens (frontend) make requests at the front desk (API), clerks (backend) process the paperwork using filing systems (database), and return the results.
-              </p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-medium mb-2">What We Test</h4>
+                  <ul className="text-sm space-y-1">
+                    <li>• Features work as expected</li>
+                    <li>• Error handling works</li>
+                    <li>• Performance is acceptable</li>
+                    <li>• Security is maintained</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-medium mb-2">Why We Test</h4>
+                  <ul className="text-sm space-y-1">
+                    <li>• Catch bugs before users do</li>
+                    <li>• Ensure quality standards</li>
+                    <li>• Build confidence in changes</li>
+                    <li>• Document expected behavior</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="ministry-header">
-            <h3 className="text-xl font-bold">Why the Ministry Needs a Backend API</h3>
+            <h3 className="text-xl font-bold">Why the Ministry Needs Testing</h3>
           </div>
           <div className="ministry-content">
             <p className="mb-4">
-              The Ministry's task management system needs to work across the entire department, not just individual browsers. A backend API enables enterprise-level functionality:
+              The Ministry of Silly Walks can't afford bugs! Imagine if a software glitch accidentally approved a perfectly normal walk, or if the system crashed during a critical evaluation period.
             </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <h4 className="font-medium text-blue-900 mb-2">Current Limitations</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• Tasks only exist in one browser</li>
-                  <li>• No sharing between staff members</li>
-                  <li>• No central oversight or reporting</li>
-                  <li>• No backup or data security</li>
-                </ul>
+            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+              <h4 className="font-medium text-red-900 mb-2">Potential Problems Without Testing</h4>
+              <ul className="text-sm text-red-800 space-y-1">
+                <li>• Empty task submissions crash the system</li>
+                <li>• Database errors aren't handled gracefully</li>
+                <li>• Users can submit invalid silly walk applications</li>
+                <li>• System performance degrades under load</li>
+                <li>• Security vulnerabilities go unnoticed</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: Testing in Requirements
+            </div>
+            <p className="concept-text">
+              When you write "the system should handle invalid input gracefully" or "performance should remain stable under high load," you're defining testing requirements. Good BAs think about edge cases, error conditions, and quality standards from the beginning, not as an afterthought.
+            </p>
+          </div>
+
+          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
+            <h3 className="text-lg font-bold mb-3">🎯 Learning Objectives</h3>
+            <ul className="space-y-2">
+              <li>• Understand different types of testing</li>
+              <li>• Learn about quality assurance practices</li>
+              <li>• Explore automated vs manual testing</li>
+              <li>• See how testing fits into the development process</li>
+            </ul>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'types-of-testing',
+      title: 'Step 1: Types of Testing',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">Types of Testing</h2>
+          <p className="text-lg text-gray-600">
+            Different types of testing check different aspects of your application. Think of them as different inspections for a building.
+          </p>
+
+          <div className="explanation-box">
+            <div className="explanation-title">The Testing Pyramid</div>
+            <div className="explanation-text">
+              <div className="bg-white border border-gray-200 rounded p-4">
+                <div className="text-center mb-4">
+                  <div className="mx-auto w-0 h-0" style={{
+                    borderLeft: '100px solid transparent',
+                    borderRight: '100px solid transparent',
+                    borderBottom: '60px solid #fee2e2'
+                  }}></div>
+                  <div className="mt-2 text-sm font-medium text-red-800">Manual Testing</div>
+                  <div className="text-xs text-red-600">Slow, expensive, but catches UX issues</div>
+                </div>
+                <div className="text-center mb-4">
+                  <div className="mx-auto w-0 h-0" style={{
+                    borderLeft: '120px solid transparent',
+                    borderRight: '120px solid transparent',
+                    borderBottom: '60px solid #fef3c7'
+                  }}></div>
+                  <div className="mt-2 text-sm font-medium text-yellow-800">Integration Testing</div>
+                  <div className="text-xs text-yellow-600">Tests how different parts work together</div>
+                </div>
+                <div className="text-center">
+                  <div className="mx-auto w-0 h-0" style={{
+                    borderLeft: '140px solid transparent',
+                    borderRight: '140px solid transparent',
+                    borderBottom: '60px solid #dcfce7'
+                  }}></div>
+                  <div className="mt-2 text-sm font-medium text-green-800">Unit Testing</div>
+                  <div className="text-xs text-green-600">Fast, automated tests of individual functions</div>
+                </div>
               </div>
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h4 className="font-medium text-green-900 mb-2">API Benefits</h4>
-                <ul className="text-sm text-green-800 space-y-1">
-                  <li>• Shared data across the department</li>
-                  <li>• Task assignment and collaboration</li>
-                  <li>• Centralized reporting and analytics</li>
-                  <li>• Secure data backup and recovery</li>
-                </ul>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <h4 className="font-medium text-green-900 mb-3">Unit Testing</h4>
+              <div className="text-sm text-green-800 space-y-2">
+                <div><strong>What:</strong> Test individual functions</div>
+                <div><strong>Example:</strong> "Does the add task function work?"</div>
+                <div><strong>Speed:</strong> Very fast</div>
+                <div><strong>Cost:</strong> Low</div>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+              <h4 className="font-medium text-yellow-900 mb-3">Integration Testing</h4>
+              <div className="text-sm text-yellow-800 space-y-2">
+                <div><strong>What:</strong> Test how parts work together</div>
+                <div><strong>Example:</strong> "Does frontend talk to backend?"</div>
+                <div><strong>Speed:</strong> Medium</div>
+                <div><strong>Cost:</strong> Medium</div>
+              </div>
+            </div>
+
+            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+              <h4 className="font-medium text-red-900 mb-3">Manual Testing</h4>
+              <div className="text-sm text-red-800 space-y-2">
+                <div><strong>What:</strong> Human testers use the app</div>
+                <div><strong>Example:</strong> "Is the interface intuitive?"</div>
+                <div><strong>Speed:</strong> Slow</div>
+                <div><strong>Cost:</strong> High</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="ministry-content">
+            <h4 className="font-medium mb-3">Ministry Testing Examples</h4>
+            <div className="space-y-3">
+              <div className="bg-white border border-gray-200 rounded p-3">
+                <h5 className="font-medium text-gray-900 mb-1">Unit Test Example</h5>
+                <p className="text-sm text-gray-600 mb-2">Testing the "calculate silliness score" function:</p>
+                <div className="bg-gray-50 p-2 rounded font-mono text-xs">
+                  Input: walk_data = {"hops": 3, "wiggles": 7, "duration": 45}<br/>
+                  Expected: silliness_score = 8.5<br/>
+                  Actual: silliness_score = 8.5 ✅
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded p-3">
+                <h5 className="font-medium text-gray-900 mb-1">Integration Test Example</h5>
+                <p className="text-sm text-gray-600 mb-2">Testing the complete task creation flow:</p>
+                <div className="bg-gray-50 p-2 rounded font-mono text-xs">
+                  1. User clicks "Add Task" → ✅<br/>
+                  2. Frontend sends POST request → ✅<br/>
+                  3. Backend validates data → ✅<br/>
+                  4. Database saves task → ✅<br/>
+                  5. Frontend shows new task → ✅
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded p-3">
+                <h5 className="font-medium text-gray-900 mb-1">Manual Test Example</h5>
+                <p className="text-sm text-gray-600 mb-2">Testing user experience:</p>
+                <div className="bg-gray-50 p-2 rounded text-xs">
+                  "Can a new Ministry employee easily figure out how to submit a silly walk application without training?"
+                </div>
               </div>
             </div>
           </div>
 
           <div className="concept-callout">
             <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
-              BA Insight: API Requirements
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: Test Coverage
             </div>
             <p className="concept-text">
-              When you write requirements like "users should be able to share data" or "the system should provide reports," you're defining API needs. Understanding REST endpoints, HTTP methods, and data flow helps you write more precise integration requirements and communicate effectively with technical teams about system architecture.
-            </p>
-          </div>
-
-          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objective</h3>
-            <p>
-              In this chapter, you'll build a simple Node.js API with endpoints for creating, reading, updating, and deleting tasks. You'll learn how frontend applications communicate with backends and understand the technical foundation that enables multi-user systems.
+              Different testing types catch different problems. Unit tests catch logic errors quickly, integration tests catch communication issues, and manual tests catch usability problems. When writing requirements, consider what could go wrong and how each type of testing would catch it.
             </p>
           </div>
         </div>
       )
     },
     {
-      id: 'create-server-file',
-      title: 'Step 1: Creating the Server',
+      id: 'test-cases',
+      title: 'Step 2: Writing Test Cases',
       type: 'coding',
       exercise: {
-        title: 'Build a Basic Node.js Server',
-        description: 'We\'ll create a simple server using Node.js and Express that can handle HTTP requests. This will be the foundation of our API.',
+        title: 'Create Test Cases for Task Creation',
+        description: 'Test cases define what should happen in different scenarios. Let\'s write test cases for our task creation feature.',
         instructions: [
-          'Create a new file called server.js',
-          'Set up Express framework for handling web requests',
-          'Add a basic route that responds with a welcome message',
-          'Start the server on port 3000'
+          'Review the test cases below - these define expected behavior',
+          'Each test case has a scenario, input, and expected result',
+          'Notice how we test both success and failure cases',
+          'These test cases help developers know what to build'
         ],
-        language: 'javascript' as const,
-        codeBlock: {
-          code: `const express = require('express');
-const cors = require('cors');
-const app = express();
-const PORT = 3000;
+        language: 'typescript' as const,
+        startingCode: `// Test Cases for Task Creation Feature
+// These define what should happen in different scenarios
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// In-memory task storage (temporary)
-let tasks = [
-  {
-    id: 1,
-    title: "Evaluate Mr. Smith's Silly Walk Application",
-    description: "Review submitted video and assess walk silliness level.",
-    assignedTo: "John Cleese",
-    completed: false
-  }
-];
-
-// Routes
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Ministry of Silly Walks Task Management API',
-    version: '1.0.0',
-    endpoints: {
-      'GET /tasks': 'Get all tasks',
-      'POST /tasks': 'Create a new task',
-      'PUT /tasks/:id': 'Update a task',
-      'DELETE /tasks/:id': 'Delete a task'
+describe('Task Creation', () => {
+  
+  test('should create task with valid input', () => {
+    // Arrange
+    const validTask = {
+      title: 'Review silly walk application',
+      description: 'Evaluate Mr. Smith\\'s application',
+      assignedTo: 'John Cleese'
     }
-  });
-});
+    
+    // Act
+    const result = createTask(validTask)
+    
+    // Assert
+    expect(result.success).toBe(true)
+    expect(result.task.id).toBeDefined()
+    expect(result.task.title).toBe('Review silly walk application')
+    expect(result.task.status).toBe('pending')
+  })
 
-// Start server
-app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\\\${PORT}\`);
-});`,
-          explanations: [
-            {
-              line: "const express = require('express');\nconst cors = require('cors');",
-              explanation: "Import the Express framework for creating web servers and CORS for allowing cross-origin requests.",
-              businessContext: "Express simplifies server creation, while CORS enables your frontend (running on a different port) to communicate with the API."
-            },
-            {
-              line: "app.use(cors());\napp.use(express.json());",
-              explanation: "Configure middleware that handles cross-origin requests and automatically parses JSON data from requests.",
-              businessContext: "This enables secure communication between your frontend and backend, allowing data to flow between different parts of the system."
-            },
-            {
-              line: "let tasks = [ { id: 1, title: \"Evaluate Mr. Smith's...\" } ];",
-              explanation: "Create temporary in-memory storage for tasks with a sample task already included.",
-              businessContext: "This simulates a database with existing Ministry work - in production, this would be replaced by a real database."
-            },
-            {
-              line: "app.get('/', (req, res) => { res.json({ message: 'Ministry...' }); });",
-              explanation: "Create an API endpoint that responds to GET requests with information about available API functions.",
-              businessContext: "This serves as documentation for developers, listing what operations the API supports - essential for team collaboration."
-            },
-            {
-              line: "app.listen(PORT, () => { console.log(\`Server running...\`); });",
-              explanation: "Start the server and listen for incoming requests on port 3000, with a confirmation message.",
-              businessContext: "This makes the API available for your frontend to connect to - the foundation for multi-user functionality."
-            }
-          ]
-        },
-        startingCode: `// Ministry of Silly Walks Task Management API
-// server.js
-
-// Step 1: Import required packages
-// const express = require('express');
-// const cors = require('cors');
-
-// Step 2: Create Express app
-// const app = express();
-// const PORT = 3000;
-
-// Step 3: Add middleware
-// app.use(cors());
-// app.use(express.json());
-
-// Step 4: Create sample data
-// let tasks = [];
-
-// Step 5: Add welcome route
-// app.get('/', (req, res) => {
-//   res.json({ message: 'Welcome to Ministry API' });
-// });
-
-// Step 6: Start server
-// app.listen(PORT, () => {
-//   console.log('Server running on port', PORT);
-// });
-
-console.log('Ready to build your API server!');`,
-        targetCode: `const express = require('express');
-const cors = require('cors');
-const app = express();
-const PORT = 3000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// In-memory task storage (temporary)
-let tasks = [
-  {
-    id: 1,
-    title: "Evaluate Mr. Smith's Silly Walk Application",
-    description: "Review submitted video and assess walk silliness level.",
-    assignedTo: "John Cleese",
-    completed: false
-  }
-];
-
-// Routes
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Ministry of Silly Walks Task Management API',
-    version: '1.0.0',
-    endpoints: {
-      'GET /tasks': 'Get all tasks',
-      'POST /tasks': 'Create a new task',
-      'PUT /tasks/:id': 'Update a task',
-      'DELETE /tasks/:id': 'Delete a task'
+  test('should reject empty title', () => {
+    // Arrange
+    const invalidTask = {
+      title: '',
+      description: 'Some description',
+      assignedTo: 'John Cleese'
     }
-  });
-});
+    
+    // Act
+    const result = createTask(invalidTask)
+    
+    // Assert
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('Title is required')
+  })
 
-// Start server
-app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\\\${PORT}\`);
-});`,
+  test('should reject task with title longer than 100 characters', () => {
+    // Arrange
+    const longTitle = 'a'.repeat(101)
+    const invalidTask = {
+      title: longTitle,
+      description: 'Some description',
+      assignedTo: 'John Cleese'
+    }
+    
+    // Act
+    const result = createTask(invalidTask)
+    
+    // Assert
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('Title must be 100 characters or less')
+  })
+
+  test('should assign default status as pending', () => {
+    // Arrange
+    const validTask = {
+      title: 'Test task',
+      description: 'Test description',
+      assignedTo: 'Test User'
+    }
+    
+    // Act
+    const result = createTask(validTask)
+    
+    // Assert
+    expect(result.task.status).toBe('pending')
+    expect(result.task.createdAt).toBeDefined()
+  })
+
+})`,
+        targetCode: `// Test Cases for Task Creation Feature
+// These define what should happen in different scenarios
+
+describe('Task Creation', () => {
+  
+  test('should create task with valid input', () => {
+    // Arrange
+    const validTask = {
+      title: 'Review silly walk application',
+      description: 'Evaluate Mr. Smith\\'s application',
+      assignedTo: 'John Cleese'
+    }
+    
+    // Act
+    const result = createTask(validTask)
+    
+    // Assert
+    expect(result.success).toBe(true)
+    expect(result.task.id).toBeDefined()
+    expect(result.task.title).toBe('Review silly walk application')
+    expect(result.task.status).toBe('pending')
+  })
+
+  test('should reject empty title', () => {
+    // Arrange
+    const invalidTask = {
+      title: '',
+      description: 'Some description',
+      assignedTo: 'John Cleese'
+    }
+    
+    // Act
+    const result = createTask(invalidTask)
+    
+    // Assert
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('Title is required')
+  })
+
+  test('should reject task with title longer than 100 characters', () => {
+    // Arrange
+    const longTitle = 'a'.repeat(101)
+    const invalidTask = {
+      title: longTitle,
+      description: 'Some description',
+      assignedTo: 'John Cleese'
+    }
+    
+    // Act
+    const result = createTask(invalidTask)
+    
+    // Assert
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('Title must be 100 characters or less')
+  })
+
+  test('should assign default status as pending', () => {
+    // Arrange
+    const validTask = {
+      title: 'Test task',
+      description: 'Test description',
+      assignedTo: 'Test User'
+    }
+    
+    // Act
+    const result = createTask(validTask)
+    
+    // Assert
+    expect(result.task.status).toBe('pending')
+    expect(result.task.createdAt).toBeDefined()
+  })
+
+})`,
         hints: [
-          "Uncomment each section step by step, starting with the imports",
-          "Express is a popular Node.js framework that simplifies server creation",
-          "CORS (Cross-Origin Resource Sharing) allows your frontend to talk to the backend",
-          "The tasks array simulates a database - in production you'd use a real database",
-          "The welcome route provides API documentation for developers"
+          "Test cases follow a pattern: Arrange, Act, Assert",
+          "We test both success cases (valid input) and failure cases (invalid input)",
+          "Each test case has a clear, descriptive name",
+          "Assertions check that the actual result matches expected behavior",
+          "Edge cases like empty strings and length limits are important to test"
         ],
         explanation: {
-          whatIsHappening: "You've created your first backend server! Express handles incoming HTTP requests, CORS enables cross-domain communication, and the middleware automatically parses JSON data. The server listens on port 3000 and provides a welcome endpoint that documents the available API functions.",
-          whyItMatters: "This establishes the technical foundation for multi-user functionality. Instead of tasks living only in individual browsers, they can now be centrally managed and shared across the Ministry. The API documentation endpoint helps developers understand how to integrate with the system.",
-          realWorldConnection: "This is how enterprise applications work - separate frontend and backend systems communicating via APIs. When you write requirements about 'system integration' or 'data sharing between departments,' this is the type of infrastructure that enables those capabilities. Understanding server architecture helps you write more informed requirements about scalability and system design.",
+          whatIsHappening: "You're looking at automated test cases written in a testing framework. These tests define exactly what should happen when users create tasks in different scenarios. The tests use the 'Arrange, Act, Assert' pattern: set up the test data, perform the action, and check the results. Each test covers a specific scenario, from happy path (valid input) to edge cases (empty title, too long title).",
+          whyItMatters: "Test cases serve as both executable documentation and quality gates. They tell developers exactly what the feature should do, and they automatically check that the implementation works correctly. When you change code later, these tests will catch any breaking changes immediately. They also help ensure that edge cases and error conditions are properly handled.",
+          realWorldConnection: "When you write requirements like 'task titles must be between 1 and 100 characters' or 'system should display helpful error messages for invalid input,' you're defining what these test cases should verify. Good test cases translate requirements into specific, measurable outcomes. They bridge the gap between business requirements and technical implementation.",
           keyTerms: {
-            "Express.js": "A Node.js framework that simplifies creating web servers and APIs",
-            "Middleware": "Code that runs between receiving a request and sending a response",
-            "CORS": "Cross-Origin Resource Sharing - enables different domains to communicate",
-            "API endpoint": "A specific URL that accepts requests and returns responses"
+            "Test Case": "A specific scenario that tests one aspect of functionality",
+            "Arrange-Act-Assert": "A pattern for organizing test code: set up data, perform action, verify results",
+            "Assertion": "A statement that checks if the actual result matches the expected result",
+            "Edge Case": "Unusual or extreme input that might cause problems",
+            "Test Suite": "A collection of related test cases that test a feature or component"
           }
         }
       }
     },
     {
-      id: 'add-crud-endpoints',
-      title: 'Step 2: Adding CRUD Endpoints',
-      type: 'coding',
-      exercise: {
-        title: 'Create API Endpoints for Task Operations',
-        description: 'Now let\'s add the core API endpoints that allow creating, reading, updating, and deleting tasks through HTTP requests.',
-        instructions: [
-          'Add GET /tasks endpoint to retrieve all tasks',
-          'Add POST /tasks endpoint to create new tasks',
-          'Add PUT /tasks/:id endpoint to update existing tasks',
-          'Add DELETE /tasks/:id endpoint to remove tasks'
-        ],
-        language: 'javascript' as const,
-        codeBlock: {
-          code: `// GET all tasks
-app.get('/tasks', (req, res) => {
-  res.json({
-    success: true,
-    data: tasks,
-    count: tasks.length
-  });
-});
+      id: 'quality-assurance',
+      title: 'Step 3: Quality Assurance Process',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">Quality Assurance Process</h2>
+          <p className="text-lg text-gray-600">
+            Quality Assurance (QA) isn't just about finding bugs - it's about building quality into the entire development process.
+          </p>
 
-// POST new task
-app.post('/tasks', (req, res) => {
-  const { title, description, assignedTo } = req.body;
-  
-  if (!title) {
-    return res.status(400).json({
-      success: false,
-      error: 'Title is required'
-    });
-  }
-  
-  const newTask = {
-    id: tasks.length + 1,
-    title,
-    description: description || 'Status: Pending',
-    assignedTo: assignedTo || 'Current User',
-    completed: false
-  };
-  
-  tasks.push(newTask);
-  res.status(201).json({
-    success: true,
-    data: newTask
-  });
-});
+          <div className="explanation-box">
+            <div className="explanation-title">QA Throughout Development</div>
+            <div className="explanation-text">
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                  <div>
+                    <h4 className="font-medium">Requirements Review</h4>
+                    <p className="text-sm text-gray-600">QA reviews requirements for clarity and testability</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                  <div>
+                    <h4 className="font-medium">Test Planning</h4>
+                    <p className="text-sm text-gray-600">Create test cases and define testing strategy</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                  <div>
+                    <h4 className="font-medium">Development Testing</h4>
+                    <p className="text-sm text-gray-600">Developers write and run unit tests</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                  <div>
+                    <h4 className="font-medium">Integration Testing</h4>
+                    <p className="text-sm text-gray-600">Test how different parts work together</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                  <div>
+                    <h4 className="font-medium">User Acceptance Testing</h4>
+                    <p className="text-sm text-gray-600">Business users verify the system meets their needs</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-// PUT update task
-app.put('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  const taskIndex = tasks.findIndex(task => task.id === taskId);
-  
-  if (taskIndex === -1) {
-    return res.status(404).json({
-      success: false,
-      error: 'Task not found'
-    });
-  }
-  
-  tasks[taskIndex] = { ...tasks[taskIndex], ...req.body };
-  res.json({
-    success: true,
-    data: tasks[taskIndex]
-  });
-});
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <h4 className="font-medium text-green-900 mb-3">Automated Testing Benefits</h4>
+              <ul className="text-sm text-green-800 space-y-2">
+                <li>• Runs fast and frequently</li>
+                <li>• Catches regressions immediately</li>
+                <li>• Provides consistent results</li>
+                <li>• Enables confident code changes</li>
+                <li>• Reduces manual testing burden</li>
+              </ul>
+            </div>
 
-// DELETE task
-app.delete('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  const taskIndex = tasks.findIndex(task => task.id === taskId);
-  
-  if (taskIndex === -1) {
-    return res.status(404).json({
-      success: false,
-      error: 'Task not found'
-    });
-  }
-  
-  const deletedTask = tasks.splice(taskIndex, 1)[0];
-  res.json({
-    success: true,
-    data: deletedTask
-  });
-});`,
-          explanations: [
-            {
-              line: "app.get('/tasks', (req, res) => { res.json({ success: true, data: tasks }); });",
-              explanation: "Create an endpoint that responds to GET requests at /tasks by returning all tasks in JSON format.",
-              businessContext: "This implements 'users should be able to view all current tasks' - the foundation for shared task visibility across the Ministry."
-            },
-            {
-              line: "app.post('/tasks', (req, res) => { const { title, description, assignedTo } = req.body;",
-              explanation: "Create an endpoint for POST requests that extracts task data from the request body.",
-              businessContext: "This handles 'staff should be able to create new tasks' and validates that required information is provided."
-            },
-            {
-              line: "if (!title) { return res.status(400).json({ success: false, error: 'Title is required' }); }",
-              explanation: "Validate that required fields are provided and return an error if not.",
-              businessContext: "This enforces the business rule 'all tasks must have a title' and provides clear feedback when requirements aren't met."
-            },
-            {
-              line: "app.put('/tasks/:id', (req, res) => { const taskId = parseInt(req.params.id);",
-              explanation: "Create an endpoint for updating tasks, extracting the task ID from the URL parameter.",
-              businessContext: "This enables 'users should be able to edit existing tasks' with proper identification of which task to modify."
-            },
-            {
-              line: "app.delete('/tasks/:id', (req, res) => { const deletedTask = tasks.splice(taskIndex, 1)[0];",
-              explanation: "Create an endpoint for deleting tasks and return the deleted task as confirmation.",
-              businessContext: "This implements 'users should be able to remove completed tasks' with confirmation of what was deleted."
-            }
-          ]
-        },
-        startingCode: `const express = require('express');
-const cors = require('cors');
-const app = express();
-const PORT = 3000;
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-3">Manual Testing Benefits</h4>
+              <ul className="text-sm text-blue-800 space-y-2">
+                <li>• Catches usability issues</li>
+                <li>• Tests real user scenarios</li>
+                <li>• Evaluates subjective qualities</li>
+                <li>• Explores edge cases creatively</li>
+                <li>• Validates business logic</li>
+              </ul>
+            </div>
+          </div>
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+          <div className="ministry-content">
+            <h4 className="font-medium mb-3">Ministry QA Checklist</h4>
+            <div className="bg-white border border-gray-200 rounded p-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-medium text-gray-900 mb-2">🔍 Functionality</h5>
+                  <ul className="text-sm text-gray-700 space-y-1">
+                    <li>• All features work as specified</li>
+                    <li>• Error messages are helpful</li>
+                    <li>• Data validation works correctly</li>
+                    <li>• Edge cases are handled</li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium text-gray-900 mb-2">🎨 User Experience</h5>
+                  <ul className="text-sm text-gray-700 space-y-1">
+                    <li>• Interface is intuitive</li>
+                    <li>• Loading times are acceptable</li>
+                    <li>• Mobile experience works</li>
+                    <li>• Accessibility requirements met</li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium text-gray-900 mb-2">🔒 Security</h5>
+                  <ul className="text-sm text-gray-700 space-y-1">
+                    <li>• User authentication works</li>
+                    <li>• Data is properly protected</li>
+                    <li>• Input validation prevents attacks</li>
+                    <li>• Permissions are enforced</li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium text-gray-900 mb-2">⚡ Performance</h5>
+                  <ul className="text-sm text-gray-700 space-y-1">
+                    <li>• Pages load quickly</li>
+                    <li>• System handles expected load</li>
+                    <li>• Database queries are efficient</li>
+                    <li>• Memory usage is reasonable</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
 
-// In-memory task storage (temporary)
-let tasks = [
-  {
-    id: 1,
-    title: "Evaluate Mr. Smith's Silly Walk Application",
-    description: "Review submitted video and assess walk silliness level.",
-    assignedTo: "John Cleese",
-    completed: false
-  }
-];
+          <div className="concept-callout">
+            <div className="concept-title">
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: Quality Requirements
+            </div>
+            <p className="concept-text">
+              Quality isn't just about bugs - it includes performance, usability, security, and maintainability. When writing requirements, consider: "How fast should this be?" "What happens if this fails?" "How intuitive should this be for new users?" "What are the security implications?" Including quality requirements helps teams build better software from the start.
+            </p>
+          </div>
 
-// Routes
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Ministry of Silly Walks Task Management API',
-    version: '1.0.0',
-    endpoints: {
-      'GET /tasks': 'Get all tasks',
-      'POST /tasks': 'Create a new task',
-      'PUT /tasks/:id': 'Update a task',
-      'DELETE /tasks/:id': 'Delete a task'
-    }
-  });
-});
-
-// Step 2: Add CRUD endpoints here
-
-// Start server
-app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\\\${PORT}\`);
-});`,
-        targetCode: `const express = require('express');
-const cors = require('cors');
-const app = express();
-const PORT = 3000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// In-memory task storage (temporary)
-let tasks = [
-  {
-    id: 1,
-    title: "Evaluate Mr. Smith's Silly Walk Application",
-    description: "Review submitted video and assess walk silliness level.",
-    assignedTo: "John Cleese",
-    completed: false
-  }
-];
-
-// Routes
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Ministry of Silly Walks Task Management API',
-    version: '1.0.0',
-    endpoints: {
-      'GET /tasks': 'Get all tasks',
-      'POST /tasks': 'Create a new task',
-      'PUT /tasks/:id': 'Update a task',
-      'DELETE /tasks/:id': 'Delete a task'
-    }
-  });
-});
-
-// GET all tasks
-app.get('/tasks', (req, res) => {
-  res.json({
-    success: true,
-    data: tasks,
-    count: tasks.length
-  });
-});
-
-// POST new task
-app.post('/tasks', (req, res) => {
-  const { title, description, assignedTo } = req.body;
-  
-  if (!title) {
-    return res.status(400).json({
-      success: false,
-      error: 'Title is required'
-    });
-  }
-  
-  const newTask = {
-    id: tasks.length + 1,
-    title,
-    description: description || 'Status: Pending',
-    assignedTo: assignedTo || 'Current User',
-    completed: false
-  };
-  
-  tasks.push(newTask);
-  res.status(201).json({
-    success: true,
-    data: newTask
-  });
-});
-
-// PUT update task
-app.put('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  const taskIndex = tasks.findIndex(task => task.id === taskId);
-  
-  if (taskIndex === -1) {
-    return res.status(404).json({
-      success: false,
-      error: 'Task not found'
-    });
-  }
-  
-  tasks[taskIndex] = { ...tasks[taskIndex], ...req.body };
-  res.json({
-    success: true,
-    data: tasks[taskIndex]
-  });
-});
-
-// DELETE task
-app.delete('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  const taskIndex = tasks.findIndex(task => task.id === taskId);
-  
-  if (taskIndex === -1) {
-    return res.status(404).json({
-      success: false,
-      error: 'Task not found'
-    });
-  }
-  
-  const deletedTask = tasks.splice(taskIndex, 1)[0];
-  res.json({
-    success: true,
-    data: deletedTask
-  });
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\\\${PORT}\`);
-});`,
-        hints: [
-          "Add the four CRUD endpoints after the welcome route",
-          "GET /tasks returns all tasks, POST /tasks creates new ones",
-          "PUT /tasks/:id updates a specific task, DELETE /tasks/:id removes it",
-          "Use req.params.id to get the task ID from the URL",
-          "Always validate required fields and handle errors gracefully"
-        ],
-        explanation: {
-          whatIsHappening: "You've built a complete REST API with all four CRUD operations! Each endpoint handles a specific HTTP method (GET, POST, PUT, DELETE) and includes proper error handling, data validation, and structured JSON responses. The API can now handle all the task management operations your frontend needs.",
-          whyItMatters: "This creates the technical foundation for enterprise-level task management. Multiple users can now interact with the same data source, enabling collaboration, reporting, and centralized management. The structured error handling ensures reliable operation and clear feedback when something goes wrong.",
-          realWorldConnection: "This is how real business applications work - REST APIs with standardized endpoints that different systems can integrate with. When you write requirements about 'system integration' or 'data APIs for reporting,' this is the type of implementation that enables those capabilities. Understanding API design helps you write more precise integration requirements.",
-          keyTerms: {
-            "REST API": "REpresentational State Transfer - a standard way of designing web APIs",
-            "HTTP methods": "GET (read), POST (create), PUT (update), DELETE (remove)",
-            "Status codes": "Numeric codes like 200 (success), 400 (bad request), 404 (not found)",
-            "Request parameters": "Data passed in URLs (:id) or request bodies (JSON)"
-          }
-        }
-      }
-    },
-    {
-      id: 'test-api-endpoints',
-      title: 'Step 3: Testing the API',
-      type: 'coding',
-      exercise: {
-        title: 'Test API Endpoints with Mock Data',
-        description: 'Let\'s create a test page that demonstrates how API endpoints work by simulating server responses with mock data and realistic API patterns.',
-        instructions: [
-          'Create an HTML page with buttons to test each API operation',
-          'Use JavaScript to simulate realistic API responses with mock data',
-          'Display the API responses in a readable format to show data structure',
-          'Test GET, POST, PUT, and DELETE operations with simulated server delay'
-        ],
-        language: 'html' as const,
-        startingCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry API Tester</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        button {
-            background-color: #003d7a;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover {
-            background-color: #002a5c;
-        }
-        #output {
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px;
-            margin-top: 20px;
-            white-space: pre-wrap;
-            font-family: monospace;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks - API Tester</h1>
-    <p>Test the backend API endpoints</p>
-    
-    <div>
-        <h3>Test Operations:</h3>
-        <button onclick="getAllTasks()">GET All Tasks</button>
-        <button onclick="createTask()">POST New Task</button>
-        <button onclick="updateTask()">PUT Update Task</button>
-        <button onclick="deleteTask()">DELETE Task</button>
-    </div>
-    
-    <div id="output">Click a button to test the API...</div>
-    
-    <script>
-        const API_BASE = 'http://localhost:3000';
-        
-        function displayOutput(title, data) {
-            const output = document.getElementById('output');
-            output.textContent = \`\\\${title}:\\n\\\${JSON.stringify(data, null, 2)}\`;
-        }
-        
-        // Mock API data for demo purposes
-        let mockTasks = [
-            {
-                id: 1,
-                title: "Evaluate Mr. Smith's Silly Walk Application",
-                description: "Review submitted video and assess walk silliness level",
-                assignedTo: "John Cleese",
-                status: "pending",
-                priority: "high",
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: 2,
-                title: "Process Mrs. Johnson's Walk Certification",
-                description: "Complete certification paperwork for approved walk",
-                assignedTo: "Terry Jones",
-                status: "in-progress",
-                priority: "medium",
-                createdAt: new Date().toISOString()
-            }
-        ];
-        
-        let nextId = 3;
-        
-        // Mock API function to simulate server delay
-        function simulateApiCall(data, delay = 500) {
-            return new Promise((resolve) => {
-                setTimeout(() => resolve(data), delay);
-            });
-        }
-        
-        async function getAllTasks() {
-            try {
-                const response = {
-                    success: true,
-                    data: mockTasks,
-                    count: mockTasks.length
-                };
-                const data = await simulateApiCall(response);
-                displayOutput('GET /api/tasks', data);
-            } catch (error) {
-                displayOutput('Error', { error: error.message });
-            }
-        }
-        
-        async function createTask() {
-            try {
-                const newTask = {
-                    id: nextId++,
-                    title: 'Test Terry Jones Walk Review',
-                    description: 'Assess comedic timing and silly factor',
-                    assignedTo: 'Ministry Reviewer',
-                    status: 'pending',
-                    priority: 'medium',
-                    createdAt: new Date().toISOString()
-                };
-                
-                mockTasks.push(newTask);
-                
-                const response = {
-                    success: true,
-                    data: newTask
-                };
-                const data = await simulateApiCall(response);
-                displayOutput('POST /api/tasks', data);
-            } catch (error) {
-                displayOutput('Error', { error: error.message });
-            }
-        }
-        
-        async function updateTask() {
-            try {
-                if (mockTasks.length === 0) {
-                    throw new Error('No tasks to update');
-                }
-                
-                const taskToUpdate = mockTasks[0];
-                taskToUpdate.status = 'completed';
-                taskToUpdate.description = 'Updated: ' + taskToUpdate.description;
-                
-                const response = {
-                    success: true,
-                    data: taskToUpdate
-                };
-                const data = await simulateApiCall(response);
-                displayOutput('PUT /api/tasks/' + taskToUpdate.id, data);
-            } catch (error) {
-                displayOutput('Error', { error: error.message });
-            }
-        }
-        
-        async function deleteTask() {
-            try {
-                if (mockTasks.length === 0) {
-                    throw new Error('No tasks to delete');
-                }
-                
-                const taskToDelete = mockTasks.pop();
-                
-                const response = {
-                    success: true,
-                    message: 'Task deleted successfully',
-                    deletedTask: taskToDelete
-                };
-                const data = await simulateApiCall(response);
-                displayOutput('DELETE /api/tasks/' + taskToDelete.id, data);
-            } catch (error) {
-                displayOutput('Error', { error: error.message });
-            }
-        }
-        
-    </script>
-</body>
-</html>`,
-        targetCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry API Tester</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        button {
-            background-color: #003d7a;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover {
-            background-color: #002a5c;
-        }
-        #output {
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px;
-            margin-top: 20px;
-            white-space: pre-wrap;
-            font-family: monospace;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks - API Tester</h1>
-    <p>Test the backend API endpoints</p>
-    
-    <div>
-        <h3>Test Operations:</h3>
-        <button onclick="getAllTasks()">GET All Tasks</button>
-        <button onclick="createTask()">POST New Task</button>
-        <button onclick="updateTask()">PUT Update Task</button>
-        <button onclick="deleteTask()">DELETE Task</button>
-    </div>
-    
-    <div id="output">Click a button to test the API...</div>
-    
-    <script>
-        // Mock API data for demo purposes
-        let mockTasks = [
-            {
-                id: 1,
-                title: "Evaluate Mr. Smith's Silly Walk Application",
-                description: "Review submitted video and assess walk silliness level",
-                assignedTo: "John Cleese",
-                status: "pending",
-                priority: "high",
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: 2,
-                title: "Process Mrs. Johnson's Walk Certification",
-                description: "Complete certification paperwork for approved walk",
-                assignedTo: "Terry Jones",
-                status: "in-progress",
-                priority: "medium",
-                createdAt: new Date().toISOString()
-            }
-        ];
-        
-        let nextId = 3;
-        
-        function displayOutput(title, data) {
-            const output = document.getElementById('output');
-            output.textContent = \`\\\${title}:\\n\\\${JSON.stringify(data, null, 2)}\`;
-        }
-        
-        // Mock API function to simulate server delay
-        function simulateApiCall(data, delay = 500) {
-            return new Promise((resolve) => {
-                setTimeout(() => resolve(data), delay);
-            });
-        }
-        
-        async function getAllTasks() {
-            try {
-                const response = {
-                    success: true,
-                    data: mockTasks,
-                    count: mockTasks.length
-                };
-                const data = await simulateApiCall(response);
-                displayOutput('GET /api/tasks', data);
-            } catch (error) {
-                displayOutput('Error', { error: error.message });
-            }
-        }
-        
-        async function createTask() {
-            try {
-                const newTask = {
-                    id: nextId++,
-                    title: 'Test Terry Jones Walk Review',
-                    description: 'Assess comedic timing and silly factor',
-                    assignedTo: 'Ministry Reviewer',
-                    status: 'pending',
-                    priority: 'medium',
-                    createdAt: new Date().toISOString()
-                };
-                
-                mockTasks.push(newTask);
-                
-                const response = {
-                    success: true,
-                    data: newTask,
-                    message: "Task created successfully"
-                };
-                
-                const data = await simulateApiCall(response);
-                displayOutput('POST /api/tasks', data);
-            } catch (error) {
-                displayOutput('Error', { error: error.message });
-            }
-        }
-        
-        async function updateTask() {
-            try {
-                const taskId = 1;
-                const taskIndex = mockTasks.findIndex(t => t.id === taskId);
-                
-                if (taskIndex === -1) {
-                    throw new Error('Task not found');
-                }
-                
-                // Update the task
-                mockTasks[taskIndex] = {
-                    ...mockTasks[taskIndex],
-                    completed: true,
-                    description: 'COMPLETED: Approved with high silliness rating',
-                    status: 'completed',
-                    updatedAt: new Date().toISOString()
-                };
-                
-                const response = {
-                    success: true,
-                    data: mockTasks[taskIndex],
-                    message: "Task updated successfully"
-                };
-                
-                const data = await simulateApiCall(response);
-                displayOutput('PUT /api/tasks/1', data);
-            } catch (error) {
-                displayOutput('Error', { error: error.message });
-            }
-        }
-        
-        async function deleteTask() {
-            try {
-                const taskId = 2;
-                const taskIndex = mockTasks.findIndex(t => t.id === taskId);
-                
-                if (taskIndex === -1) {
-                    throw new Error('Task not found');
-                }
-                
-                // Delete the task
-                const deletedTask = mockTasks.splice(taskIndex, 1)[0];
-                
-                const response = {
-                    success: true,
-                    data: deletedTask,
-                    message: "Task deleted successfully"
-                };
-                
-                const data = await simulateApiCall(response);
-                displayOutput('DELETE /api/tasks/2', data);
-            } catch (error) {
-                displayOutput('Error', { error: error.message });
-            }
-        }
-    </script>
-</body>
-</html>`,
-        hints: [
-          "Use mock data stored in JavaScript variables to simulate a database",
-          "Use async/await with simulateApiCall() to create realistic response timing",
-          "Each function should manipulate the mockTasks array to simulate server operations",
-          "Call displayOutput() to show the API response format",
-          "The try/catch blocks handle errors gracefully, just like real API calls"
-        ],
-        explanation: {
-          whatIsHappening: "You've created a test interface that demonstrates how API endpoints work by simulating realistic server responses! The mock data approach shows how backends store and manipulate data, while the simulated delays make it feel like real network requests. Each button demonstrates a different CRUD operation, showing how data flows between frontend and backend systems.",
-          whyItMatters: "This demonstrates the complete request-response cycle that powers modern web applications. While this uses mock data, the patterns are identical to real API interactions - the same JSON structures, async operations, and error handling. Understanding these patterns helps you write better requirements about data exchange and system integration.",
-          realWorldConnection: "This testing approach mirrors how development teams prototype APIs and how Quality Assurance teams validate endpoints. When you write requirements about 'system testing' or 'API documentation,' this is the type of validation that ensures requirements are properly implemented. The mock approach also shows how frontend and backend development can proceed in parallel.",
-          keyTerms: {
-            "Mock API": "Simulated server responses used for testing and development",
-            "Async/await": "JavaScript pattern for handling asynchronous operations like API calls",
-            "CRUD operations": "Create, Read, Update, Delete - the fundamental data operations",
-            "API testing": "Verifying that endpoints work correctly and handle errors properly"
-          }
-        }
-      }
+          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
+            <h3 className="text-lg font-bold mb-3">🎯 Key Takeaways</h3>
+            <ul className="space-y-2">
+              <li>• Testing should happen throughout development, not just at the end</li>
+              <li>• Different types of testing catch different types of problems</li>
+              <li>• Automated tests provide fast feedback, manual tests catch UX issues</li>
+              <li>• Quality requirements are as important as functional requirements</li>
+              <li>• Good testing practices lead to more reliable, maintainable software</li>
+            </ul>
+          </div>
+        </div>
+      )
     }
   ]
 
-  // Load progress on mount
   useEffect(() => {
     const progress = getProgress()
     const completed = steps
       .map((step, index) => isStepComplete(step.id) ? index : -1)
       .filter(index => index !== -1)
     setCompletedSteps(completed)
-  }, [steps])
+  }, [])
 
   const markStepCompleteLocal = (index: number) => {
     if (!completedSteps.includes(index)) {
@@ -954,26 +567,24 @@ app.listen(PORT, () => {
       setCompletedSteps(newCompleted)
       markStepComplete(steps[index].id)
     }
-  }
+  };
 
   const allStepsComplete = completedSteps.length === steps.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Breadcrumb Navigation */}
       <TutorialBreadcrumb />
       
-      {/* Header */
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/tutorial/chapter-4" className="flex items-center text-gray-600 hover:text-gray-900">
+            <Link href={getUrlWithParams("/tutorial/chapter-4")} className="flex items-center text-gray-600 hover:text-gray-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Chapter 4
             </Link>
             <div className="text-center">
-              <h1 className="text-xl font-bold text-gray-900">Chapter 5: Building the Backend API</h1>
-              <p className="text-sm text-gray-600">Creating server endpoints for multi-user functionality</p>
+              <h1 className="text-xl font-bold text-gray-900">Chapter 5: Testing & QA</h1>
+              <p className="text-sm text-gray-600">Quality assurance practices</p>
             </div>
             <div className="text-sm text-gray-500">
               Step {currentStep + 1} of {steps.length}
@@ -984,7 +595,6 @@ app.listen(PORT, () => {
 
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Progress Sidebar */}
           <div className="lg:col-span-1">
             <div className="tutorial-card sticky top-8">
               <h3 className="font-semibold text-gray-900 mb-4">Chapter 5 Progress</h3>
@@ -1019,7 +629,7 @@ app.listen(PORT, () => {
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800 font-medium mb-2">Chapter 5 Complete!</p>
                   <Link 
-                    href="/tutorial/chapter-6" 
+                    href={getUrlWithParams("/tutorial/chapter-6")} 
                     className="inline-flex items-center text-sm text-green-700 hover:text-green-900"
                   >
                     Start Chapter 6
@@ -1030,10 +640,8 @@ app.listen(PORT, () => {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-3">
             <div className="space-y-8">
-              {/* Progress Bar */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-700">Chapter Progress</span>
@@ -1049,60 +657,42 @@ app.listen(PORT, () => {
                 </div>
               </div>
 
-              {/* Step Content */}
-              {steps[currentStep].type === 'explanation' ? (
-                <div className="tutorial-card">
-                  {steps[currentStep].content}
-                  
-                  <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
-                    <button
-                      onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                      disabled={currentStep === 0}
-                      className={`flex items-center ${
-                        currentStep === 0 
-                          ? 'text-gray-400 cursor-not-allowed' 
-                          : 'text-tutorial-primary hover:text-blue-700'
-                      }`}
-                    >
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Previous
-                    </button>
+              <div className="tutorial-card">
+                {steps[currentStep].content}
+                
+                <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
+                  <button
+                    onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                    disabled={currentStep === 0}
+                    className={`flex items-center ${
+                      currentStep === 0 
+                        ? 'text-gray-400 cursor-not-allowed' 
+                        : 'text-tutorial-primary hover:text-blue-700'
+                    }`}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Previous
+                  </button>
 
-                    <button
-                      onClick={() => {
-                        markStepCompleteLocal(currentStep)
-                        if (currentStep < steps.length - 1) {
-                          setCurrentStep(currentStep + 1)
-                        }
-                      }}
-                      className="tutorial-button-primary"
-                    >
-                      {completedSteps.includes(currentStep) 
-                        ? currentStep === steps.length - 1 
-                          ? 'Complete Chapter' 
-                          : 'Next Step'
-                        : 'Build the API!'
-                      }
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <CodeEditor
-                  {...steps[currentStep].exercise!}
-                  stepId={steps[currentStep].id}
-                  currentChapter={5}
-                  showFileTree={true}
-                  onComplete={() => {
-                    markStepCompleteLocal(currentStep)
-                    setTimeout(() => {
+                  <button
+                    onClick={() => {
+                      markStepCompleteLocal(currentStep)
                       if (currentStep < steps.length - 1) {
                         setCurrentStep(currentStep + 1)
                       }
-                    }, 2000)
-                  }}
-                />
-              )}
+                    }}
+                    className="tutorial-button-primary"
+                  >
+                    {completedSteps.includes(currentStep) 
+                      ? currentStep === steps.length - 1 
+                        ? 'Complete Chapter' 
+                        : 'Next Step'
+                      : 'Mark Complete & Continue'
+                    }
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

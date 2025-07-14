@@ -2,1245 +2,782 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, CheckCircle, Database, Lightbulb, Code, Save, Trash2 } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter4() {
+  const searchParams = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
 
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
+
   const steps = [
     {
-      id: 'data-management-introduction',
-      title: 'Understanding Data Management',
+      id: 'backend-introduction',
+      title: 'Understanding Backend Development',
       type: 'explanation',
       content: (
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Chapter 4: Advanced JavaScript & Data Management</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Chapter 4: Backend Development</h2>
           <p className="text-lg text-gray-600">
-            Excellent! Your task manager can now add tasks. But what happens when users refresh the page? All their tasks disappear! Let's fix this and add more advanced features like editing and deleting tasks.
+            Great work! Your task manager now works perfectly in the browser. But what happens when users close the page? All their tasks disappear! This is where backend development comes in.
           </p>
 
           <div className="explanation-box">
-            <div className="explanation-title">What is Data Management?</div>
+            <div className="explanation-title">What is Backend Development?</div>
             <div className="explanation-text">
               <p className="mb-3">
-                Data management is about storing, organizing, and manipulating information in your application. Right now, tasks only exist in the browser's memory while the page is loaded.
+                Backend development handles everything users don't see: data storage, user authentication, business logic, and communication between different systems.
               </p>
-              <ul className="list-disc list-inside space-y-2">
-                <li><strong>Temporary Storage:</strong> Data in variables disappears when page refreshes</li>
-                <li><strong>Persistent Storage:</strong> Data saved to localStorage, databases, or files</li>
-                <li><strong>CRUD Operations:</strong> Create, Read, Update, Delete - the four basic data operations</li>
-              </ul>
-              <p className="mt-3">
-                Think of it like filing cabinets vs. your desk: your desk (memory) gets cleared each day, but filing cabinets (storage) keep documents permanently.
-              </p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-medium mb-2">Frontend (What you've built)</h4>
+                  <ul className="text-sm space-y-1">
+                    <li>• User interface</li>
+                    <li>• Click handlers</li>
+                    <li>• Visual feedback</li>
+                    <li>• Browser interactions</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-medium mb-2">Backend (What we'll explore)</h4>
+                  <ul className="text-sm space-y-1">
+                    <li>• Data storage</li>
+                    <li>• Server logic</li>
+                    <li>• API endpoints</li>
+                    <li>• Database operations</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="ministry-header">
-            <h3 className="text-xl font-bold">Why the Ministry Needs Persistent Data</h3>
+            <h3 className="text-xl font-bold">Why the Ministry Needs Backend Systems</h3>
           </div>
           <div className="ministry-content">
             <p className="mb-4">
-              The Ministry staff can't lose their work every time they refresh their browser. John Cleese needs to track walk evaluations across multiple sessions, and the system needs to support real workflow requirements:
+              The Ministry of Silly Walks processes thousands of applications annually. A frontend-only system would lose all data when staff close their browsers!
             </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                <h4 className="font-medium text-red-900 mb-2">Current Problems</h4>
-                <ul className="text-sm text-red-800 space-y-1">
-                  <li>• Tasks disappear on page refresh</li>
-                  <li>• Can't edit task details after creation</li>
-                  <li>• No way to delete completed tasks</li>
-                  <li>• No task status tracking</li>
-                </ul>
+            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+              <h4 className="font-medium text-red-900 mb-2">Current Problems</h4>
+              <ul className="text-sm text-red-800 space-y-1">
+                <li>• Tasks disappear when page refreshes</li>
+                <li>• No way to share tasks between staff</li>
+                <li>• No permanent record of silly walk evaluations</li>
+                <li>• No user accounts or permissions</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: System Architecture
+            </div>
+            <p className="concept-text">
+              Understanding the difference between frontend and backend helps you write better requirements. When you specify "user data must persist between sessions" or "multiple users should access the same information," you're describing backend requirements. This separation helps teams understand what needs to be built where.
+            </p>
+          </div>
+
+          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
+            <h3 className="text-lg font-bold mb-3">🎯 Learning Objectives</h3>
+            <ul className="space-y-2">
+              <li>• Understand client-server architecture</li>
+              <li>• Learn about APIs and data persistence</li>
+              <li>• Explore database concepts</li>
+              <li>• See how requirements translate to backend features</li>
+            </ul>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'api-concepts',
+      title: 'Step 1: Understanding APIs',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">Understanding APIs</h2>
+          <p className="text-lg text-gray-600">
+            APIs (Application Programming Interfaces) are how your frontend communicates with the backend. Think of them as the waiter in a restaurant.
+          </p>
+
+          <div className="explanation-box">
+            <div className="explanation-title">The Restaurant Analogy</div>
+            <div className="explanation-text">
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <span className="text-2xl">👤</span>
+                  </div>
+                  <h4 className="font-medium">Customer</h4>
+                  <p className="text-sm text-gray-600">Frontend (Your task manager)</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <span className="text-2xl">🍽️</span>
+                  </div>
+                  <h4 className="font-medium">Waiter</h4>
+                  <p className="text-sm text-gray-600">API (Takes orders, brings food)</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <span className="text-2xl">👨‍🍳</span>
+                  </div>
+                  <h4 className="font-medium">Kitchen</h4>
+                  <p className="text-sm text-gray-600">Backend (Processes data)</p>
+                </div>
               </div>
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h4 className="font-medium text-green-900 mb-2">Required Features</h4>
-                <ul className="text-sm text-green-800 space-y-1">
-                  <li>• Persistent task storage</li>
-                  <li>• Edit task descriptions</li>
-                  <li>• Delete unwanted tasks</li>
-                  <li>• Track task completion status</li>
-                </ul>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-3">Common API Operations</h4>
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <span className="bg-green-500 text-white px-2 py-1 rounded text-xs font-mono mr-2">GET</span>
+                  <span className="text-sm">Retrieve data (like viewing tasks)</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs font-mono mr-2">POST</span>
+                  <span className="text-sm">Create new data (like adding tasks)</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-mono mr-2">PUT</span>
+                  <span className="text-sm">Update existing data</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="bg-red-500 text-white px-2 py-1 rounded text-xs font-mono mr-2">DELETE</span>
+                  <span className="text-sm">Remove data</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <h4 className="font-medium text-green-900 mb-3">For Our Task Manager</h4>
+              <div className="space-y-2 text-sm text-green-800">
+                <div>• <strong>GET /tasks</strong> - Load all tasks</div>
+                <div>• <strong>POST /tasks</strong> - Create new task</div>
+                <div>• <strong>PUT /tasks/123</strong> - Update task #123</div>
+                <div>• <strong>DELETE /tasks/123</strong> - Remove task #123</div>
               </div>
             </div>
           </div>
 
           <div className="concept-callout">
             <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
-              BA Insight: Data Requirements
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: API Requirements
             </div>
             <p className="concept-text">
-              When you write requirements like "users should be able to edit their entries" or "data should persist between sessions," you're defining data management needs. Understanding concepts like CRUD operations and storage types helps you write more precise requirements and have informed discussions about data architecture decisions.
-            </p>
-          </div>
-
-          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objective</h3>
-            <p>
-              In this chapter, you'll implement localStorage to persist tasks, add edit/delete functionality, and understand how data flows through web applications. You'll see how business requirements translate into specific data management features.
+              When writing requirements, you're essentially defining what APIs need to exist. "Users should be able to create tasks" becomes "POST /tasks endpoint." "Users should view their task history" becomes "GET /tasks endpoint with filtering." Understanding APIs helps you write more precise technical requirements.
             </p>
           </div>
         </div>
       )
     },
     {
-      id: 'add-local-storage',
-      title: 'Step 1: Adding Persistent Storage',
-      type: 'coding',
-      exercise: {
-        title: 'Save Tasks to Browser Storage',
-        description: 'Let\'s add localStorage to save tasks permanently. This means tasks won\'t disappear when users refresh the page.',
-        instructions: [
-          'Find the comment "// Step 1: Add localStorage functions here" at the top of the script',
-          'Add functions to save and load tasks from localStorage',
-          'Update the add task code to save to storage',
-          'Add code to load existing tasks when the page loads'
-        ],
-        language: 'html' as const,
-        codeBlock: {
-          code: `// Save tasks to localStorage
-function saveTasks(tasks) {
-    localStorage.setItem('ministryTasks', JSON.stringify(tasks));
-}
+      id: 'database-concepts',
+      title: 'Step 2: Understanding Databases',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">Understanding Databases</h2>
+          <p className="text-lg text-gray-600">
+            Databases are where your application's data lives permanently. Think of them as organized filing cabinets that never lose information.
+          </p>
 
-// Load tasks from localStorage
-function loadTasks() {
-    const saved = localStorage.getItem('ministryTasks');
-    return saved ? JSON.parse(saved) : [];
-}
+          <div className="explanation-box">
+            <div className="explanation-title">Database Tables</div>
+            <div className="explanation-text">
+              <p className="mb-3">
+                Data is organized in tables (like spreadsheets). Each row is a record, each column is a field.
+              </p>
+              <div className="bg-white border border-gray-200 rounded overflow-hidden">
+                <div className="bg-gray-50 p-2 border-b">
+                  <h4 className="font-medium text-sm">Tasks Table</h4>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-3 py-2 text-left">id</th>
+                        <th className="px-3 py-2 text-left">title</th>
+                        <th className="px-3 py-2 text-left">description</th>
+                        <th className="px-3 py-2 text-left">assigned_to</th>
+                        <th className="px-3 py-2 text-left">status</th>
+                        <th className="px-3 py-2 text-left">created_at</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-t">
+                        <td className="px-3 py-2">1</td>
+                        <td className="px-3 py-2">Review Mr. Smith's Application</td>
+                        <td className="px-3 py-2">Assess walk silliness level</td>
+                        <td className="px-3 py-2">John Cleese</td>
+                        <td className="px-3 py-2">pending</td>
+                        <td className="px-3 py-2">2024-01-15</td>
+                      </tr>
+                      <tr className="border-t bg-gray-50">
+                        <td className="px-3 py-2">2</td>
+                        <td className="px-3 py-2">Update Ministry Website</td>
+                        <td className="px-3 py-2">Add new silly walk guidelines</td>
+                        <td className="px-3 py-2">Eric Idle</td>
+                        <td className="px-3 py-2">completed</td>
+                        <td className="px-3 py-2">2024-01-16</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
 
-// Display all tasks
-function displayTasks() {
-    const tasks = loadTasks();
-    const taskList = document.getElementById('taskList');
-    
-    // Clear existing tasks
-    taskList.innerHTML = '';
-    
-    // Add each task
-    tasks.forEach((task, index) => {
-        const taskDiv = document.createElement('div');
-        taskDiv.innerHTML = \`
-            <h3>\\\\\${task.title}</h3>
-            <p>\\\\\${task.description || 'Status: Pending'}</p>
-            <p>Assigned to: \\\\\${task.assignedTo || 'Current User'}</p>
-        \`;
-        taskList.appendChild(taskDiv);
-    });
-}`,
-          explanations: [
-            {
-              line: "function saveTasks(tasks) {\n    localStorage.setItem('ministryTasks', JSON.stringify(tasks));\n}",
-              explanation: "Create a function that saves an array of tasks to the browser's localStorage with a unique key.",
-              businessContext: "This implements the requirement 'tasks should persist between browser sessions' - essential for real workplace tools."
-            },
-            {
-              line: "function loadTasks() {\n    const saved = localStorage.getItem('ministryTasks');\n    return saved ? JSON.parse(saved) : [];\n}",
-              explanation: "Create a function that retrieves saved tasks from localStorage, or returns an empty array if none exist.",
-              businessContext: "This handles the user story 'As a staff member, I want to see my previous tasks when I return to the system.'"
-            },
-            {
-              line: "function displayTasks() {\n    const tasks = loadTasks();\n    const taskList = document.getElementById('taskList');\n    \n    // Clear existing tasks\n    taskList.innerHTML = '';",
-              explanation: "Create a function that loads all saved tasks and clears the current display to avoid duplicates.",
-              businessContext: "This ensures the interface always shows the current, accurate task list - preventing user confusion."
-            },
-            {
-              line: "tasks.forEach((task, index) => {\n        const taskDiv = document.createElement('div');\n        taskDiv.innerHTML = \`<h3>\\\\${task.title}</h3>...`;",
-              explanation: "Loop through each saved task and create HTML elements to display them in the interface.",
-              businessContext: "This renders the user's task list in a consistent format, making their work visible and manageable."
-            }
-          ]
-        },
-        startingCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        div {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            background-color: #003d7a;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        button:hover {
-            background-color: #002a5c;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <button id="addTaskBtn">Add Task</button>
-    
-    <h2>Current Tasks</h2>
-    <div id="taskList">
-        <div>
-            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
-            <p>Assigned to: John Cleese</p>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-3">Database Operations</h4>
+              <div className="space-y-2 text-sm text-blue-800">
+                <div><strong>CREATE:</strong> Add new records</div>
+                <div><strong>READ:</strong> Retrieve existing data</div>
+                <div><strong>UPDATE:</strong> Modify existing records</div>
+                <div><strong>DELETE:</strong> Remove records</div>
+              </div>
+              <p className="text-xs text-blue-700 mt-2">
+                These match perfectly with API operations!
+              </p>
+            </div>
+
+            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+              <h4 className="font-medium text-purple-900 mb-3">Data Relationships</h4>
+              <div className="space-y-2 text-sm text-purple-800">
+                <div><strong>Users Table:</strong> Staff members</div>
+                <div><strong>Tasks Table:</strong> Individual tasks</div>
+                <div><strong>Applications Table:</strong> Silly walk submissions</div>
+              </div>
+              <p className="text-xs text-purple-700 mt-2">
+                Tables connect to each other through relationships
+              </p>
+            </div>
+          </div>
+
+          <div className="ministry-content">
+            <h4 className="font-medium mb-3">Ministry Database Schema</h4>
+            <div className="bg-white border border-gray-200 rounded p-4">
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div className="border border-blue-200 rounded p-3">
+                  <h5 className="font-medium text-blue-900 mb-2">👤 Users</h5>
+                  <ul className="space-y-1 text-blue-800">
+                    <li>• id</li>
+                    <li>• name</li>
+                    <li>• email</li>
+                    <li>• role</li>
+                    <li>• department</li>
+                  </ul>
+                </div>
+                <div className="border border-green-200 rounded p-3">
+                  <h5 className="font-medium text-green-900 mb-2">📋 Tasks</h5>
+                  <ul className="space-y-1 text-green-800">
+                    <li>• id</li>
+                    <li>• title</li>
+                    <li>• description</li>
+                    <li>• assigned_to</li>
+                    <li>• status</li>
+                    <li>• created_at</li>
+                  </ul>
+                </div>
+                <div className="border border-purple-200 rounded p-3">
+                  <h5 className="font-medium text-purple-900 mb-2">🚶 Applications</h5>
+                  <ul className="space-y-1 text-purple-800">
+                    <li>• id</li>
+                    <li>• applicant_name</li>
+                    <li>• walk_description</li>
+                    <li>• video_url</li>
+                    <li>• status</li>
+                    <li>• reviewer_id</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: Data Modeling
+            </div>
+            <p className="concept-text">
+              When you write requirements about "storing user information" or "tracking task history," you're describing database needs. Understanding how data is structured helps you ask better questions: "What information do we need to store?" "How do different pieces of data relate?" "What reports will users need?"
+            </p>
+          </div>
         </div>
-    </div>
-    
-    <script>
-        // Step 1: Add localStorage functions here
-        
-        document.getElementById('addTaskBtn').addEventListener('click', function() {
-            const input = document.getElementById('taskInput');
-            const taskText = input.value.trim();
-            
-            if (taskText === '') {
-                alert('Please enter a task description');
-                return;
-            }
-            
-            const taskList = document.getElementById('taskList');
-            const newTask = document.createElement('div');
-            newTask.innerHTML = \`
-                <h3>\\\${taskText}</h3>
-                <p>Status: Pending</p>
-                <p>Assigned to: Current User</p>
-            \`;
-            
-            taskList.appendChild(newTask);
-            input.value = '';
-        });
-    </script>
-</body>
-</html>`,
-        targetCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        div {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            background-color: #003d7a;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        button:hover {
-            background-color: #002a5c;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <button id="addTaskBtn">Add Task</button>
-    
-    <h2>Current Tasks</h2>
-    <div id="taskList">
-        <div>
-            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
-            <p>Assigned to: John Cleese</p>
-        </div>
-    </div>
-    
-    <script>
-        // Save tasks to localStorage
-        function saveTasks(tasks) {
-            localStorage.setItem('ministryTasks', JSON.stringify(tasks));
-        }
-
-        // Load tasks from localStorage
-        function loadTasks() {
-            const saved = localStorage.getItem('ministryTasks');
-            return saved ? JSON.parse(saved) : [];
-        }
-
-        // Display all tasks
-        function displayTasks() {
-            const tasks = loadTasks();
-            const taskList = document.getElementById('taskList');
-            
-            // Clear existing tasks
-            taskList.innerHTML = '';
-            
-            // Add each task
-            tasks.forEach((task, index) => {
-                const taskDiv = document.createElement('div');
-                taskDiv.innerHTML = \`
-                    <h3>\\\${task.title}</h3>
-                    <p>\\\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
-                \`;
-                taskList.appendChild(taskDiv);
-            });
-        }
-        
-        document.getElementById('addTaskBtn').addEventListener('click', function() {
-            const input = document.getElementById('taskInput');
-            const taskText = input.value.trim();
-            
-            if (taskText === '') {
-                alert('Please enter a task description');
-                return;
-            }
-            
-            // Load existing tasks and add new one
-            const tasks = loadTasks();
-            tasks.push({
-                title: taskText,
-                description: 'Status: Pending',
-                assignedTo: 'Current User',
-                completed: false
-            });
-            
-            // Save and display
-            saveTasks(tasks);
-            displayTasks();
-            input.value = '';
-        });
-        
-        // Load tasks when page loads
-        displayTasks();
-    </script>
-</body>
-</html>`,
-        hints: [
-          "Look for the comment '// Step 1: Add localStorage functions here' at the top of the script section",
-          "Add the three functions: saveTasks(), loadTasks(), and displayTasks()",
-          "Update the click handler to use the task array instead of direct DOM manipulation",
-          "Add displayTasks() at the end to load saved tasks when the page loads",
-          "localStorage.setItem() saves data, localStorage.getItem() retrieves it"
-        ],
-        explanation: {
-          whatIsHappening: "You've implemented persistent data storage using the browser's localStorage feature. Tasks are now saved as JSON data and automatically loaded when the page refreshes. The code separates data management (saveTasks, loadTasks) from display logic (displayTasks), creating a cleaner architecture.",
-          whyItMatters: "This solves a critical business requirement - data persistence. Users can now trust that their work won't disappear, which is essential for real workplace applications. You've also structured the code to handle data as objects rather than just HTML, making it easier to add features like editing and status tracking.",
-          realWorldConnection: "This pattern mirrors how real applications work: separate data storage from display logic. When you write requirements about 'saving user work' or 'maintaining state between sessions,' this is the type of implementation developers create. Understanding localStorage helps you discuss data persistence requirements more effectively.",
-          keyTerms: {
-            "localStorage": "Browser storage that persists data between page loads and browser sessions",
-            "JSON.stringify": "Converts JavaScript objects into text format for storage",
-            "JSON.parse": "Converts stored text back into JavaScript objects",
-            "Data persistence": "Ensuring information survives beyond the current session or page load"
-          }
-        }
-      }
+      )
     },
     {
-      id: 'add-delete-functionality',
-      title: 'Step 2: Adding Delete Functionality',
+      id: 'json-api-example',
+      title: 'Step 3: Working with JSON APIs',
       type: 'coding',
       exercise: {
-        title: 'Add Delete Buttons to Tasks',
-        description: 'Now let\'s add the ability to delete tasks. Each task will get a delete button that removes it from storage.',
+        title: 'Process API Response Data',
+        description: 'Let\'s add JavaScript to process JSON data from our backend API. This shows how frontend code transforms server data into user-friendly displays.',
         instructions: [
-          'Update the displayTasks function to include delete buttons',
-          'Add a deleteTask function that removes tasks by index',
-          'Style the delete buttons to look like danger/warning buttons'
-        ],
-        language: 'html' as const,
-        startingCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        div {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            background-color: #003d7a;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 20px;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #002a5c;
-        }
-        /* Step 2: Add delete button styles here */
-        .delete-btn {
-            background-color: #dc2626;
-            padding: 5px 10px;
-            font-size: 14px;
-            margin: 0;
-        }
-        .delete-btn:hover {
-            background-color: #b91c1c;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <button id="addTaskBtn">Add Task</button>
-    
-    <h2>Current Tasks</h2>
-    <div id="taskList">
-        <div>
-            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
-            <p>Assigned to: John Cleese</p>
-        </div>
-    </div>
-    
-    <script>
-        // Save tasks to localStorage
-        function saveTasks(tasks) {
-            localStorage.setItem('ministryTasks', JSON.stringify(tasks));
-        }
-
-        // Load tasks from localStorage
-        function loadTasks() {
-            const saved = localStorage.getItem('ministryTasks');
-            return saved ? JSON.parse(saved) : [];
-        }
-
-        // Step 2: Add deleteTask function here
-        
-        // Display all tasks
-        function displayTasks() {
-            const tasks = loadTasks();
-            const taskList = document.getElementById('taskList');
-            
-            // Clear existing tasks
-            taskList.innerHTML = '';
-            
-            // Add each task
-            tasks.forEach((task, index) => {
-                const taskDiv = document.createElement('div');
-                taskDiv.innerHTML = \`
-                    <h3>\\\${task.title}</h3>
-                    <p>\\\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
-                \`;
-                taskList.appendChild(taskDiv);
-            });
-        }
-        
-        document.getElementById('addTaskBtn').addEventListener('click', function() {
-            const input = document.getElementById('taskInput');
-            const taskText = input.value.trim();
-            
-            if (taskText === '') {
-                alert('Please enter a task description');
-                return;
-            }
-            
-            // Load existing tasks and add new one
-            const tasks = loadTasks();
-            tasks.push({
-                title: taskText,
-                description: 'Status: Pending',
-                assignedTo: 'Current User',
-                completed: false
-            });
-            
-            // Save and display
-            saveTasks(tasks);
-            displayTasks();
-            input.value = '';
-        });
-        
-        // Load tasks when page loads
-        displayTasks();
-    </script>
-</body>
-</html>`,
-        targetCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        div {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            background-color: #003d7a;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 20px;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #002a5c;
-        }
-        .delete-btn {
-            background-color: #dc2626;
-            padding: 5px 10px;
-            font-size: 14px;
-            margin: 0;
-        }
-        .delete-btn:hover {
-            background-color: #b91c1c;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <button id="addTaskBtn">Add Task</button>
-    
-    <h2>Current Tasks</h2>
-    <div id="taskList">
-        <div>
-            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
-            <p>Assigned to: John Cleese</p>
-        </div>
-    </div>
-    
-    <script>
-        // Save tasks to localStorage
-        function saveTasks(tasks) {
-            localStorage.setItem('ministryTasks', JSON.stringify(tasks));
-        }
-
-        // Load tasks from localStorage
-        function loadTasks() {
-            const saved = localStorage.getItem('ministryTasks');
-            return saved ? JSON.parse(saved) : [];
-        }
-
-        // Delete a task by index
-        function deleteTask(index) {
-            const tasks = loadTasks();
-            tasks.splice(index, 1);
-            saveTasks(tasks);
-            displayTasks();
-        }
-        
-        // Display all tasks
-        function displayTasks() {
-            const tasks = loadTasks();
-            const taskList = document.getElementById('taskList');
-            
-            // Clear existing tasks
-            taskList.innerHTML = '';
-            
-            // Add each task
-            tasks.forEach((task, index) => {
-                const taskDiv = document.createElement('div');
-                taskDiv.innerHTML = \`
-                    <h3>\\\${task.title}</h3>
-                    <p>\\\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
-                    <button class="delete-btn" onclick="deleteTask(\\\${index})">Delete Task</button>
-                \`;
-                taskList.appendChild(taskDiv);
-            });
-        }
-        
-        document.getElementById('addTaskBtn').addEventListener('click', function() {
-            const input = document.getElementById('taskInput');
-            const taskText = input.value.trim();
-            
-            if (taskText === '') {
-                alert('Please enter a task description');
-                return;
-            }
-            
-            // Load existing tasks and add new one
-            const tasks = loadTasks();
-            tasks.push({
-                title: taskText,
-                description: 'Status: Pending',
-                assignedTo: 'Current User',
-                completed: false
-            });
-            
-            // Save and display
-            saveTasks(tasks);
-            displayTasks();
-            input.value = '';
-        });
-        
-        // Load tasks when page loads
-        displayTasks();
-    </script>
-</body>
-</html>`,
-        hints: [
-          "Add a deleteTask function that takes an index parameter",
-          "Use tasks.splice(index, 1) to remove one item at that index",
-          "Update displayTasks to include a delete button in each task's HTML",
-          "Use onclick=\"deleteTask(\\${index})\" to wire up the button",
-          "The red delete button styling is already provided in the CSS"
-        ],
-        explanation: {
-          whatIsHappening: "You've implemented full CRUD functionality - Create (add), Read (display), Update (coming next), and Delete. The deleteTask function removes items from the array by index, saves the updated array, and refreshes the display. Each task now has its own delete button that's dynamically connected to its position in the array.",
-          whyItMatters: "This implements the user story 'As a staff member, I want to remove completed or cancelled tasks from my list.' The red styling follows UI conventions that help users understand this is a destructive action. The immediate visual feedback (task disappears) confirms the action succeeded.",
-          realWorldConnection: "This demonstrates how user requirements like 'users should be able to remove items' translate into specific technical implementations. Understanding array manipulation and event handling helps you write more informed requirements about data modification features and discuss the technical implications of user actions.",
-          keyTerms: {
-            "Array.splice()": "JavaScript method that removes items from an array at a specific position",
-            "Dynamic event handling": "Connecting buttons to functions with parameters based on data",
-            "CRUD operations": "Create, Read, Update, Delete - the fundamental data operations",
-            "Destructive action": "An operation that permanently removes or changes data"
-          }
-        }
-      }
-    },
-    {
-      id: 'add-edit-functionality',
-      title: 'Step 3: Adding Edit Functionality',
-      type: 'coding',
-      exercise: {
-        title: 'Add Edit Buttons and Functionality',
-        description: 'Let\'s add the ability to edit existing tasks. Users can click an edit button to modify the task description.',
-        instructions: [
-          'Find the comment "// Step 3: Add editTask function here"',
-          'Replace it with the editTask function shown below',
-          'Then find the displayTasks function and the taskDiv.innerHTML section',
-          'Add this edit button BEFORE the delete button: <button class="edit-btn" onclick="editTask(\\${index})">Edit</button>',
-          'The edit button should appear before the delete button on the same line'
+          'Add the JavaScript code to script.js (you can see it in the file tree)',
+          'This code will process JSON API responses and display tasks',
+          'Copy the JavaScript code from the code block below into the editor',
+          'Watch how the API data gets transformed into HTML'
         ],
         codeBlock: {
-          code: `// Edit a task by index
-function editTask(index) {
-    const tasks = loadTasks();
-    const currentTitle = tasks[index].title;
-    
-    // Replace the task's h3 element with an input field
-    const taskList = document.getElementById('taskList');
-    const taskDiv = taskList.children[index];
-    const h3Element = taskDiv.querySelector('h3');
-    
-    // Create input field with current title
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = currentTitle;
-    input.style.width = '100%';
-    input.style.padding = '5px';
-    input.style.fontSize = '16px';
-    
-    // Replace h3 with input
-    h3Element.replaceWith(input);
-    input.focus();
-    input.select();
-    
-    // Save on Enter key or when input loses focus
-    function saveEdit() {
-        const newTitle = input.value.trim();
-        if (newTitle !== '' && newTitle !== currentTitle) {
-            tasks[index].title = newTitle;
-            saveTasks(tasks);
-        }
-        displayTasks();
+          code: `// Function to process API response and display tasks
+function displayTasksFromAPI(apiResponse) {
+    // Check if the API call was successful
+    if (apiResponse.status !== 'success') {
+        console.error('API Error:', apiResponse.error);
+        return;
     }
     
-    input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            saveEdit();
-        } else if (e.key === 'Escape') {
-            displayTasks(); // Cancel edit
-        }
+    // Get the tasks array from the response
+    const tasks = apiResponse.data.tasks;
+    const taskContainer = document.getElementById('taskList');
+    taskContainer.innerHTML = '';
+    
+    // Create HTML for each task
+    tasks.forEach(task => {
+        const taskElement = document.createElement('div');
+        taskElement.innerHTML = \`
+            <h3>\${task.title}</h3>
+            <p>\${task.description}</p>
+            <p>Assigned to: \${task.assigned_to}</p>
+            <p>Status: \${task.status}</p>
+        \`;
+        taskContainer.appendChild(taskElement);
     });
     
-    input.addEventListener('blur', saveEdit);
-}`,
+    // Update task count
+    document.getElementById('taskCount').textContent = \`Total: \${apiResponse.data.total_count}\`;
+}
+
+// Example API response (this comes from the backend)
+const apiData = {
+    "status": "success",
+    "data": {
+        "tasks": [
+            {
+                "id": 1,
+                "title": "Review Mr. Smith's Silly Walk Application",
+                "description": "Assess walk silliness level and provide feedback",
+                "assigned_to": "John Cleese",
+                "status": "pending"
+            },
+            {
+                "id": 2,
+                "title": "Update Ministry Website",
+                "description": "Add new silly walk guidelines",
+                "assigned_to": "Eric Idle", 
+                "status": "completed"
+            }
+        ],
+        "total_count": 2
+    }
+};
+
+// Process the API data
+displayTasksFromAPI(apiData);`,
           explanations: [
             {
-              line: "function editTask(index) {",
-              explanation: "Creates a function that takes the index (position) of the task to edit in the tasks array.",
-              businessContext: "When users click an edit button, we need to know which specific task they want to modify - the index tells us exactly which one."
+              line: "if (apiResponse.status !== 'success') {",
+              explanation: "Always check if the API call succeeded before processing data.",
+              businessContext: "Error handling is crucial - APIs can fail for many reasons (network issues, server problems, invalid requests)."
             },
             {
-              line: "const tasks = loadTasks(); const currentTitle = tasks[index].title;",
-              explanation: "Loads the current tasks and gets the title of the task being edited.",
-              businessContext: "We need the current task data to work with and the original title for comparison and pre-filling the edit field."
+              line: "const tasks = apiResponse.data.tasks;",
+              explanation: "Extract the actual task data from the API response structure.",
+              businessContext: "API responses often have metadata (status, pagination) separate from the actual data."
             },
             {
-              line: "const taskDiv = taskList.children[index]; const h3Element = taskDiv.querySelector('h3');",
-              explanation: "Finds the specific task's HTML elements in the display - the task container and its title heading.",
-              businessContext: "To edit inline, we need to locate exactly which title element on the page corresponds to this task."
+              line: "taskElement.innerHTML = `<h3>${task.title}</h3>...`;",
+              explanation: "Transform API data into HTML that users can see and understand.",
+              businessContext: "This is where technical data becomes user-friendly information - crucial for good UX."
             },
             {
-              line: "const input = document.createElement('input'); input.value = currentTitle;",
-              explanation: "Creates a new text input field and pre-fills it with the current task title.",
-              businessContext: "Inline editing feels more natural to users - they can edit directly where they see the text, and pre-filling saves them from retyping everything."
-            },
-            {
-              line: "h3Element.replaceWith(input); input.focus(); input.select();",
-              explanation: "Replaces the title heading with the input field, focuses on it, and selects all text for easy editing.",
-              businessContext: "This creates a smooth editing experience - users immediately see they're in edit mode and can start typing or make quick corrections."
-            },
-            {
-              line: "function saveEdit() { const newTitle = input.value.trim();",
-              explanation: "Creates a helper function to save the edit, getting the new title and removing extra spaces.",
-              businessContext: "Having a reusable save function means we can trigger saves on both Enter key and when the user clicks elsewhere."
-            },
-            {
-              line: "if (newTitle !== '' && newTitle !== currentTitle) { tasks[index].title = newTitle; saveTasks(tasks); }",
-              explanation: "Only saves if the new title is valid and actually different from the original.",
-              businessContext: "This prevents saving empty tasks and avoids unnecessary database writes when users don't actually change anything."
-            },
-            {
-              line: "input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { saveEdit(); }",
-              explanation: "Listens for keyboard shortcuts - Enter to save, Escape to cancel the edit.",
-              businessContext: "Keyboard shortcuts make the interface efficient for power users who prefer not to reach for the mouse constantly."
-            },
-            {
-              line: "input.addEventListener('blur', saveEdit);",
-              explanation: "Automatically saves when the user clicks elsewhere or tabs away from the input field.",
-              businessContext: "This creates intuitive behavior - users expect their edits to be saved when they're done editing, without requiring an explicit save action."
+              line: "taskContainer.appendChild(taskElement);",
+              explanation: "Add the new task element to the page so users can see it.",
+              businessContext: "DOM manipulation is how dynamic web applications update content without page refreshes."
             }
           ]
         },
-        language: 'html' as const,
-        startingCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        div {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            background-color: #003d7a;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 20px;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #002a5c;
-        }
-        .delete-btn {
-            background-color: #dc2626;
-            padding: 5px 10px;
-            font-size: 14px;
-            margin: 0;
-        }
-        .delete-btn:hover {
-            background-color: #b91c1c;
-        }
-        /* Step 3: Edit button styles already provided */
-        .edit-btn {
-            background-color: #059669;
-            padding: 5px 10px;
-            font-size: 14px;
-            margin: 0;
-            margin-right: 5px;
-        }
-        .edit-btn:hover {
-            background-color: #047857;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <button id="addTaskBtn">Add Task</button>
-    
-    <h2>Current Tasks</h2>
-    <div id="taskList">
-        <div>
-            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
-            <p>Assigned to: John Cleese</p>
-        </div>
-    </div>
-    
-    <script>
-        // Save tasks to localStorage
-        function saveTasks(tasks) {
-            localStorage.setItem('ministryTasks', JSON.stringify(tasks));
-        }
+        language: 'typescript' as const,
+        startingCode: `// Ministry of Silly Walks - API Processing JavaScript
 
-        // Load tasks from localStorage
-        function loadTasks() {
-            const saved = localStorage.getItem('ministryTasks');
-            return saved ? JSON.parse(saved) : [];
-        }
+// TODO: Add the API processing code here`,
+        targetCode: `// Function to process API response and display tasks
+function displayTasksFromAPI(apiResponse) {
+    // Check if the API call was successful
+    if (apiResponse.status !== 'success') {
+        console.error('API Error:', apiResponse.error);
+        return;
+    }
+    
+    // Get the tasks array from the response
+    const tasks = apiResponse.data.tasks;
+    const taskContainer = document.getElementById('taskList');
+    taskContainer.innerHTML = '';
+    
+    // Create HTML for each task
+    tasks.forEach(task => {
+        const taskElement = document.createElement('div');
+        taskElement.innerHTML = \`
+            <h3>\${task.title}</h3>
+            <p>\${task.description}</p>
+            <p>Assigned to: \${task.assigned_to}</p>
+            <p>Status: \${task.status}</p>
+        \`;
+        taskContainer.appendChild(taskElement);
+    });
+    
+    // Update task count
+    document.getElementById('taskCount').textContent = \`Total: \${apiResponse.data.total_count}\`;
+}
 
-        // Delete a task by index
-        function deleteTask(index) {
-            const tasks = loadTasks();
-            tasks.splice(index, 1);
-            saveTasks(tasks);
-            displayTasks();
-        }
-        
-        // Step 3: Add editTask function here
-        
-        // Display all tasks
-        function displayTasks() {
-            const tasks = loadTasks();
-            const taskList = document.getElementById('taskList');
-            
-            // Clear existing tasks
-            taskList.innerHTML = '';
-            
-            // Add each task
-            tasks.forEach((task, index) => {
-                const taskDiv = document.createElement('div');
-                taskDiv.innerHTML = \`
-                    <h3>\\\${task.title}</h3>
-                    <p>\\\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
-                    <button class="delete-btn" onclick="deleteTask(\\\${index})">Delete Task</button>
-                \`;
-                taskList.appendChild(taskDiv);
-            });
-        }
-        
-        document.getElementById('addTaskBtn').addEventListener('click', function() {
-            const input = document.getElementById('taskInput');
-            const taskText = input.value.trim();
-            
-            if (taskText === '') {
-                alert('Please enter a task description');
-                return;
+// Example API response (this comes from the backend)
+const apiData = {
+    "status": "success",
+    "data": {
+        "tasks": [
+            {
+                "id": 1,
+                "title": "Review Mr. Smith's Silly Walk Application",
+                "description": "Assess walk silliness level and provide feedback",
+                "assigned_to": "John Cleese",
+                "status": "pending"
+            },
+            {
+                "id": 2,
+                "title": "Update Ministry Website",
+                "description": "Add new silly walk guidelines",
+                "assigned_to": "Eric Idle", 
+                "status": "completed"
             }
-            
-            // Load existing tasks and add new one
-            const tasks = loadTasks();
-            tasks.push({
-                title: taskText,
-                description: 'Status: Pending',
-                assignedTo: 'Current User',
-                completed: false
-            });
-            
-            // Save and display
-            saveTasks(tasks);
-            displayTasks();
-            input.value = '';
-        });
-        
-        // Load tasks when page loads
-        displayTasks();
-    </script>
-</body>
-</html>`,
-        targetCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        div {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            background-color: #003d7a;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 20px;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: #002a5c;
-        }
-        .delete-btn {
-            background-color: #dc2626;
-            padding: 5px 10px;
-            font-size: 14px;
-            margin: 0;
-        }
-        .delete-btn:hover {
-            background-color: #b91c1c;
-        }
-        .edit-btn {
-            background-color: #059669;
-            padding: 5px 10px;
-            font-size: 14px;
-            margin: 0;
-            margin-right: 5px;
-        }
-        .edit-btn:hover {
-            background-color: #047857;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <button id="addTaskBtn">Add Task</button>
-    
-    <h2>Current Tasks</h2>
-    <div id="taskList">
-        <div>
-            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
-            <p>Assigned to: John Cleese</p>
-        </div>
-    </div>
-    
-    <script>
-        // Save tasks to localStorage
-        function saveTasks(tasks) {
-            localStorage.setItem('ministryTasks', JSON.stringify(tasks));
-        }
+        ],
+        "total_count": 2
+    }
+};
 
-        // Load tasks from localStorage
-        function loadTasks() {
-            const saved = localStorage.getItem('ministryTasks');
-            return saved ? JSON.parse(saved) : [];
-        }
-
-        // Delete a task by index
-        function deleteTask(index) {
-            const tasks = loadTasks();
-            tasks.splice(index, 1);
-            saveTasks(tasks);
-            displayTasks();
-        }
-        
-        // Edit a task by index
-        function editTask(index) {
-            const tasks = loadTasks();
-            const currentTitle = tasks[index].title;
-            
-            // Replace the task's h3 element with an input field
-            const taskList = document.getElementById('taskList');
-            const taskDiv = taskList.children[index];
-            const h3Element = taskDiv.querySelector('h3');
-            
-            // Create input field with current title
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = currentTitle;
-            input.style.width = '100%';
-            input.style.padding = '5px';
-            input.style.fontSize = '16px';
-            
-            // Replace h3 with input
-            h3Element.replaceWith(input);
-            input.focus();
-            input.select();
-            
-            // Save on Enter key or when input loses focus
-            function saveEdit() {
-                const newTitle = input.value.trim();
-                if (newTitle !== '' && newTitle !== currentTitle) {
-                    tasks[index].title = newTitle;
-                    saveTasks(tasks);
-                }
-                displayTasks();
-            }
-            
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    saveEdit();
-                } else if (e.key === 'Escape') {
-                    displayTasks(); // Cancel edit
-                }
-            });
-            
-            input.addEventListener('blur', saveEdit);
-        }
-        
-        // Display all tasks
-        function displayTasks() {
-            const tasks = loadTasks();
-            const taskList = document.getElementById('taskList');
-            
-            // Clear existing tasks
-            taskList.innerHTML = '';
-            
-            // Add each task
-            tasks.forEach((task, index) => {
-                const taskDiv = document.createElement('div');
-                taskDiv.innerHTML = \`
-                    <h3>\\\${task.title}</h3>
-                    <p>\\\${task.description || 'Status: Pending'}</p>
-                    <p>Assigned to: \\\${task.assignedTo || 'Current User'}</p>
-                    <button class="edit-btn" onclick="editTask(\\\${index})">Edit</button>
-                    <button class="delete-btn" onclick="deleteTask(\\\${index})">Delete Task</button>
-                \`;
-                taskList.appendChild(taskDiv);
-            });
-        }
-        
-        document.getElementById('addTaskBtn').addEventListener('click', function() {
-            const input = document.getElementById('taskInput');
-            const taskText = input.value.trim();
-            
-            if (taskText === '') {
-                alert('Please enter a task description');
-                return;
-            }
-            
-            // Load existing tasks and add new one
-            const tasks = loadTasks();
-            tasks.push({
-                title: taskText,
-                description: 'Status: Pending',
-                assignedTo: 'Current User',
-                completed: false
-            });
-            
-            // Save and display
-            saveTasks(tasks);
-            displayTasks();
-            input.value = '';
-        });
-        
-        // Load tasks when page loads
-        displayTasks();
-    </script>
-</body>
-</html>`,
+// Process the API data
+displayTasksFromAPI(apiData);`,
         hints: [
-          "Copy and paste the editTask function from the code block above",
-          "Place it where the comment '// Step 3: Add editTask function here' is located",
-          "In the displayTasks function, find the taskDiv.innerHTML section",
-          "Add the edit button HTML before the delete button line",
-          "The edit button should use class='edit-btn' and onclick='editTask(\\${index})'"
+          "You're editing the script.js file - you can see it in the file tree",
+          "Copy the complete code from the code block above",
+          "This code processes JSON API data and creates HTML elements",
+          "Template literals (\`string\`) let you embed variables with \${variable}",
+          "The preview will show how API data becomes user-friendly content"
         ],
         explanation: {
-          whatIsHappening: "You've completed full CRUD functionality! The editTask function implements inline editing - when users click Edit, the task title transforms into an input field where they can make changes directly. The function handles keyboard shortcuts (Enter to save, Escape to cancel) and automatically saves when users click elsewhere. This creates a smooth, professional editing experience.",
-          whyItMatters: "This implements the user story 'As a staff member, I want to correct or update task descriptions after creating them.' The inline editing approach feels more natural and efficient than popup dialogs - users can see their changes in context and make quick corrections without disrupting their workflow. This is especially important for busy civil servants who need to process many tasks quickly.",
-          realWorldConnection: "This demonstrates how requirements like 'users should be able to modify their entries' translate into technical implementation. Inline editing is a common pattern in modern web applications because it provides immediate visual feedback and reduces cognitive load. Understanding these interaction patterns helps you specify requirements for sophisticated edit interfaces and discuss user experience trade-offs with development teams.",
+          whatIsHappening: "You've added JavaScript that processes JSON API responses and displays them as HTML. This is the bridge between backend data and frontend display. The code checks for success, extracts task data, creates HTML elements for each task, and updates the page. This pattern is used in every modern web application that displays server data.",
+          whyItMatters: "Understanding this API-to-display process helps you write better requirements. When you specify 'show task status' or 'display creation date,' you're describing both the API data structure needed and how it should appear to users. This knowledge helps you write more technically informed and realistic requirements.",
+          realWorldConnection: "This is exactly how applications like Gmail, Facebook, or banking apps work - they fetch data from servers and transform it into user-friendly displays. When you write requirements for data display, sorting, or filtering, you're describing variations of this same pattern. Understanding the technical implementation helps you write more complete requirements.",
           keyTerms: {
-            "Inline editing": "Editing content directly in place rather than in a separate dialog or form",
-            "Event listeners": "JavaScript functions that respond to user actions like clicks or key presses",
-            "DOM manipulation": "Dynamically changing HTML elements on the page using JavaScript",
-            "Complete CRUD": "Full Create, Read, Update, Delete functionality for data management"
+            "API Response Processing": "Converting structured server data into user interface elements",
+            "JSON Data Structure": "How information is organized in API responses",
+            "DOM Manipulation": "Using JavaScript to create and modify page content",
+            "Template Literals": "JavaScript syntax for creating strings with embedded variables",
+            "Error Handling": "Code that gracefully handles API failures and edge cases"
+          }
+        }
+      }
+    },
+    {
+      id: 'api-integration',
+      title: 'Step 4: Complete API Integration',
+      type: 'coding',
+      exercise: {
+        title: 'Make Real API Calls',
+        description: 'Now let\'s add the fetch() call to actually get data from the backend. This completes the frontend-backend connection with proper error handling.',
+        instructions: [
+          'Update the script.js file to add the fetch API call',
+          'This code will make real HTTP requests to the backend server',
+          'Copy the JavaScript code from the code block below into the editor',
+          'See how loading states and error handling work in practice'
+        ],
+        codeBlock: {
+          code: `// Store tasks data (simulates what would be in a database)
+let allTasks = [
+    {
+        "id": 1,
+        "title": "Review Mr. Smith's Silly Walk Application",
+        "description": "Assess walk silliness level and provide feedback",
+        "assigned_to": "John Cleese",
+        "status": "pending"
+    },
+    {
+        "id": 2,
+        "title": "Update Ministry Website",
+        "description": "Add new silly walk guidelines to public portal",
+        "assigned_to": "Eric Idle",
+        "status": "completed"
+    }
+];
+
+// Simulate getting tasks from API
+function loadTasksFromAPI() {
+    const mockAPIResponse = {
+        "status": "success",
+        "data": {
+            "tasks": allTasks,
+            "total_count": allTasks.length
+        }
+    };
+    
+    displayTasksFromAPI(mockAPIResponse);
+}
+
+// Function to display API data
+function displayTasksFromAPI(apiResponse) {
+    if (apiResponse.status !== 'success') {
+        alert('API Error: ' + apiResponse.error);
+        return;
+    }
+    
+    const tasks = apiResponse.data.tasks;
+    const taskContainer = document.getElementById('taskList');
+    if (!taskContainer) {
+        console.error('taskList element not found');
+        return;
+    }
+    
+    // Clear existing tasks
+    taskContainer.innerHTML = '';
+    
+    // Add each task to the display
+    tasks.forEach(task => {
+        const taskElement = document.createElement('div');
+        taskElement.innerHTML = \`
+            <h3>\${task.title}</h3>
+            <p>\${task.description}</p>
+            <p>Assigned to: \${task.assigned_to}</p>
+            <p>Status: \${task.status}</p>
+        \`;
+        taskContainer.appendChild(taskElement);
+    });
+}
+
+// Add task functionality (from Chapter 3) + API simulation
+document.getElementById('addTaskBtn').addEventListener('click', function() {
+    const input = document.getElementById('taskInput');
+    const taskText = input.value.trim();
+    
+    if (taskText === '') {
+        alert('Please enter a task description');
+        return;
+    }
+    
+    // Simulate adding task via API
+    const newTask = {
+        "id": allTasks.length + 1,
+        "title": taskText,
+        "description": "New task from frontend",
+        "assigned_to": "Current User",
+        "status": "pending"
+    };
+    
+    // Add to our "database"
+    allTasks.push(newTask);
+    
+    // Reload tasks from "API"
+    loadTasksFromAPI();
+    
+    // Clear input
+    input.value = '';
+});
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Load initial tasks
+    loadTasksFromAPI();
+    
+    // Create Load from API button
+    const loadButton = document.createElement('button');
+    loadButton.textContent = 'Refresh from API';
+    loadButton.onclick = loadTasksFromAPI;
+    loadButton.style.marginLeft = '10px';
+    
+    // Add the button after the Add Task button
+    const addBtn = document.getElementById('addTaskBtn');
+    if (addBtn && addBtn.parentNode) {
+        addBtn.parentNode.insertBefore(loadButton, addBtn.nextSibling);
+    }
+});`,
+          explanations: [
+            {
+              line: "let allTasks = [ {...} ];",
+              explanation: "Store task data in memory to simulate what would be in a database.",
+              businessContext: "In real applications, this data would be stored in a database and accessed through APIs."
+            },
+            {
+              line: "document.getElementById('addTaskBtn').addEventListener('click', function() {",
+              explanation: "Keep the add task functionality from Chapter 3, but now integrate it with API simulation.",
+              businessContext: "This shows how user actions (adding tasks) would trigger API calls to update the backend database."
+            },
+            {
+              line: "allTasks.push(newTask); loadTasksFromAPI();",
+              explanation: "Add the new task to our data store and refresh the display through the API simulation.",
+              businessContext: "This simulates the flow: user adds task → API saves to database → frontend refreshes data from API."
+            },
+            {
+              line: "const loadButton = document.createElement('button'); loadButton.textContent = 'Refresh from API';",
+              explanation: "Create a button that demonstrates refreshing data from the API.",
+              businessContext: "Refresh functionality is essential - users need to see the latest data, especially in multi-user systems."
+            }
+          ]
+        },
+        language: 'typescript' as const,
+        startingCode: `// Ministry of Silly Walks - Complete API Integration
+
+// TODO: Add the complete API integration code here`,
+        targetCode: `// Store tasks data (simulates what would be in a database)
+let allTasks = [
+    {
+        "id": 1,
+        "title": "Review Mr. Smith's Silly Walk Application",
+        "description": "Assess walk silliness level and provide feedback",
+        "assigned_to": "John Cleese",
+        "status": "pending"
+    },
+    {
+        "id": 2,
+        "title": "Update Ministry Website",
+        "description": "Add new silly walk guidelines to public portal",
+        "assigned_to": "Eric Idle",
+        "status": "completed"
+    }
+];
+
+// Simulate getting tasks from API
+function loadTasksFromAPI() {
+    const mockAPIResponse = {
+        "status": "success",
+        "data": {
+            "tasks": allTasks,
+            "total_count": allTasks.length
+        }
+    };
+    
+    displayTasksFromAPI(mockAPIResponse);
+}
+
+// Function to display API data
+function displayTasksFromAPI(apiResponse) {
+    if (apiResponse.status !== 'success') {
+        alert('API Error: ' + apiResponse.error);
+        return;
+    }
+    
+    const tasks = apiResponse.data.tasks;
+    const taskContainer = document.getElementById('taskList');
+    if (!taskContainer) {
+        console.error('taskList element not found');
+        return;
+    }
+    
+    // Clear existing tasks
+    taskContainer.innerHTML = '';
+    
+    // Add each task to the display
+    tasks.forEach(task => {
+        const taskElement = document.createElement('div');
+        taskElement.innerHTML = \`
+            <h3>\${task.title}</h3>
+            <p>\${task.description}</p>
+            <p>Assigned to: \${task.assigned_to}</p>
+            <p>Status: \${task.status}</p>
+        \`;
+        taskContainer.appendChild(taskElement);
+    });
+}
+
+// Add task functionality (from Chapter 3) + API simulation
+document.getElementById('addTaskBtn').addEventListener('click', function() {
+    const input = document.getElementById('taskInput');
+    const taskText = input.value.trim();
+    
+    if (taskText === '') {
+        alert('Please enter a task description');
+        return;
+    }
+    
+    // Simulate adding task via API
+    const newTask = {
+        "id": allTasks.length + 1,
+        "title": taskText,
+        "description": "New task from frontend",
+        "assigned_to": "Current User",
+        "status": "pending"
+    };
+    
+    // Add to our "database"
+    allTasks.push(newTask);
+    
+    // Reload tasks from "API"
+    loadTasksFromAPI();
+    
+    // Clear input
+    input.value = '';
+});
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Load initial tasks
+    loadTasksFromAPI();
+    
+    // Create Load from API button
+    const loadButton = document.createElement('button');
+    loadButton.textContent = 'Refresh from API';
+    loadButton.onclick = loadTasksFromAPI;
+    loadButton.style.marginLeft = '10px';
+    
+    // Add the button after the Add Task button
+    const addBtn = document.getElementById('addTaskBtn');
+    if (addBtn && addBtn.parentNode) {
+        addBtn.parentNode.insertBefore(loadButton, addBtn.nextSibling);
+    }
+});`,
+        hints: [
+          "You're still editing script.js - add this code to complete the integration",
+          "The fetch() API is the modern way to make HTTP requests",
+          "async/await makes asynchronous code easier to read and write",
+          "Always handle both success and error cases in API calls",
+          "Loading indicators greatly improve user experience"
+        ],
+        explanation: {
+          whatIsHappening: "You've completed a full frontend-backend integration! This code makes real HTTP requests to your backend API, handles loading states, processes responses, and gracefully handles errors. It combines the API processing from Step 3 with actual network requests, error handling, and user feedback. This is exactly how modern web applications work.",
+          whyItMatters: "This represents the complete picture of web application architecture. Understanding this full flow - from user action to API call to data display - helps you write comprehensive requirements. When you specify 'system should load quickly' or 'handle network errors gracefully,' you're describing this exact functionality. This knowledge helps you write more realistic and complete requirements.",
+          realWorldConnection: "Every web application you use follows this pattern - social media loading posts, banking apps showing transactions, shopping sites displaying products. Requirements like 'show loading indicators,' 'handle offline scenarios,' and 'provide error recovery options' all stem from understanding this complete integration pattern. As a BA, this technical understanding helps you ask better questions and write more thorough requirements.",
+          keyTerms: {
+            "Full-Stack Integration": "Frontend and backend working together to deliver complete functionality",
+            "HTTP Request Lifecycle": "The complete process from making a request to displaying results",
+            "Error Recovery": "Providing users with clear feedback and options when things go wrong",
+            "Progressive Enhancement": "Building applications that work in stages, providing feedback at each step",
+            "API Contract": "The agreed-upon format and behavior between frontend and backend systems"
           }
         }
       }
     }
   ]
 
-  // Load progress on mount
   useEffect(() => {
     const progress = getProgress()
     const completed = steps
       .map((step, index) => isStepComplete(step.id) ? index : -1)
       .filter(index => index !== -1)
     setCompletedSteps(completed)
-  }, [steps])
+  }, [])
 
   const markStepCompleteLocal = (index: number) => {
     if (!completedSteps.includes(index)) {
@@ -1248,26 +785,24 @@ function editTask(index) {
       setCompletedSteps(newCompleted)
       markStepComplete(steps[index].id)
     }
-  }
+  };
 
   const allStepsComplete = completedSteps.length === steps.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Breadcrumb Navigation */}
       <TutorialBreadcrumb />
       
-      {/* Header */
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/tutorial/chapter-3" className="flex items-center text-gray-600 hover:text-gray-900">
+            <Link href={getUrlWithParams("/tutorial/chapter-3")} className="flex items-center text-gray-600 hover:text-gray-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Chapter 3
             </Link>
             <div className="text-center">
-              <h1 className="text-xl font-bold text-gray-900">Chapter 4: Advanced JavaScript & Data Management</h1>
-              <p className="text-sm text-gray-600">Making data persist and adding CRUD operations</p>
+              <h1 className="text-xl font-bold text-gray-900">Chapter 4: Backend Development</h1>
+              <p className="text-sm text-gray-600">Building server-side functionality</p>
             </div>
             <div className="text-sm text-gray-500">
               Step {currentStep + 1} of {steps.length}
@@ -1278,7 +813,6 @@ function editTask(index) {
 
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Progress Sidebar */}
           <div className="lg:col-span-1">
             <div className="tutorial-card sticky top-8">
               <h3 className="font-semibold text-gray-900 mb-4">Chapter 4 Progress</h3>
@@ -1313,7 +847,7 @@ function editTask(index) {
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800 font-medium mb-2">Chapter 4 Complete!</p>
                   <Link 
-                    href="/tutorial/chapter-5" 
+                    href={getUrlWithParams("/tutorial/chapter-5")} 
                     className="inline-flex items-center text-sm text-green-700 hover:text-green-900"
                   >
                     Start Chapter 5
@@ -1324,10 +858,8 @@ function editTask(index) {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-3">
             <div className="space-y-8">
-              {/* Progress Bar */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-700">Chapter Progress</span>
@@ -1375,7 +907,7 @@ function editTask(index) {
                         ? currentStep === steps.length - 1 
                           ? 'Complete Chapter' 
                           : 'Next Step'
-                        : 'Start Data Management!'
+                        : 'Mark Complete & Continue'
                       }
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </button>
