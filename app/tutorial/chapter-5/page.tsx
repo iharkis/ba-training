@@ -185,7 +185,7 @@ export default function Chapter5() {
                 <h5 className="font-medium text-gray-900 mb-1">Unit Test Example</h5>
                 <p className="text-sm text-gray-600 mb-2">Testing the "calculate silliness score" function:</p>
                 <div className="bg-gray-50 p-2 rounded font-mono text-xs">
-                  Input: walk_data = {"hops": 3, "wiggles": 7, "duration": 45}<br/>
+                  Input: walk_data = {`{"hops": 3, "wiggles": 7, "duration": 45}`}<br/>
                   Expected: silliness_score = 8.5<br/>
                   Actual: silliness_score = 8.5 ✅
                 </div>
