@@ -2,14 +2,22 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CheckCircle, Database, Lightbulb, Code, HardDrive, Shield } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter6() {
+  const searchParams = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
+
+  // Helper function to preserve URL parameters
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
 
   useEffect(() => {
     const progress = getProgress()
@@ -107,7 +115,7 @@ export default function Chapter6() {
           'Set up the tasks table with appropriate columns',
           'Add database connection to the server startup'
         ],
-        language: 'javascript' as const,
+        language: 'typescript' as const,
         codeBlock: {
           code: `const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
@@ -353,7 +361,7 @@ startServer();`,
           'Replace the DELETE /tasks/:id route with database delete functionality',
           'Copy each route from the code block and replace the corresponding route in your editor'
         ],
-        language: 'javascript' as const,
+        language: 'typescript' as const,
         codeBlock: {
           code: `// GET all tasks
 app.get('/tasks', (req, res) => {
@@ -752,7 +760,7 @@ app.delete('/tasks/:id', (req, res) => {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/tutorial/chapter-5" className="flex items-center text-gray-600 hover:text-gray-900">
+            <Link href={getUrlWithParams("/tutorial/chapter-5")} className="flex items-center text-gray-600 hover:text-gray-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Chapter 5
             </Link>
@@ -803,7 +811,7 @@ app.delete('/tasks/:id', (req, res) => {
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800 font-medium mb-2">Chapter 6 Complete!</p>
                   <Link 
-                    href="/tutorial/chapter-7" 
+                    href={getUrlWithParams("/tutorial/chapter-7")} 
                     className="inline-flex items-center text-sm text-green-700 hover:text-green-900"
                   >
                     Start Chapter 7

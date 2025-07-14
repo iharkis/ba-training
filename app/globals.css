@@ -74,9 +74,12 @@
     line-height: 1;
     border-radius: 0; /* GOV.UK uses square corners */
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
     vertical-align: top;
+    white-space: nowrap;
   }
 
   .tutorial-button-primary {

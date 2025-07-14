@@ -2,15 +2,22 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CheckCircle, Users, FileText, Lightbulb, Target } from 'lucide-react'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import { getProgress, markSectionComplete, isSectionComplete } from '@/lib/progress'
 
 export default function TutorialIntroduction() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [currentSection, setCurrentSection] = useState(0)
   const [completedSections, setCompletedSections] = useState<number[]>([])
+
+  // Helper function to preserve URL parameters
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
 
   // Load progress on mount
   useEffect(() => {
@@ -402,7 +409,7 @@ export default function TutorialIntroduction() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center text-gray-600 hover:text-gray-900">
+            <Link href={getUrlWithParams("/")} className="flex items-center text-gray-600 hover:text-gray-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Home
             </Link>
@@ -454,7 +461,7 @@ export default function TutorialIntroduction() {
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800 font-medium mb-2">Ready for Chapter 1!</p>
                   <Link 
-                    href="/tutorial/chapter-1" 
+                    href={getUrlWithParams("/tutorial/chapter-1")} 
                     className="inline-flex items-center text-sm text-green-700 hover:text-green-900"
                   >
                     Start Building
@@ -509,7 +516,7 @@ export default function TutorialIntroduction() {
                       setCurrentSection(currentSection + 1)
                     } else {
                       // If this is the last section and it's being completed, navigate to Chapter 1
-                      router.push('/tutorial/chapter-1')
+                      router.push(getUrlWithParams('/tutorial/chapter-1'))
                     }
                   }}
                   className="tutorial-button-primary"

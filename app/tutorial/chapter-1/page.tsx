@@ -2,16 +2,24 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, CheckCircle, BookOpen, Lightbulb, Target } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { ArrowLeft, ArrowRight, CheckCircle, BookOpen, Lightbulb, Target, Code } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import BeginnerGuide from '@/components/tutorial/BeginnerGuide'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter1() {
+  const searchParams = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
   const [showBeginnerGuide, setShowBeginnerGuide] = useState(true)
+
+  // Helper function to preserve URL parameters
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
 
   // Load progress on mount
   useEffect(() => {
@@ -115,8 +123,89 @@ export default function Chapter1() {
       )
     },
     {
+      id: 'understanding-html-template',
+      title: 'Step 1: Understanding the HTML Template',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold text-gray-900">Breaking Down the HTML Structure</h3>
+          
+          <p className="text-gray-700">
+            Before we start adding content, let's understand what's already in our HTML file. Every web page needs this basic structure - it's like the foundation of a house.
+          </p>
+          
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+              <Code className="w-4 h-4 mr-2" />
+              The HTML Template Explained:
+            </h4>
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              <div className="space-y-1">
+                <div><span className="text-blue-400">&lt;!DOCTYPE html&gt;</span> <span className="text-green-400">← Tells the browser this is modern HTML</span></div>
+                <div><span className="text-blue-400">&lt;html lang="en-GB"&gt;</span> <span className="text-green-400">← Starts the page, sets language to British English</span></div>
+                <div><span className="text-blue-400">&lt;head&gt;</span> <span className="text-green-400">← Information about the page (not visible to users)</span></div>
+                <div className="ml-4"><span className="text-blue-400">&lt;meta charset="UTF-8"&gt;</span> <span className="text-green-400">← Supports international characters</span></div>
+                <div className="ml-4"><span className="text-blue-400">&lt;meta name="viewport"...&gt;</span> <span className="text-green-400">← Makes it work on mobile devices</span></div>
+                <div className="ml-4"><span className="text-blue-400">&lt;title&gt;</span>Ministry of Silly Walks - Task Manager<span className="text-blue-400">&lt;/title&gt;</span> <span className="text-green-400">← Tab title</span></div>
+                <div><span className="text-blue-400">&lt;/head&gt;</span></div>
+                <div><span className="text-blue-400">&lt;body&gt;</span> <span className="text-green-400">← Where visible content goes</span></div>
+                <div className="ml-4"><span className="text-gray-400">{'<!--'} This is where we'll add our Ministry content {'-->'}</span></div>
+                <div><span className="text-blue-400">&lt;/body&gt;</span></div>
+                <div><span className="text-blue-400">&lt;/html&gt;</span></div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-2">The &lt;head&gt; Section</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• Contains information about the page</li>
+                <li>• Not visible to users</li>
+                <li>• Includes the page title (shows in browser tab)</li>
+                <li>• Sets up mobile compatibility</li>
+              </ul>
+            </div>
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <h4 className="font-medium text-green-900 mb-2">The &lt;body&gt; Section</h4>
+              <ul className="text-sm text-green-800 space-y-1">
+                <li>• Contains all visible content</li>
+                <li>• This is where we'll build our task manager</li>
+                <li>• Users see everything in here</li>
+                <li>• Currently empty - let's fill it!</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="concept-callout">
+            <div className="concept-title">
+              <Lightbulb className="w-5 h-5 mr-2" />
+              BA Insight: Requirements to HTML Structure
+            </div>
+            <div className="concept-text">
+              <p className="mb-3">When you write requirements like:</p>
+              <ul className="text-sm space-y-1 mb-3">
+                <li>• "The system should display clearly in browser tabs" → &lt;title&gt; tag</li>
+                <li>• "The application must work on mobile devices" → viewport meta tag</li>
+                <li>• "Support international character sets" → UTF-8 encoding</li>
+              </ul>
+              <p>These business requirements translate directly into HTML structure decisions!</p>
+            </div>
+          </div>
+          
+          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
+            <h4 className="text-lg font-bold mb-3">🎯 What's Next</h4>
+            <p>
+              Now that you understand the foundation, we'll start adding visible content inside the &lt;body&gt; section. 
+              Every piece of content we add will be between &lt;body&gt; and &lt;/body&gt; tags.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
       id: 'html-basics',
-      title: 'Your First Step: Adding a Simple Header',
+      title: 'Step 2: Adding a Simple Header',
       type: 'coding',
       exercise: {
         title: 'Add a Header to Your Page',
@@ -124,9 +213,29 @@ export default function Chapter1() {
         instructions: [
           'Look for the comment that says "<!-- Step 1: Add a header here -->"',
           'Delete that entire comment line',
-          'Type: <h1>Ministry of Silly Walks</h1>',
+          'Copy and paste the code shown below',
           'Click "Check My Work" to see if it\'s correct'
         ],
+        codeBlock: {
+          code: `<h1>Ministry of Silly Walks</h1>`,
+          explanations: [
+            {
+              line: "<h1>",
+              explanation: "This is an opening H1 tag - it tells the browser 'the next text is the main heading'",
+              businessContext: "H1 tags create the largest, most prominent text on the page - perfect for the main system title that users need to see immediately."
+            },
+            {
+              line: "Ministry of Silly Walks",
+              explanation: "This is the actual text that users will see displayed as the heading.",
+              businessContext: "Clear system identification helps users know they're in the right place - essential for user confidence and navigation."
+            },
+            {
+              line: "</h1>",
+              explanation: "This closes the H1 tag - it tells the browser 'the main heading ends here'",
+              businessContext: "HTML tags work in pairs: an opening tag starts something, a closing tag ends it. This ensures the heading applies only to the text we want."
+            }
+          ]
+        },
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
 <html lang="en-GB">
@@ -173,7 +282,7 @@ export default function Chapter1() {
     },
     {
       id: 'add-subtitle',
-      title: 'Step 2: Adding a Subtitle',
+      title: 'Step 3: Adding a Subtitle',
       type: 'coding',
       exercise: {
         title: 'Add a Subtitle Below the Header',
@@ -181,9 +290,29 @@ export default function Chapter1() {
         instructions: [
           'Find the comment "<!-- Step 2: Add a subtitle here -->"',
           'Delete that comment line',
-          'Type: <p>Task Management System</p>',
+          'Copy and paste the code shown below',
           'This will appear as smaller text below the main heading'
         ],
+        codeBlock: {
+          code: `<p>Task Management System</p>`,
+          explanations: [
+            {
+              line: "<p>",
+              explanation: "This is a paragraph tag - it tells the browser to display the text as a normal paragraph.",
+              businessContext: "Paragraphs create readable text blocks that are smaller than headings - perfect for descriptions and explanatory text."
+            },
+            {
+              line: "Task Management System",
+              explanation: "This text explains what the system does - it gives users context about the application.",
+              businessContext: "Clear system descriptions help users understand the purpose immediately, reducing confusion and support requests."
+            },
+            {
+              line: "</p>",
+              explanation: "This closes the paragraph tag, ending the text block.",
+              businessContext: "Properly closed tags ensure the formatting applies only where intended, maintaining clean page structure."
+            }
+          ]
+        },
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
 <html lang="en-GB">
@@ -232,17 +361,49 @@ export default function Chapter1() {
     },
     {
       id: 'simple-form',
-      title: 'Step 3: Creating a Simple Input Box',
+      title: 'Step 4: Creating a Simple Input Box',
       type: 'coding',
       exercise: {
-        title: 'Add One Input Field for Tasks',
-        description: 'Now let\'s add a simple way for users to type in a task. We\'ll start with just one input box - no complicated forms yet!',
+        title: 'Add Section Heading and Input Field',
+        description: 'Now let\'s create a proper section for adding tasks. We\'ll add a section heading first, then the input field.',
         instructions: [
-          'Look for the comment "<!-- Step 3: Add an input box here -->"',
+          'Look for the comment "<!-- Step 3: Add section heading here -->"',
+          'Replace it with: <h2>Add New Task</h2>',
+          'Look for the comment "<!-- Step 4: Add an input box here -->"', 
           'Replace it with: <input type="text" placeholder="Enter task description">',
-          'Notice the quotes around "text" and "Enter task description"',
-          'The placeholder text shows users what to type in the box'
+          'This creates a clear section for task input with proper heading structure'
         ],
+        codeBlock: {
+          code: `<h2>Add New Task</h2>
+<input type="text" placeholder="Enter task description">`,
+          explanations: [
+            {
+              line: "<h2>Add New Task</h2>",
+              explanation: "Creates a section heading (H2) that's smaller than the main title (H1) but larger than regular text.",
+              businessContext: "Clear section headings help users understand page organization and make the interface scannable - essential for usability."
+            },
+            {
+              line: "<input",
+              explanation: "This creates an input field where users can type information.",
+              businessContext: "Input fields are the primary way users interact with web applications - they're essential for data collection and user engagement."
+            },
+            {
+              line: 'type="text"',
+              explanation: "Specifies this is a text input field (users can type letters, numbers, symbols).",
+              businessContext: "Different input types serve different business needs: text for general information, email for contact details, number for quantities, etc."
+            },
+            {
+              line: 'placeholder="Enter task description"',
+              explanation: "Shows helpful text inside the input box before users start typing.",
+              businessContext: "Good placeholder text reduces user confusion and support requests by clearly indicating what information is expected."
+            },
+            {
+              line: ">",
+              explanation: "Closes the input tag. Note: input elements are self-closing and don't need a separate closing tag.",
+              businessContext: "Understanding HTML structure helps when reviewing developer implementations and writing technical requirements."
+            }
+          ]
+        },
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
 <html lang="en-GB">
@@ -255,8 +416,8 @@ export default function Chapter1() {
     <h1>Ministry of Silly Walks</h1>
     <p>Task Management System</p>
     
-    <h2>Add New Task</h2>
-    <!-- Step 3: Add an input box here -->
+    <!-- Step 3: Add section heading here -->
+    <!-- Step 4: Add an input box here -->
     
 </body>
 </html>`,
@@ -276,20 +437,21 @@ export default function Chapter1() {
 </body>
 </html>`,
         hints: [
-          "Find the comment '<!-- Step 3: Add an input box here -->'",
-          "Replace it with: <input type=\"text\" placeholder=\"Enter task description\">",
+          "First find the comment '<!-- Step 3: Add section heading here -->' and replace it with <h2>Add New Task</h2>",
+          "Then find '<!-- Step 4: Add an input box here -->' and replace it with the input field",
+          "The <h2> tag creates a section heading - smaller than <h1> but bigger than regular text",
           "The <input> tag creates a text box where users can type",
-          "The placeholder text shows users what to type in the box",
           "Notice that <input> doesn't need a closing tag - it's self-contained!"
         ],
         explanation: {
-          whatIsHappening: "You've added an input field! This creates a text box where users can type. The 'placeholder' text appears as light gray text inside the box to guide users. When they click in the box and start typing, their text replaces the placeholder.",
-          whyItMatters: "This directly implements our user story: 'As a Junior Analyst, I want to add new walk evaluation tasks.' Now Michael Palin can actually type in a task description! This is the foundation of how users interact with web applications - through input fields.",
-          realWorldConnection: "When you write requirements like 'Users must be able to enter task information' or 'Provide a field for task description,' this is exactly what developers build. Understanding input types helps you specify requirements more precisely - like 'text input,' 'dropdown menu,' or 'multi-line text area.'",
+          whatIsHappening: "You've created a proper task input section! The <h2> heading organizes the page into clear sections, while the input field provides a text box where users can type. The 'placeholder' text appears as light gray text inside the box to guide users. When they click in the box and start typing, their text replaces the placeholder.",
+          whyItMatters: "This directly implements our user story: 'As a Junior Analyst, I want to add new walk evaluation tasks.' The section heading helps users understand what this part of the page does, while the input field lets Michael Palin actually type in a task description. Good information architecture like this reduces user confusion.",
+          realWorldConnection: "When you write requirements like 'Users must be able to enter task information' or 'The interface should be clearly organized,' this is how developers implement it. Understanding headings and input types helps you specify requirements more precisely - like 'section headings,' 'text input,' 'dropdown menu,' or 'multi-line text area.'",
           keyTerms: {
+            "Section heading (H2)": "A heading tag that organizes content into clear sections, smaller than H1 but larger than regular text",
             "Input field": "A box where users can type or select information",
             "Placeholder text": "Helpful text that shows what to enter, disappears when typing starts",
-            "User interaction": "How people use the website - clicking, typing, selecting",
+            "Information architecture": "How content is organized and structured to help users understand and navigate",
             "Self-closing tag": "Some HTML tags like <input> don't need a separate closing tag"
           }
         }
@@ -297,19 +459,57 @@ export default function Chapter1() {
     },
     {
       id: 'display-sample-task',
-      title: 'Step 4: Showing an Example Task',
+      title: 'Step 5: Showing an Example Task',
       type: 'coding',
       exercise: {
         title: 'Display a Sample Task',
         description: 'Let\'s show users what a task looks like! We\'ll add one example task so John Cleese can see how his tasks will appear.',
         instructions: [
-          'Find the comment "<!-- Step 4: Add a sample task here -->"',
-          'Replace it with: <div>',
-          'On the next line, add: <h3>Evaluate Mr. Smith\'s Silly Walk Application</h3>',
-          'Add: <p>Review submitted video and assess walk silliness level.</p>',
-          'Add: <p>Assigned to: John Cleese</p>',
-          'Finally, close with: </div>'
+          'Find the comment "<!-- Step 5: Add current tasks section here -->"',
+          'Replace it with the code shown below',
+          'This creates a section heading and a sample task display',
+          'Notice how we organize content with headings and containers'
         ],
+        codeBlock: {
+          code: `<h2>Current Tasks</h2>
+<div>
+    <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+    <p>Review submitted video and assess walk silliness level.</p>
+    <p>Assigned to: John Cleese</p>
+</div>`,
+          explanations: [
+            {
+              line: "<h2>Current Tasks</h2>",
+              explanation: "Creates another section heading to organize the page into clear areas - one for adding tasks, one for viewing them.",
+              businessContext: "Good information architecture separates different functions clearly, making the interface intuitive for users."
+            },
+            {
+              line: "<div>",
+              explanation: "Opens a container element that groups related information together.",
+              businessContext: "Containers organize content logically - essential for structured data display and user interface design."
+            },
+            {
+              line: "<h3>Evaluate Mr. Smith's Silly Walk Application</h3>",
+              explanation: "Creates a medium-sized heading for the task title using H3 (smaller than H1 and H2).",
+              businessContext: "Proper heading hierarchy helps users scan content quickly and improves accessibility for screen readers."
+            },
+            {
+              line: "<p>Review submitted video and assess walk silliness level.</p>",
+              explanation: "A paragraph containing the task description - what needs to be done.",
+              businessContext: "Clear task descriptions reduce ambiguity and help ensure work is completed correctly."
+            },
+            {
+              line: "<p>Assigned to: John Cleese</p>",
+              explanation: "Another paragraph showing who is responsible for this task.",
+              businessContext: "Assignment tracking is crucial for accountability and workload management in any system."
+            },
+            {
+              line: "</div>",
+              explanation: "Closes the container, keeping all task information grouped together.",
+              businessContext: "Proper structure ensures related information stays together visually and semantically."
+            }
+          ]
+        },
         language: 'html' as const,
         startingCode: `<!DOCTYPE html>
 <html lang="en-GB">
@@ -325,8 +525,7 @@ export default function Chapter1() {
     <h2>Add New Task</h2>
     <input type="text" placeholder="Enter task description">
     
-    <h2>Current Tasks</h2>
-    <!-- Step 4: Add a sample task here -->
+    <!-- Step 5: Add current tasks section here -->
     
 </body>
 </html>`,
@@ -353,20 +552,21 @@ export default function Chapter1() {
 </body>
 </html>`,
         hints: [
-          "Find the comment '<!-- Step 4: Add a sample task here -->'",
-          "Start with a <div> to contain the task information",
+          "Find the comment '<!-- Step 5: Add current tasks section here -->'",
+          "Start with <h2>Current Tasks</h2> to create a clear section heading",
+          "Add a <div> to contain the task information",
           "Add an <h3> heading for the task title: 'Evaluate Mr. Smith's Silly Walk Application'",
-          "Add a <p> paragraph for the description: 'Review submitted video and assess walk silliness level.'",
-          "Add another <p> for assignment: 'Assigned to: John Cleese'",
+          "Add <p> paragraphs for the description and assignment",
           "Don't forget to close the </div> at the end!"
         ],
         explanation: {
-          whatIsHappening: "You've created a sample task display! The <div> acts like a container that groups all the information about one task together. The <h3> creates a medium-sized heading for the task title, and the <p> elements show the description and who it's assigned to.",
-          whyItMatters: "This directly fulfills John Cleese's user story: 'I want to see all my assigned tasks in one place.' Now he can see exactly what information will be available for each task - the title, what needs to be done, and who's responsible for it.",
-          realWorldConnection: "When you write requirements like 'Users should see task title, description, and assignee,' this is how developers implement it. Understanding how content is grouped in HTML helps you write better requirements about information display and user interfaces.",
+          whatIsHappening: "You've created a complete task viewing section! The <h2> heading clearly labels this section, while the <div> acts like a container that groups all the information about one task together. The <h3> creates a medium-sized heading for the task title, and the <p> elements show the description and who it's assigned to.",
+          whyItMatters: "This directly fulfills John Cleese's user story: 'I want to see all my assigned tasks in one place.' The section heading helps him understand what this part of the page does, while the structured task display shows exactly what information will be available for each task - the title, what needs to be done, and who's responsible for it.",
+          realWorldConnection: "When you write requirements like 'Users should see task title, description, and assignee' or 'The interface should be clearly organized into sections,' this is how developers implement it. Understanding how content is grouped and labeled in HTML helps you write better requirements about information display and user interfaces.",
           keyTerms: {
+            "Section organization": "Using H2 headings to divide the page into clear functional areas",
             "Container": "A <div> element that groups related content together",
-            "Content hierarchy": "How information is organized from most important (h3) to details (p)",
+            "Content hierarchy": "How information is organized from most important (h2, h3) to details (p)",
             "Information grouping": "Putting related pieces of data together so they make sense",
             "Task representation": "How we show task information to users in a clear, organized way"
           }
@@ -394,7 +594,7 @@ export default function Chapter1() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/tutorial/introduction" className="flex items-center text-gray-600 hover:text-gray-900">
+            <Link href={getUrlWithParams("/tutorial/introduction")} className="flex items-center text-gray-600 hover:text-gray-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Introduction
             </Link>
@@ -409,7 +609,7 @@ export default function Chapter1() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Progress Sidebar */}
           <div className="lg:col-span-1">
@@ -446,7 +646,7 @@ export default function Chapter1() {
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800 font-medium mb-2">Chapter 1 Complete!</p>
                   <Link 
-                    href="/tutorial/chapter-2" 
+                    href={getUrlWithParams("/tutorial/chapter-2")} 
                     className="inline-flex items-center text-sm text-green-700 hover:text-green-900"
                   >
                     Start Chapter 2

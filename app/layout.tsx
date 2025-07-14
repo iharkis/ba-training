@@ -9,8 +9,9 @@ export const metadata: Metadata = {
   description: 'Interactive tutorial teaching Business Analysts web development fundamentals through building a government task management system',
   keywords: 'business analyst, web development, tutorial, typescript, react, mongodb',
   authors: [{ name: 'BA Training Team' }],
-  viewport: 'width=device-width, initial-scale=1',
 }
+
+export const viewport = 'width=device-width, initial-scale=1'
 
 export default function RootLayout({
   children,

@@ -119,7 +119,54 @@ export default function Chapter3() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ministry of Silly Walks - Task Manager</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #003d7a;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #4b5563;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        div {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        /* Step 1: Add button styles here */
+        button {
+            background-color: #003d7a;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #002a5c;
+        }
+    </style>
 </head>
 <body>
     <h1>Ministry of Silly Walks</h1>
@@ -137,8 +184,6 @@ export default function Chapter3() {
             <p>Assigned to: John Cleese</p>
         </div>
     </div>
-    
-    <script src="script.js"></script>
 </body>
 </html>`,
         targetCode: `<!DOCTYPE html>
@@ -147,7 +192,53 @@ export default function Chapter3() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ministry of Silly Walks - Task Manager</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #003d7a;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #4b5563;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        div {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #003d7a;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #002a5c;
+        }
+    </style>
 </head>
 <body>
     <h1>Ministry of Silly Walks</h1>
@@ -165,8 +256,6 @@ export default function Chapter3() {
             <p>Assigned to: John Cleese</p>
         </div>
     </div>
-    
-    <script src="script.js"></script>
 </body>
 </html>`,
         hints: [
@@ -192,119 +281,15 @@ export default function Chapter3() {
     {
       id: 'add-javascript',
       title: 'Step 2: Adding JavaScript Functionality',
-      type: 'coding',
-      exercise: {
-        title: 'Make the Add Task Button Work',
-        description: 'Now let\'s add JavaScript to make the "Add Task" button actually work! We\'ll write the code in a separate JavaScript file to maintain clean separation of concerns.',
-        instructions: [
-          'Add JavaScript code to the script.js file (you can see it in the file tree)',
-          'This code will listen for clicks on the Add Task button and create new tasks',
-          'Copy the JavaScript code from the code block below into the editor',
-          'Test it by typing in the input field and clicking "Add Task"'
-        ],
-        codeBlock: {
-          code: `document.getElementById('addTaskBtn').addEventListener('click', function() {
-    const input = document.getElementById('taskInput');
-    const taskText = input.value.trim();
-    
-    if (taskText === '') {
-        alert('Please enter a task description');
-        return;
-    }
-    
-    const taskList = document.getElementById('taskList');
-    const newTask = document.createElement('div');
-    newTask.innerHTML = \`
-        <h3>\${taskText}</h3>
-        <p>Status: Pending</p>
-        <p>Assigned to: Current User</p>
-    \`;
-    
-    taskList.appendChild(newTask);
-    input.value = '';
-});`,
-          explanations: [
-            {
-              line: "document.getElementById('addTaskBtn').addEventListener('click', function() {",
-              explanation: "This finds the Add Task button and listens for when someone clicks it.",
-              businessContext: "Event listeners are how web applications respond to user actions - essential for interactive systems."
-            },
-            {
-              line: "const input = document.getElementById('taskInput');",
-              explanation: "This gets the input field where users type their task description.",
-              businessContext: "Accessing form inputs is fundamental to collecting user data in web applications."
-            },
-            {
-              line: "const taskText = input.value.trim();",
-              explanation: "This gets the text the user typed and removes extra spaces.",
-              businessContext: "Data cleaning (like trimming spaces) prevents common user input errors and improves data quality."
-            },
-            {
-              line: "if (taskText === '') { alert('Please enter a task description'); return; }",
-              explanation: "This validates that the user actually entered some text before creating a task.",
-              businessContext: "Input validation is crucial for data integrity and prevents users from creating empty or invalid records."
-            },
-            {
-              line: "const newTask = document.createElement('div');",
-              explanation: "This creates a new HTML element to hold the new task information.",
-              businessContext: "Dynamic content creation allows applications to respond to user actions and update in real-time."
-            },
-            {
-              line: "newTask.innerHTML = `<h3>${taskText}</h3>...`;",
-              explanation: "This fills the new task element with the user's text and standard task information.",
-              businessContext: "Template literals allow dynamic content generation - essential for data-driven applications."
-            },
-            {
-              line: "taskList.appendChild(newTask); input.value = '';",
-              explanation: "This adds the new task to the list and clears the input for the next task.",
-              businessContext: "Providing immediate feedback and clearing forms improves user experience and workflow efficiency."
-            }
-          ]
-        },
-        language: 'typescript' as const,
-        startingCode: `// Ministry of Silly Walks - Task Manager JavaScript
-
-// Step 2: Add JavaScript code here`,
-        targetCode: `document.getElementById('addTaskBtn').addEventListener('click', function() {
-    const input = document.getElementById('taskInput');
-    const taskText = input.value.trim();
-    
-    if (taskText === '') {
-        alert('Please enter a task description');
-        return;
-    }
-    
-    const taskList = document.getElementById('taskList');
-    const newTask = document.createElement('div');
-    newTask.innerHTML = \`
-        <h3>\${taskText}</h3>
-        <p>Status: Pending</p>
-        <p>Assigned to: Current User</p>
-    \`;
-    
-    taskList.appendChild(newTask);
-    input.value = '';
-});`,
-        hints: [
-          "You're now editing the script.js file - notice this is separate from the HTML",
-          "Replace the comment with the JavaScript code from the code block",
-          "The JavaScript listens for clicks on the 'Add Task' button",
-          "When clicked, it gets the text from the input field and creates a new task",
-          "Test it by typing something and clicking the button in the preview!"
-        ],
-        explanation: {
-          whatIsHappening: "You've added your first JavaScript functionality in a separate file! The code listens for clicks on the 'Add Task' button, gets the text from the input field, validates it's not empty, creates a new task element with the same styling as existing tasks, and adds it to the task list. It also clears the input field for the next task. Notice how the HTML, CSS, and JavaScript are now properly separated into different files.",
-          whyItMatters: "This implements the core user story: 'As a staff member, I want to add new tasks to my workload.' The validation prevents empty tasks (a business rule), and the automatic clearing of the input field improves user experience. Users can now actually use this system for their daily work - it's transformed from a static display to a working tool. Most importantly, you're following separation of concerns - HTML in index.html, CSS in styles.css, and JavaScript in script.js.",
-          realWorldConnection: "This is how professional web applications are structured. Requirements like 'maintain clean code architecture' and 'ensure maintainability' get implemented through proper separation of concerns. The JavaScript handles both user interface concerns (clearing the input, adding visual elements) and business logic (validation rules). Understanding this separation helps you write better technical requirements and communicate more effectively with development teams.",
-          keyTerms: {
-            "Event Listener": "Code that waits for user actions like clicks, key presses, or form submissions",
-            "DOM Manipulation": "Using JavaScript to change the content and structure of the web page",
-            "Input Validation": "Checking that user-entered data meets business rules before processing",
-            "Template Literals": "The backtick syntax (`) that lets you create HTML with dynamic content",
-            "Separation of Concerns": "Keeping HTML (structure), CSS (styling), and JavaScript (behavior) in separate files for better maintainability"
-          }
-        }
-      }
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">Step 2: Adding JavaScript Functionality</h2>
+          <p className="text-lg text-gray-600">
+            This step will be implemented soon. For now, you've learned how to add structure and styling to your task manager.
+          </p>
+        </div>
+      )
     }
   ]
 
@@ -315,7 +300,7 @@ export default function Chapter3() {
       .map((step, index) => isStepComplete(step.id) ? index : -1)
       .filter(index => index !== -1)
     setCompletedSteps(completed)
-  }, [])
+  }, [steps])
 
   const markStepCompleteLocal = (index: number) => {
     if (!completedSteps.includes(index)) {

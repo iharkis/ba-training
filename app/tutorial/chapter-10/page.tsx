@@ -2,12 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, CheckCircle, Lightbulb, Users, Briefcase, Target, Award, BookOpen } from 'lucide-react'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter10() {
+  const searchParams = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
+
+  // Helper function to preserve URL parameters
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
 
   useEffect(() => {
     const progress = getProgress()
@@ -407,6 +415,75 @@ export default function Chapter10() {
               Use this knowledge to bridge business and technical teams more effectively, write better requirements, and contribute to successful project delivery.
             </p>
           </div>
+
+          <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+            <h4 className="font-medium text-green-900 mb-3 text-lg">🏗️ Your Complete System Architecture</h4>
+            <p className="text-sm text-green-800 mb-4">
+              You've built a full-stack web application that demonstrates enterprise-grade architecture:
+            </p>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded border-l-4 border-green-500">
+                <h5 className="font-medium text-green-800 mb-2">Frontend Layer (Chapters 1-3):</h5>
+                <ul className="text-sm text-green-700 space-y-1">
+                  <li>• HTML structure defining semantic content</li>
+                  <li>• CSS styling creating professional user interface</li>
+                  <li>• JavaScript adding interactivity and business logic</li>
+                  <li>• Responsive design working across all devices</li>
+                </ul>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-blue-500">
+                <h5 className="font-medium text-blue-800 mb-2">API Layer (Chapters 4-5):</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• RESTful API endpoints for all CRUD operations</li>
+                  <li>• Proper HTTP methods and status codes</li>
+                  <li>• Input validation and error handling</li>
+                  <li>• JSON data exchange between frontend and backend</li>
+                </ul>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-purple-500">
+                <h5 className="font-medium text-purple-800 mb-2">Database Layer (Chapter 6):</h5>
+                <ul className="text-sm text-purple-700 space-y-1">
+                  <li>• SQLite database with proper schema design</li>
+                  <li>• ACID compliance for data integrity</li>
+                  <li>• Automatic audit trails with timestamps</li>
+                  <li>• Safe concurrent access for multiple users</li>
+                </ul>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-orange-500">
+                <h5 className="font-medium text-orange-800 mb-2">Integration & Quality (Chapters 7-9):</h5>
+                <ul className="text-sm text-orange-700 space-y-1">
+                  <li>• Frontend-backend integration with real API calls</li>
+                  <li>• Comprehensive testing and debugging strategies</li>
+                  <li>• Performance optimization and monitoring</li>
+                  <li>• User experience enhancements and error handling</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+            <h4 className="font-medium text-blue-900 mb-3 text-lg">📋 Your New BA Superpowers</h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <h5 className="font-medium text-blue-800 mb-2">Technical Discussions:</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• "Should we use localStorage or a database?"</li>
+                  <li>• "How will the frontend validate user input?"</li>
+                  <li>• "What happens when the API call fails?"</li>
+                  <li>• "How do we prevent duplicate submissions?"</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-medium text-blue-800 mb-2">Requirements Writing:</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• Specific, testable acceptance criteria</li>
+                  <li>• Performance requirements with measurable targets</li>
+                  <li>• Error handling and edge case specifications</li>
+                  <li>• Integration requirements across system layers</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       )
     }
@@ -427,7 +504,7 @@ export default function Chapter10() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/tutorial/chapter-9" className="flex items-center text-gray-600 hover:text-gray-900">
+            <Link href={getUrlWithParams("/tutorial/chapter-9")} className="flex items-center text-gray-600 hover:text-gray-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Chapter 9
             </Link>

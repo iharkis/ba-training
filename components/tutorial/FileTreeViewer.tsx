@@ -13,11 +13,13 @@ interface FileNode {
 }
 
 interface FileTreeViewerProps {
-  projectStructure: FileNode[]
+  projectStructure?: FileNode[]
   selectedFile?: string | null
   onFileSelect?: (filePath: string, content: string, language?: string) => void
   currentChapter?: number
   useStartingContent?: boolean
+  currentExerciseLanguage?: string
+  fileContents?: Map<string, string>
 }
 
 // Define the project structure that builds up throughout the tutorial
@@ -46,6 +48,7 @@ const getProjectStructureForChapter = (chapter: number): FileNode[] => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ministry of Silly Walks - Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Ministry of Silly Walks</h1>
@@ -485,12 +488,78 @@ module.exports = Database;`
   return baseStructure
 }
 
+// Build project structure from user's actual file contents
+const buildProjectStructureFromUserFiles = (fileContents: Map<string, string>, chapter: number): FileNode[] => {
+  const baseStructure: FileNode[] = [
+    {
+      name: 'silly-walks-task-manager',
+      type: 'folder',
+      isExpanded: true,
+      children: []
+    }
+  ]
+
+  const projectRoot = baseStructure[0]
+
+  // Add user's actual files if they exist, otherwise use templates
+  const addFileToStructure = (fileName: string, language: 'html' | 'css' | 'javascript' | 'typescript' | 'json') => {
+    const fullPath = `silly-walks-task-manager/${fileName}`
+    const userContent = fileContents.get(fullPath)
+    
+    if (userContent && userContent.trim().length > 0) {
+      // Use user's actual content
+      projectRoot.children?.push({
+        name: fileName,
+        type: 'file',
+        language,
+        content: userContent
+      })
+    } else if (chapter >= getMinChapterForFile(fileName)) {
+      // Use template content for files that should exist in this chapter
+      const templateStructure = getProjectStructureForChapter(chapter)
+      const templateRoot = templateStructure[0]
+      const templateFile = templateRoot.children?.find(f => f.name === fileName)
+      
+      if (templateFile) {
+        projectRoot.children?.push(templateFile)
+      }
+    }
+  }
+
+  // Determine which files should exist based on chapter
+  const getMinChapterForFile = (fileName: string): number => {
+    if (fileName === 'index.html') return 1
+    if (fileName === 'styles.css') return 2
+    if (fileName === 'script.js') return 3
+    return 1
+  }
+
+  // Add files based on what should exist and what user has created
+  addFileToStructure('index.html', 'html')
+  if (chapter >= 2) addFileToStructure('styles.css', 'css')
+  if (chapter >= 3) addFileToStructure('script.js', 'javascript')
+
+  // Add backend structure for later chapters
+  if (chapter >= 5) {
+    const templateStructure = getProjectStructureForChapter(chapter)
+    const templateRoot = templateStructure[0]
+    const backendFolder = templateRoot.children?.find(f => f.name === 'backend')
+    if (backendFolder) {
+      projectRoot.children?.push(backendFolder)
+    }
+  }
+
+  return baseStructure
+}
+
 export default function FileTreeViewer({ 
   projectStructure, 
   selectedFile, 
   onFileSelect,
   currentChapter = 1,
-  useStartingContent = false
+  useStartingContent = false,
+  currentExerciseLanguage,
+  fileContents = new Map()
 }: FileTreeViewerProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['silly-walks-task-manager']))
   const [showContent, setShowContent] = useState(false)
@@ -500,8 +569,8 @@ export default function FileTreeViewer({
     language?: string
   } | null>(null)
 
-  // Use dynamic project structure based on chapter if not provided
-  const structure = projectStructure || getProjectStructureForChapter(currentChapter)
+  // Use user's actual files if available, otherwise fall back to template
+  const structure = projectStructure || buildProjectStructureFromUserFiles(fileContents, currentChapter)
 
   const toggleFolder = (folderPath: string) => {
     const newExpanded = new Set(expandedFolders)
@@ -548,15 +617,21 @@ export default function FileTreeViewer({
   }
 
   const handleFileClick = (filePath: string, content: string, language?: string) => {
+    // Always check for user's actual content first
+    const userContent = fileContents.get(filePath)
+    
     if (useStartingContent) {
-      // Use starting content instead of completed content for file editing mode
-      const startingContent = getFileStartingContent(filePath, language)
-      onFileSelect?.(filePath, startingContent, language)
+      // Use starting content for file editing mode (only if no user content exists)
+      const contentToUse = userContent && userContent.trim().length > 0 
+        ? userContent 
+        : getFileStartingContent(filePath, language)
+      onFileSelect?.(filePath, contentToUse, language)
     } else {
-      // Show modal with completed content for viewing mode
-      setSelectedFileContent({ name: filePath, content, language })
+      // Use user content if available, otherwise use provided content
+      const contentToUse = userContent && userContent.trim().length > 0 ? userContent : content
+      setSelectedFileContent({ name: filePath, content: contentToUse, language })
       setShowContent(true)
-      onFileSelect?.(filePath, content, language)
+      onFileSelect?.(filePath, contentToUse, language)
     }
   }
 
@@ -567,12 +642,21 @@ export default function FileTreeViewer({
           const fullPath = basePath ? `${basePath}/${node.name}` : node.name
           const isExpanded = expandedFolders.has(fullPath)
           const isSelected = selectedFile === fullPath
+          
+          // Check if this file corresponds to the current exercise
+          const isCurrentExerciseFile = currentExerciseLanguage && node.type === 'file' && (
+            (node.name.includes('index.html') && currentExerciseLanguage === 'html') ||
+            (node.name.includes('styles.css') && currentExerciseLanguage === 'css') ||
+            (node.name.includes('script.js') && (currentExerciseLanguage === 'javascript' || currentExerciseLanguage === 'typescript'))
+          )
 
           return (
             <div key={fullPath}>
               <div
                 className={`flex items-center space-x-2 px-2 py-1 rounded text-sm cursor-pointer hover:bg-gray-100 ${
-                  isSelected ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                  isSelected ? 'bg-blue-50 text-blue-700' : 
+                  isCurrentExerciseFile ? 'bg-green-50 text-green-700 border border-green-200' : 
+                  'text-gray-700'
                 }`}
                 onClick={() => {
                   if (node.type === 'folder') {
@@ -611,7 +695,12 @@ export default function FileTreeViewer({
                   )}
                 </div>
                 <span className="flex-1">{node.name}</span>
-                {node.type === 'file' && node.content && (
+                {isCurrentExerciseFile && (
+                  <span className="text-xs text-green-600 font-medium bg-green-100 px-2 py-0.5 rounded">
+                    Current Exercise
+                  </span>
+                )}
+                {node.type === 'file' && node.content && !isCurrentExerciseFile && (
                   <Eye className="w-3 h-3 text-gray-400" />
                 )}
               </div>

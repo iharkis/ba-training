@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BookOpen, Code, Users, Lightbulb, ArrowRight, Play, Clock, Target } from 'lucide-react'
+import { BookOpen, Code, Users, Clock } from 'lucide-react'
 import { getCompletedStepsCount } from '@/lib/progress'
 
 export default function HomePage() {
-  const [isReady, setIsReady] = useState(false)
   const [completedSteps, setCompletedSteps] = useState(0)
 
   useEffect(() => {
@@ -49,16 +48,10 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <Link href="/tutorial/introduction" className="tutorial-button-primary px-6 py-3">
               {completedSteps > 0 ? 'Continue Tutorial' : 'Start Tutorial'}
             </Link>
-            <button 
-              onClick={() => setIsReady(!isReady)}
-              className="tutorial-button-secondary px-6 py-3"
-            >
-              View Learning Path
-            </button>
           </div>
           
           {completedSteps > 0 && (
@@ -147,10 +140,9 @@ export default function HomePage() {
       </section>
 
       {/* Learning Path Overview */}
-      {isReady && (
-        <section className="py-12 px-4 sm:px-6 lg:px-8 fade-in">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">Tutorial Structure</h2>
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">Tutorial Structure</h2>
             
             <div className="grid md:grid-cols-3 gap-8">
               {/* Foundation */}
@@ -224,7 +216,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-      )}
 
 
       {/* Footer */}

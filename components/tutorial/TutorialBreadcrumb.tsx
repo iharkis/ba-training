@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 const TUTORIAL_STRUCTURE = {
   '/': { title: 'Home', description: 'BA Development Tutorial' },
@@ -71,10 +71,17 @@ interface TutorialBreadcrumbProps {
 
 export default function TutorialBreadcrumb({ showChapterNavigation = true }: TutorialBreadcrumbProps) {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const currentPage = TUTORIAL_STRUCTURE[pathname as keyof typeof TUTORIAL_STRUCTURE]
   
+  // Helper function to preserve URL parameters
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
+  
   const getCurrentChapterNumber = () => {
-    if (currentPage?.chapter !== undefined) {
+    if (currentPage && 'chapter' in currentPage) {
       return currentPage.chapter
     }
     return null
@@ -85,13 +92,13 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
     if (currentChapter === null || currentChapter <= 0) return null
     
     if (currentChapter === 1) {
-      return { path: '/tutorial/introduction', title: 'Introduction' }
+      return { path: getUrlWithParams('/tutorial/introduction'), title: 'Introduction' }
     }
     
     const prevChapter = currentChapter - 1
     const path = `/tutorial/chapter-${prevChapter}`
     const pageData = TUTORIAL_STRUCTURE[path as keyof typeof TUTORIAL_STRUCTURE]
-    return pageData ? { path, title: pageData.title } : null
+    return pageData ? { path: getUrlWithParams(path), title: pageData.title } : null
   }
 
   const getNextChapter = () => {
@@ -99,7 +106,7 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
     if (currentChapter === null || currentChapter >= TOTAL_CHAPTERS) return null
     
     if (currentChapter === 0) {
-      return { path: '/tutorial/chapter-1', title: 'Chapter 1: Building the Foundation' }
+      return { path: getUrlWithParams('/tutorial/chapter-1'), title: 'Chapter 1: Building the Foundation' }
     }
     
     const nextChapter = currentChapter + 1
@@ -107,21 +114,21 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
     
     const path = `/tutorial/chapter-${nextChapter}`
     const pageData = TUTORIAL_STRUCTURE[path as keyof typeof TUTORIAL_STRUCTURE]
-    return pageData ? { path, title: pageData.title } : null
+    return pageData ? { path: getUrlWithParams(path), title: pageData.title } : null
   }
 
   const generateBreadcrumbs = () => {
     const breadcrumbs = [
-      { path: '/', title: 'Home', icon: Home }
+      { path: getUrlWithParams('/'), title: 'Home', icon: Home }
     ]
 
     if (pathname.startsWith('/tutorial')) {
       if (pathname !== '/tutorial/introduction') {
-        breadcrumbs.push({ path: '/tutorial/introduction', title: 'Tutorial' })
+        breadcrumbs.push({ path: getUrlWithParams('/tutorial/introduction'), title: 'Tutorial', icon: Home })
       }
       
       if (currentPage) {
-        breadcrumbs.push({ path: pathname, title: currentPage.title, current: true })
+        breadcrumbs.push({ path: getUrlWithParams(pathname), title: currentPage.title, icon: Home })
       }
     }
 
@@ -142,7 +149,7 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
             {breadcrumbs.map((crumb, index) => (
               <div key={crumb.path} className="flex items-center">
                 {index > 0 && <ChevronRight className="w-4 h-4 text-gray-400 mx-2" />}
-                {crumb.current ? (
+                {index === breadcrumbs.length - 1 ? (
                   <span className="text-gray-900 font-medium flex items-center">
                     {crumb.icon && <crumb.icon className="w-4 h-4 mr-1" />}
                     {crumb.title}

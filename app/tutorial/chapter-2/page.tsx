@@ -2,14 +2,22 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CheckCircle, Palette, Lightbulb } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter2() {
+  const searchParams = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
+
+  // Helper function to preserve URL parameters
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
 
   // Load progress on mount
   useEffect(() => {
@@ -101,13 +109,13 @@ export default function Chapter2() {
       title: 'Step 1: Adding Basic Styles',
       type: 'coding',
       exercise: {
-        title: 'Add a Style Section to Your HTML',
-        description: 'Let\'s start by adding a CSS section to our HTML file. We\'ll put the styles right in the HTML for now to keep things simple.',
+        title: 'Create Your First CSS Styles',
+        description: 'Let\'s add professional styling to our task manager by creating CSS in a separate stylesheet file. This follows industry best practices.',
         instructions: [
-          'Find the comment "<!-- Step 1: Add styles here -->" in the <head> section',
-          'Replace it with a <style> tag opening: <style>',
-          'Copy and paste the CSS code shown below',
-          'Close with: </style>',
+          'Find the comment "/* Step 1: Add body styles here */" in the CSS file',
+          'Replace the entire comment with the CSS code shown below',
+          'Make sure to include the opening "body {" and closing "}" brackets',
+          'Each CSS property should end with a semicolon',
           'This will make our page look much more professional'
         ],
         codeBlock: {
@@ -151,77 +159,36 @@ export default function Chapter2() {
             }
           ]
         },
-        language: 'html' as const,
-        startingCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <!-- Step 1: Add styles here -->
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" placeholder="Enter task description">
-    
-    <h2>Current Tasks</h2>
-    <div>
-        <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-        <p>Review submitted video and assess walk silliness level.</p>
-        <p>Assigned to: John Cleese</p>
-    </div>
-</body>
-</html>`,
-        targetCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" placeholder="Enter task description">
-    
-    <h2>Current Tasks</h2>
-    <div>
-        <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-        <p>Review submitted video and assess walk silliness level.</p>
-        <p>Assigned to: John Cleese</p>
-    </div>
-</body>
-</html>`,
+        language: 'css' as const,
+        startingCode: `/* Ministry of Silly Walks - Task Manager Styles */
+
+/* Step 1: Add body styles here */`,
+        targetCode: `/* Ministry of Silly Walks - Task Manager Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}`,
         hints: [
-          "Look for the comment '<!-- Step 1: Add styles here -->' in the <head> section",
-          "Replace the entire comment with <style> to start the CSS section",
-          "Copy and paste the CSS code from the code block above",
-          "Don't forget to close with </style>",
+          "Look for the comment '/* Step 1: Add body styles here */' in the CSS file",
+          "Replace the entire comment with the CSS code from the code block above",
+          "Make sure to include the opening 'body {' and closing '}' brackets",
+          "Each CSS property should end with a semicolon",
           "The styles will center the content and add a professional look"
         ],
         explanation: {
-          whatIsHappening: "You've added your first CSS! The <style> tag tells the browser 'everything inside here is styling instructions.' The body selector targets the <body> element and applies styling to the entire page. You've set a professional font, centered the content, added padding for breathing room, and given it a light background color.",
-          whyItMatters: "This simple styling transformation shows how CSS directly serves business requirements. The Ministry needed a 'professional appearance' - you've just implemented that requirement. The centered layout and clean font make the system look trustworthy and government-appropriate.",
-          realWorldConnection: "When you write requirements like 'the system should look professional' or 'use a clean, readable layout,' developers implement these through CSS properties like font-family, max-width, and background-color. Understanding these basics helps you write more specific design requirements.",
+          whatIsHappening: "You've added your first CSS to an external stylesheet! The body selector targets the <body> element and applies styling to the entire page. You've set a professional font, centered the content, added padding for breathing room, and given it a light background color. This CSS file is linked to your HTML, so the browser knows to apply these styles.",
+          whyItMatters: "This approach follows professional web development practices by separating content (HTML) from presentation (CSS). The Ministry needed a 'professional appearance' - you've just implemented that requirement using industry-standard techniques. The centered layout and clean font make the system look trustworthy and government-appropriate.",
+          realWorldConnection: "Real web applications use external CSS files like this because they're easier to maintain, can be cached by browsers for better performance, and can be shared across multiple pages. When you write requirements like 'the system should look professional,' developers implement these through CSS properties in external stylesheets.",
           keyTerms: {
             "CSS Selector": "The part that chooses which HTML elements to style (like 'body')",
             "Property": "What aspect you want to change (like 'font-family' or 'background-color')",
             "Value": "How you want to change it (like 'Arial' or '#f8f9fa')",
-            "Style Tag": "The <style> element that contains CSS code within HTML"
+            "External Stylesheet": "A separate .css file linked to HTML that contains all styling rules",
+            "Separation of Concerns": "Keeping HTML (content) and CSS (styling) in separate files for better organization"
           }
         }
       }
@@ -234,7 +201,7 @@ export default function Chapter2() {
         title: 'Make the Headings Look Professional',
         description: 'Now let\'s style our headings to follow government design standards. We\'ll add colors and spacing that make the hierarchy clear.',
         instructions: [
-          'Find the comment "/* Step 2: Add heading styles here */" inside the <style> tag',
+          'Find the comment "/* Step 2: Add heading styles here */" in the CSS file',
           'Replace it with the CSS code shown below',
           'This will style both h1 and h2 headings with government colors',
           'The styling creates clear visual hierarchy for your users'
@@ -287,81 +254,59 @@ h2 {
             }
           ]
         },
-        language: 'html' as const,
-        startingCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        /* Step 2: Add heading styles here */
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" placeholder="Enter task description">
-    
-    <h2>Current Tasks</h2>
-    <div>
-        <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-        <p>Review submitted video and assess walk silliness level.</p>
-        <p>Assigned to: John Cleese</p>
-    </div>
-</body>
-</html>`,
-        targetCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" placeholder="Enter task description">
-    
-    <h2>Current Tasks</h2>
-    <div>
-        <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-        <p>Review submitted video and assess walk silliness level.</p>
-        <p>Assigned to: John Cleese</p>
-    </div>
-</body>
-</html>`,
+        language: 'css' as const,
+        startingCode: `/* Ministry of Silly Walks - Task Manager Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+/* Step 2: Add heading styles here */
+
+/* Basic styles to show the content */
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}`,
+        targetCode: `/* Ministry of Silly Walks - Task Manager Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #003d7a;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+}`,
         hints: [
-          "Find the comment '/* Step 2: Add heading styles here */' inside the <style> section",
+          "Find the comment '/* Step 2: Add heading styles here */' in the CSS file",
           "Copy and paste the CSS code from the code block above",
           "Make sure to include both the h1 and h2 style rules",
           "Each style rule targets different heading levels",
@@ -385,10 +330,10 @@ h2 {
       title: 'Step 3: Styling the Input and Task Card',
       type: 'coding',
       exercise: {
-        title: 'Style the Task Input and Task Display',
-        description: 'Let\'s make the input field look professional and create a proper task card design that makes tasks easy to read and manage.',
+        title: 'Style the Task Input and Task Display with External CSS',
+        description: 'Let\'s make the input field look professional and create a proper task card design that makes tasks easy to read and manage using our external CSS file.',
         instructions: [
-          'Find the comment "/* Step 3: Add input and task styles here */"',
+          'Find the comment "/* Step 3: Add input and task styles here */" in the CSS file',
           'Replace it with the CSS code shown below',
           'This will style both the input field and task cards',
           'The input will become full-width with professional padding',
@@ -484,113 +429,94 @@ div {
             }
           ]
         },
-        language: 'html' as const,
-        startingCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-        /* Step 3: Add input and task styles here */
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" placeholder="Enter task description">
-    
-    <h2>Current Tasks</h2>
-    <div>
-        <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-        <p>Review submitted video and assess walk silliness level.</p>
-        <p>Assigned to: John Cleese</p>
-    </div>
-</body>
-</html>`,
-        targetCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            color: #003d7a;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #4b5563;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        div {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" placeholder="Enter task description">
-    
-    <h2>Current Tasks</h2>
-    <div>
-        <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-        <p>Review submitted video and assess walk silliness level.</p>
-        <p>Assigned to: John Cleese</p>
-    </div>
-</body>
-</html>`,
+        language: 'css' as const,
+        startingCode: `/* Ministry of Silly Walks - Task Manager Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #003d7a;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+}
+
+/* Step 3: Add input and task styles here */
+
+/* Basic form styling */
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Basic task styling */
+div {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}`,
+        targetCode: `/* Ministry of Silly Walks - Task Manager Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #003d7a;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+div {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}`,
         hints: [
-          "Find the comment '/* Step 3: Add input and task styles here */'",
+          "Find the comment '/* Step 3: Add input and task styles here */' in the CSS file",
           "Copy and paste the CSS code from the code block above",
           "Make sure to include both the input and div style rules",
           "The input will become full-width with professional padding",
           "The div will become a card with white background and subtle shadow"
         ],
         explanation: {
-          whatIsHappening: "You've transformed the basic input and task display into professional UI components. The input field now spans the full width with comfortable padding and rounded corners. The task is displayed in a card format with a white background, subtle border, and shadow - making it stand out from the page background while being easy to read.",
+          whatIsHappening: "You've transformed the basic input and task display into professional UI components using external CSS. The input field now spans the full width with comfortable padding and rounded corners. The task is displayed in a card format with a white background, subtle border, and shadow - making it stand out from the page background while being easy to read.",
           whyItMatters: "These styling changes directly address user experience requirements. The full-width input makes it clear where to type, and the card design helps John Cleese quickly identify individual tasks in his workload. The visual separation reduces errors and speeds up task processing - crucial for busy government work.",
           realWorldConnection: "When you write requirements like 'tasks should be clearly distinguished' or 'input fields should be easy to use,' these CSS properties are how developers implement them. Understanding concepts like padding, borders, and shadows helps you write more specific UX requirements and have informed discussions about interface design decisions.",
           keyTerms: {
@@ -623,7 +549,7 @@ div {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/tutorial/chapter-1" className="flex items-center text-gray-600 hover:text-gray-900">
+            <Link href={getUrlWithParams("/tutorial/chapter-1")} className="flex items-center text-gray-600 hover:text-gray-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Chapter 1
             </Link>
@@ -675,7 +601,7 @@ div {
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800 font-medium mb-2">Chapter 2 Complete!</p>
                   <Link 
-                    href="/tutorial/chapter-3" 
+                    href={getUrlWithParams("/tutorial/chapter-3")} 
                     className="inline-flex items-center text-sm text-green-700 hover:text-green-900"
                   >
                     Start Chapter 3

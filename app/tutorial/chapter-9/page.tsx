@@ -2,12 +2,20 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, CheckCircle, Zap, Lightbulb, Timer, TrendingUp, Users } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { ArrowLeft, ArrowRight, CheckCircle, Zap, Lightbulb, Timer, TrendingUp, Users, Target } from 'lucide-react'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter9() {
+  const searchParams = useSearchParams()
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
+
+  // Helper function to preserve URL parameters
+  const getUrlWithParams = (path: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    return params.toString() ? `${path}?${params.toString()}` : path
+  }
 
   useEffect(() => {
     const progress = getProgress()
@@ -200,6 +208,31 @@ export default function Chapter9() {
                 <li>• <strong>User Experience:</strong> Page load times, interaction responsiveness, error rates</li>
               </ul>
               <p className="mt-3 text-sm">What gets measured can be improved - establish baselines and track improvements.</p>
+            </div>
+          </div>
+
+          <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+            <h4 className="font-medium text-green-900 mb-3 text-lg">🔧 Hands-On: Measuring Your Ministry System</h4>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded border-l-4 border-green-500">
+                <h5 className="font-medium text-green-800 mb-2">Try This Now:</h5>
+                <ol className="text-sm text-green-700 space-y-2">
+                  <li>1. <strong>Open your Ministry task system</strong> in the browser</li>
+                  <li>2. <strong>Press F12</strong> to open Developer Tools</li>
+                  <li>3. <strong>Go to the Network tab</strong> and refresh the page</li>
+                  <li>4. <strong>Look for:</strong> How long does the page take to load? How many requests are made?</li>
+                  <li>5. <strong>Create a new task</strong> and watch the API call in the Network tab</li>
+                </ol>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-blue-500">
+                <h5 className="font-medium text-blue-800 mb-2">What You'll See:</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• <strong>HTML document:</strong> Usually loads in 50-200ms</li>
+                  <li>• <strong>CSS/JS files:</strong> May take 100-500ms depending on size</li>
+                  <li>• <strong>API calls:</strong> Database queries typically 5-50ms</li>
+                  <li>• <strong>Total page load:</strong> Should be under 2 seconds</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -410,6 +443,143 @@ export default function Chapter9() {
           </div>
         </div>
       )
+    },
+    {
+      id: 'practical-performance-testing',
+      title: 'Step 3: Practical Performance Testing',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold text-gray-900">Hands-On Performance Analysis</h3>
+          
+          <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+            <h4 className="font-medium text-blue-900 mb-3 text-lg">🔍 Using Browser DevTools for Performance</h4>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded border-l-4 border-blue-500">
+                <h5 className="font-medium text-blue-800 mb-2">Exercise: Audit Your Ministry System</h5>
+                <ol className="text-sm text-blue-700 space-y-2">
+                  <li>1. Open your task management system in Chrome</li>
+                  <li>2. Press F12 → Go to "Lighthouse" tab</li>
+                  <li>3. Click "Generate report" for Performance</li>
+                  <li>4. Review the score and recommendations</li>
+                </ol>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-yellow-500">
+                <h5 className="font-medium text-yellow-800 mb-2">What Lighthouse Measures:</h5>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li>• <strong>First Contentful Paint:</strong> When first content appears</li>
+                  <li>• <strong>Speed Index:</strong> How quickly content is visually complete</li>
+                  <li>• <strong>Largest Contentful Paint:</strong> When main content finishes loading</li>
+                  <li>• <strong>Time to Interactive:</strong> When page becomes fully interactive</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+            <h4 className="font-medium text-green-900 mb-3 text-lg">📊 Simple Performance Testing for BAs</h4>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded border-l-4 border-green-500">
+                <h5 className="font-medium text-green-800 mb-2">Manual Testing Checklist:</h5>
+                <div className="space-y-3">
+                  <div>
+                    <h6 className="font-medium text-green-700 mb-1">Page Load Testing:</h6>
+                    <ul className="text-sm text-green-600 space-y-1">
+                      <li>☐ Page loads in under 3 seconds on slow 3G</li>
+                      <li>☐ Loading indicators appear for operations over 1 second</li>
+                      <li>☐ User can start interacting before everything is loaded</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h6 className="font-medium text-green-700 mb-1">Task Management Testing:</h6>
+                    <ul className="text-sm text-green-600 space-y-1">
+                      <li>☐ Creating 20 tasks in a row doesn't slow down</li>
+                      <li>☐ Task list with 100+ items remains responsive</li>
+                      <li>☐ Searching/filtering responds instantly</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-orange-500">
+                <h5 className="font-medium text-orange-800 mb-2">Simulate Real Conditions:</h5>
+                <ul className="text-sm text-orange-700 space-y-1">
+                  <li>• <strong>Network throttling:</strong> DevTools → Network tab → Slow 3G</li>
+                  <li>• <strong>CPU throttling:</strong> DevTools → Performance tab → CPU 4x slowdown</li>
+                  <li>• <strong>Mobile device:</strong> DevTools → Device toolbar → iPhone/Android</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
+            <h4 className="font-medium text-purple-900 mb-3 text-lg">📝 Writing Performance Acceptance Criteria</h4>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded">
+                <h5 className="font-medium text-purple-800 mb-2">Instead of vague requirements:</h5>
+                <div className="bg-red-50 p-3 rounded border-l-4 border-red-500">
+                  <p className="text-sm text-red-700">"The system should be fast and responsive"</p>
+                </div>
+              </div>
+              <div className="bg-white p-4 rounded">
+                <h5 className="font-medium text-purple-800 mb-2">Write specific, testable criteria:</h5>
+                <div className="bg-green-50 p-3 rounded border-l-4 border-green-500">
+                  <div className="text-sm text-green-700 space-y-2">
+                    <p><strong>Page Load Performance:</strong></p>
+                    <ul className="text-xs space-y-1">
+                      <li>• Initial page load completes within 2 seconds on standard broadband</li>
+                      <li>• Page remains usable within 5 seconds on slow 3G connection</li>
+                      <li>• Loading indicators appear within 200ms of user action</li>
+                    </ul>
+                    <p><strong>Task Management Performance:</strong></p>
+                    <ul className="text-xs space-y-1">
+                      <li>• Task creation completes within 500ms under normal load</li>
+                      <li>• Task list displays 100+ items without noticeable lag</li>
+                      <li>• Search results appear within 300ms of typing</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
+            <h4 className="font-medium text-yellow-900 mb-3 text-lg">🎯 Performance Requirements Template</h4>
+            <div className="bg-white p-4 rounded">
+              <h5 className="font-medium text-yellow-800 mb-2">Use this template for your projects:</h5>
+              <div className="text-sm text-yellow-700 space-y-3">
+                <div>
+                  <p><strong>GIVEN</strong> [specific conditions - device, network, data volume]</p>
+                  <p><strong>WHEN</strong> [user performs action]</p>
+                  <p><strong>THEN</strong> [measurable performance outcome with specific timings]</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded">
+                  <p className="text-xs text-gray-600">
+                    <strong>Example:</strong> GIVEN a user on a mobile device with 50+ tasks in their list, WHEN they search for a specific task, THEN search results should appear within 300ms and the interface should remain responsive during typing.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <Target className="w-5 h-5 mr-2" />
+              BA Impact on Performance
+            </div>
+            <div className="concept-text">
+              <p className="mb-3">
+                Your role in performance optimization:
+              </p>
+              <ul className="text-sm space-y-2">
+                <li>• <strong>Define realistic targets</strong> based on user expectations and business needs</li>
+                <li>• <strong>Prioritize optimizations</strong> by understanding which delays hurt users most</li>
+                <li>• <strong>Validate implementations</strong> against real user scenarios</li>
+                <li>• <strong>Communicate trade-offs</strong> between performance, features, and costs</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )
     }
   ]
 
@@ -428,7 +598,7 @@ export default function Chapter9() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/tutorial/chapter-8" className="flex items-center text-gray-600 hover:text-gray-900">
+            <Link href={getUrlWithParams("/tutorial/chapter-8")} className="flex items-center text-gray-600 hover:text-gray-900">
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Chapter 8
             </Link>
@@ -479,7 +649,7 @@ export default function Chapter9() {
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800 font-medium mb-2">Chapter 9 Complete!</p>
                   <Link 
-                    href="/tutorial/chapter-10" 
+                    href={getUrlWithParams("/tutorial/chapter-10")} 
                     className="inline-flex items-center text-sm text-green-700 hover:text-green-900"
                   >
                     Start Chapter 10
