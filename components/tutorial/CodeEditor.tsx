@@ -172,15 +172,27 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
           )}
         </div>
         
-        {!isFullscreen && (
-          <button
-            onClick={() => setIsFullscreen(true)}
-            className="text-sm text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 rounded border border-gray-300"
-          >
-            <Maximize2 className="w-4 h-4 mr-1" />
-            Full Screen
-          </button>
-        )}
+        <div className="flex items-center space-x-2">
+          {explanation && (
+            <button
+              onClick={() => setShowExplanation(true)}
+              className="text-sm text-tutorial-primary hover:text-blue-700 flex items-center px-3 py-2 rounded border border-tutorial-primary"
+            >
+              <Lightbulb className="w-4 h-4 mr-1" />
+              How does this relate to BA work?
+            </button>
+          )}
+          
+          {!isFullscreen && (
+            <button
+              onClick={() => setIsFullscreen(true)}
+              className="text-sm text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 rounded border border-gray-300"
+            >
+              <Maximize2 className="w-4 h-4 mr-1" />
+              Full Screen
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Main coding area */}
@@ -1045,6 +1057,74 @@ button:hover {
           />
         )
       })()}
+
+      {/* Story Context Modal */}
+      {explanation && showExplanation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center">
+                <Lightbulb className="w-5 h-5 text-blue-600 mr-2" />
+                <h2 className="text-xl font-semibold text-gray-900">How This Relates to BA Work</h2>
+              </div>
+              <button
+                onClick={() => setShowExplanation(false)}
+                className="text-gray-500 hover:text-gray-700 p-1"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="overflow-y-auto max-h-[calc(90vh-120px)] p-6 space-y-6">
+              {/* What's Happening */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-blue-900 mb-2 flex items-center">
+                  <Code className="w-5 h-5 mr-2" />
+                  What's Happening in This Code
+                </h3>
+                <p className="text-blue-800">{explanation.whatIsHappening}</p>
+              </div>
+
+              {/* Why It Matters */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-green-900 mb-2 flex items-center">
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Why This Matters for Your Users
+                </h3>
+                <p className="text-green-800">{explanation.whyItMatters}</p>
+              </div>
+
+              {/* Real World Connection */}
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-purple-900 mb-2 flex items-center">
+                  <Lightbulb className="w-5 h-5 mr-2" />
+                  Real-World Connection to BA Work
+                </h3>
+                <p className="text-purple-800">{explanation.realWorldConnection}</p>
+              </div>
+
+              {/* Key Terms */}
+              {explanation.keyTerms && Object.keys(explanation.keyTerms).length > 0 && (
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Key Terms to Remember</h3>
+                  <div className="space-y-2">
+                    {Object.entries(explanation.keyTerms).map(([term, definition]) => (
+                      definition && (
+                        <div key={term} className="flex flex-col space-y-1">
+                          <span className="font-medium text-gray-900">{term}</span>
+                          <span className="text-gray-700 text-sm">{definition}</span>
+                        </div>
+                      )
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
