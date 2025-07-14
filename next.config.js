@@ -13,6 +13,10 @@ const nextConfig = {
     // Allow build to complete even with ESLint errors during development
     ignoreDuringBuilds: false,
   },
+  experimental: {
+    // Allow static export to continue despite useSearchParams warnings
+    missingSuspenseWithCSRBailout: false,
+  },
 }
 
 module.exports = nextConfig
