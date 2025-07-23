@@ -54,6 +54,28 @@ module.exports = {
           '0%': { opacity: '0', transform: 'translateX(-10px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
+        bounceGentle: {
+          '0%': { transform: 'scale(0.9)' },
+          '50%': { transform: 'scale(1.05)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        pulseSuccess: {
+          '0%': { boxShadow: '0 0 0 0 rgba(34, 197, 94, 0.4)' },
+          '70%': { boxShadow: '0 0 0 10px rgba(34, 197, 94, 0)' },
+          '100%': { boxShadow: '0 0 0 0 rgba(34, 197, 94, 0)' },
+        },
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '25%': { transform: 'rotate(-3deg)' },
+          '75%': { transform: 'rotate(3deg)' },
+        },
+        celebrate: {
+          '0%': { transform: 'scale(1)' },
+          '25%': { transform: 'scale(1.1) rotate(-2deg)' },
+          '50%': { transform: 'scale(1.15) rotate(2deg)' },
+          '75%': { transform: 'scale(1.05) rotate(-1deg)' },
+          '100%': { transform: 'scale(1) rotate(0deg)' },
+        },
       },
     },
   },

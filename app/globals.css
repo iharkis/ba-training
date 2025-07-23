@@ -230,32 +230,78 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Soft shadow */
   }
 
-  /* Responsive grid for tutorial layout */
+  /* Mobile-first responsive tutorial layout */
   .tutorial-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .tutorial-grid {
+      gap: 1.5rem;
+    }
   }
 
   @media (min-width: 1024px) {
     .tutorial-grid {
       grid-template-columns: 1fr 1fr;
+      gap: 2rem;
     }
   }
 
   @media (min-width: 1280px) {
     .tutorial-grid {
       grid-template-columns: 2fr 1fr;
+      gap: 2.5rem;
     }
   }
 
-  /* Animation classes */
+  /* Mobile-friendly tutorial cards */
+  @media (max-width: 640px) {
+    .tutorial-card {
+      @apply p-4; /* Reduce padding on mobile */
+      margin-left: -0.5rem;
+      margin-right: -0.5rem;
+    }
+    
+    /* Stack navigation on mobile */
+    .tutorial-nav-mobile {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    /* Better mobile buttons */
+    .tutorial-button {
+      @apply w-full justify-center text-base; /* Full width on mobile */
+      padding: 0.875rem 1rem;
+    }
+  }
+
+  /* Encouraging animation classes */
   .fade-in {
     animation: fadeIn 0.5s ease-in-out;
   }
 
   .slide-in {
     animation: slideIn 0.3s ease-out;
+  }
+
+  .bounce-gentle {
+    animation: bounceGentle 0.6s ease-out;
+  }
+
+  .pulse-success {
+    animation: pulseSuccess 1s ease-in-out;
+  }
+
+  .wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  /* Success celebration animation */
+  .celebrate {
+    animation: celebrate 0.8s ease-out;
   }
 
   /* GOV.UK Alert/Notice styles */

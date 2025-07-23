@@ -255,27 +255,45 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
           )}
         </div>
         
-        {/* Secondary actions - moved to right and de-emphasized */}
-        <div className="flex items-center space-x-2 text-xs">
-          <button
-            onClick={() => {
-              setCode(startingCode)
-              setIsComplete(false)
-              setShowExplanation(false)
-            }}
-            className="text-gray-400 hover:text-gray-600 transition-colors px-2 py-1"
-          >
-            Reset
-          </button>
-          
-          {explanation && (
-            <button
-              onClick={() => setShowExplanation(true)}
-              className="text-gray-400 hover:text-tutorial-primary transition-colors px-2 py-1"
-            >
-              Why this matters
-            </button>
-          )}
+        {/* Advanced options - hidden by default */}
+        <div className="flex items-center space-x-2">
+          <details className="relative">
+            <summary className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer px-2 py-1 rounded transition-colors hover:bg-gray-50">
+              ⚙️ More options
+            </summary>
+            <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-40 z-10">
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    setCode(startingCode)
+                    setIsComplete(false)
+                    setShowExplanation(false)
+                  }}
+                  className="block w-full text-left text-xs text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 rounded hover:bg-gray-50"
+                >
+                  🔄 Reset code
+                </button>
+                
+                {explanation && (
+                  <button
+                    onClick={() => setShowExplanation(true)}
+                    className="block w-full text-left text-xs text-gray-600 hover:text-tutorial-primary transition-colors px-2 py-1 rounded hover:bg-gray-50"
+                  >
+                    💡 Why this matters
+                  </button>
+                )}
+                
+                {!isFullscreen && (
+                  <button
+                    onClick={() => setIsFullscreen(true)}
+                    className="block w-full text-left text-xs text-gray-600 hover:text-gray-800 transition-colors px-2 py-1 rounded hover:bg-gray-50"
+                  >
+                    ⛶ Full screen
+                  </button>
+                )}
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -1309,14 +1327,14 @@ button:hover {
               <div className="mb-6">
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold text-yellow-900 flex items-center">
-                      Need Help? Here are some hints:
+                    <h4 className="font-medium text-amber-900 flex items-center text-lg">
+                      💭 Let's figure this out together
                     </h4>
                     <button
                       onClick={() => setShowHints(false)}
                       className="text-sm text-yellow-600 hover:text-yellow-800 font-medium px-2 py-1 rounded"
                     >
-                      Hide Hints
+                      I'm good now
                     </button>
                   </div>
                   <div className="space-y-3">

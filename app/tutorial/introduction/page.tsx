@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CheckCircle, Users, FileText, Lightbulb, Target } from 'lucide-react'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
+import ExpandableSection from '@/components/tutorial/ExpandableSection'
+import ProgressiveReveal from '@/components/tutorial/ProgressiveReveal'
 import { getProgress, markSectionComplete, isSectionComplete } from '@/lib/progress'
 
 export default function TutorialIntroduction() {
@@ -278,21 +280,49 @@ export default function TutorialIntroduction() {
           <h2 className="text-2xl font-bold text-gray-900">User Stories & Requirements</h2>
           <p className="text-gray-600 mb-6">
             Through interviews and workshops, you've gathered these key requirements. 
-            Notice how they'll directly influence our technical implementation:
+            Let's explore how they'll directly influence our technical implementation:
           </p>
 
-          <div className="space-y-6">
-            <div className="tutorial-card border-l-4 border-l-blue-500">
-              <h3 className="font-semibold text-gray-900 mb-3">Epic: Task Management</h3>
-              <div className="space-y-4">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <p className="font-medium text-blue-900 mb-2">
-                    <strong>As a</strong> Walk Evaluator, <strong>I want to</strong> see all my assigned tasks in one place{' '}
-                    <strong>so that</strong> I can prioritise my daily work effectively.
-                  </p>
-                  <div className="text-sm text-blue-700">
-                    <strong>Acceptance Criteria (Gherkin Format):</strong>
-                    <div className="mt-2 space-y-3">
+          <ProgressiveReveal
+            initiallyVisible={1}
+            showAllText="Show all requirements details"
+            hideText="Show less detail"
+            chunks={[
+              {
+                id: 'task-overview',
+                title: '📋 Core Task Management',
+                content: (
+                  <div className="tutorial-card border-l-4 border-l-blue-500">
+                    <h3 className="font-semibold text-gray-900 mb-4">Main User Stories</h3>
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <p className="font-medium text-blue-900 mb-2">
+                          <strong>As a</strong> Walk Evaluator, <strong>I want to</strong> see all my assigned tasks in one place{' '}
+                          <strong>so that</strong> I can prioritise my daily work effectively.
+                        </p>
+                      </div>
+                      <div className="bg-green-50 p-4 rounded-lg">
+                        <p className="font-medium text-green-900 mb-2">
+                          <strong>As a</strong> Junior Analyst, <strong>I want to</strong> add new walk evaluation tasks{' '}
+                          <strong>so that</strong> I can track incoming applications.
+                        </p>
+                      </div>
+                      <div className="bg-yellow-50 p-4 rounded-lg">
+                        <p className="font-medium text-yellow-900 mb-2">
+                          <strong>As a</strong> Quality Assessor, <strong>I want to</strong> update task status{' '}
+                          <strong>so that</strong> everyone knows the current progress.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              },
+              {
+                id: 'detailed-acceptance',
+                title: '🔍 Detailed Acceptance Criteria',
+                content: (
+                  <div className="space-y-4">
+                    <ExpandableSection title="📊 Task List Requirements" variant="gentle">
                       <div className="bg-white p-3 rounded border-l-4 border-blue-400">
                         <p className="font-mono text-xs">
                           <strong className="text-blue-800">Scenario:</strong> Viewing task list<br/>
@@ -302,175 +332,111 @@ export default function TutorialIntroduction() {
                           <strong className="text-red-700">And</strong> each task should display priority, status, and due date
                         </p>
                       </div>
-                      <div className="bg-white p-3 rounded border-l-4 border-blue-400">
-                        <p className="font-mono text-xs">
-                          <strong className="text-blue-800">Scenario:</strong> Filtering tasks by status<br/>
-                          <strong className="text-green-700">Given</strong> I have multiple tasks with different statuses<br/>
-                          <strong className="text-green-700">When</strong> I select "In Progress" from the status filter<br/>
-                          <strong className="text-red-700">Then</strong> I should only see tasks with "In Progress" status<br/>
-                          <strong className="text-red-700">And</strong> the filter should show the count of filtered tasks
-                        </p>
+                    </ExpandableSection>
+
+                    <ExpandableSection title="🔄 Task Creation & Updates" variant="gentle">
+                      <div className="space-y-3">
+                        <div className="bg-white p-3 rounded border-l-4 border-green-400">
+                          <p className="font-mono text-xs">
+                            <strong className="text-blue-800">Scenario:</strong> Creating a new task<br/>
+                            <strong className="text-green-700">Given</strong> I am a Junior Analyst<br/>
+                            <strong className="text-green-700">When</strong> I complete the task creation form<br/>
+                            <strong className="text-red-700">Then</strong> the task should be saved and assigned properly
+                          </p>
+                        </div>
+                        <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
+                          <p className="font-mono text-xs">
+                            <strong className="text-blue-800">Scenario:</strong> Updating task status<br/>
+                            <strong className="text-green-700">Given</strong> I am a Quality Assessor<br/>
+                            <strong className="text-green-700">When</strong> I change a task status<br/>
+                            <strong className="text-red-700">Then</strong> all users should see the update immediately
+                          </p>
+                        </div>
                       </div>
+                    </ExpandableSection>
+                  </div>
+                )
+              },
+              {
+                id: 'non-functional',
+                title: '⚙️ System Requirements',
+                content: (
+                  <div className="tutorial-card border-l-4 border-l-green-500">
+                    <h3 className="font-semibold text-gray-900 mb-3">Non-Functional Requirements</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <ExpandableSection title="🚀 Performance" size="sm" variant="encouraging">
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• Page loads within 2 seconds</li>
+                          <li>• Task updates appear within 1 second</li>
+                          <li>• Support 50 concurrent users</li>
+                        </ul>
+                      </ExpandableSection>
+                      <ExpandableSection title="♿ Accessibility" size="sm" variant="encouraging">
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• Follow GOV.UK design standards</li>
+                          <li>• Screen reader compatible</li>
+                          <li>• Mobile device support</li>
+                        </ul>
+                      </ExpandableSection>
+                      <ExpandableSection title="🔐 Security" size="sm" variant="encouraging">
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• Protect against web attacks</li>
+                          <li>• Validate all user inputs</li>
+                          <li>• Secure data transmission</li>
+                        </ul>
+                      </ExpandableSection>
+                      <ExpandableSection title="🛡️ Reliability" size="sm" variant="encouraging">
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• 99.5% uptime during business hours</li>
+                          <li>• Graceful error handling</li>
+                          <li>• Data backup and recovery</li>
+                        </ul>
+                      </ExpandableSection>
                     </div>
                   </div>
-                </div>
+                )
+              }
+            ]}
+          />
 
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="font-medium text-green-900 mb-2">
-                    <strong>As a</strong> Junior Analyst, <strong>I want to</strong> add new walk evaluation tasks{' '}
-                    <strong>so that</strong> I can track incoming applications.
-                  </p>
-                  <div className="text-sm text-green-700">
-                    <strong>Acceptance Criteria (Gherkin Format):</strong>
-                    <div className="mt-2 space-y-3">
-                      <div className="bg-white p-3 rounded border-l-4 border-green-400">
-                        <p className="font-mono text-xs">
-                          <strong className="text-blue-800">Scenario:</strong> Creating a new task<br/>
-                          <strong className="text-green-700">Given</strong> I am a Junior Analyst<br/>
-                          <strong className="text-green-700">When</strong> I complete the task creation form with title, description, and priority<br/>
-                          <strong className="text-green-700">And</strong> I assign it to a team member<br/>
-                          <strong className="text-red-700">Then</strong> the task should be saved to the system<br/>
-                          <strong className="text-red-700">And</strong> it should appear in the assignee's task list
-                        </p>
-                      </div>
-                      <div className="bg-white p-3 rounded border-l-4 border-green-400">
-                        <p className="font-mono text-xs">
-                          <strong className="text-blue-800">Scenario:</strong> Validation of required fields<br/>
-                          <strong className="text-green-700">Given</strong> I am creating a new task<br/>
-                          <strong className="text-green-700">When</strong> I try to submit the form without a title<br/>
-                          <strong className="text-red-700">Then</strong> I should see an error message "Title is required"<br/>
-                          <strong className="text-red-700">And</strong> the task should not be saved
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-yellow-50 p-4 rounded-lg">
-                  <p className="font-medium text-yellow-900 mb-2">
-                    <strong>As a</strong> Quality Assessor, <strong>I want to</strong> update task status{' '}
-                    <strong>so that</strong> everyone knows the current progress.
-                  </p>
-                  <div className="text-sm text-yellow-700">
-                    <strong>Acceptance Criteria (Gherkin Format):</strong>
-                    <div className="mt-2 space-y-3">
-                      <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
-                        <p className="font-mono text-xs">
-                          <strong className="text-blue-800">Scenario:</strong> Updating task status<br/>
-                          <strong className="text-green-700">Given</strong> I am a Quality Assessor<br/>
-                          <strong className="text-green-700">And</strong> I have a task with status "Pending"<br/>
-                          <strong className="text-green-700">When</strong> I change the status to "In Progress"<br/>
-                          <strong className="text-red-700">Then</strong> the task status should update immediately<br/>
-                          <strong className="text-red-700">And</strong> all users should see the updated status
-                        </p>
-                      </div>
-                      <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
-                        <p className="font-mono text-xs">
-                          <strong className="text-blue-800">Scenario:</strong> Adding notes to status update<br/>
-                          <strong className="text-green-700">Given</strong> I am updating a task status<br/>
-                          <strong className="text-green-700">When</strong> I add a note "Waiting for additional documentation"<br/>
-                          <strong className="text-red-700">Then</strong> the note should be saved with the status change<br/>
-                          <strong className="text-red-700">And</strong> the note should be visible to all team members
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="tutorial-card border-l-4 border-l-green-500">
-              <h3 className="font-semibold text-gray-900 mb-3">Non-Functional Requirements</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Performance</h4>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• Page loads within 2 seconds</li>
-                    <li>• Task updates appear within 1 second</li>
-                    <li>• Support 50 concurrent users</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Usability</h4>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• Follow GOV.UK design standards</li>
-                    <li>• Accessible to screen readers</li>
-                    <li>• Work on mobile devices</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Security</h4>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• Protect against common web attacks</li>
-                    <li>• Validate all user inputs</li>
-                    <li>• Secure data transmission</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Reliability</h4>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• 99.5% uptime during business hours</li>
-                    <li>• Graceful error handling</li>
-                    <li>• Data backup and recovery</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="explanation-box">
-            <div className="explanation-title">What's Happening Here? Requirements → Technical Implementation</div>
+          <ExpandableSection 
+            title="🔗 How Requirements Become Code" 
+            variant="gentle" 
+            defaultExpanded={false}
+          >
             <div className="explanation-text">
-              <p className="mb-3">
-                Each requirement directly translates into specific technical work. Here's the exact connection:
+              <p className="mb-4 text-gray-600">
+                Each requirement directly translates into specific technical work. Here's how your user stories become working software:
               </p>
               <div className="space-y-4">
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-blue-900 mb-2">Requirement: "See all assigned tasks in a list format"</h4>
-                  <p className="text-sm text-blue-800 mb-2"><strong>Technical Implementation:</strong></p>
+                  <h4 className="font-medium text-blue-900 mb-2">💡 "See all assigned tasks in a list"</h4>
+                  <p className="text-sm text-blue-800 mb-2"><strong>What developers actually build:</strong></p>
                   <ul className="text-sm text-blue-700 space-y-1">
-                    <li>• <strong>HTML:</strong> Create &lt;ul&gt; and &lt;li&gt; elements for task list structure</li>
-                    <li>• <strong>CSS:</strong> Style list items with proper spacing and visual hierarchy</li>
-                    <li>• <strong>JavaScript:</strong> Fetch task data from API and populate the list</li>
-                    <li>• <strong>Backend:</strong> Create GET /tasks endpoint with user filtering</li>
-                    <li>• <strong>Database:</strong> Design tasks table with user_id foreign key</li>
+                    <li>• <strong>Frontend:</strong> HTML list structure + CSS styling + JavaScript data loading</li>
+                    <li>• <strong>Backend:</strong> API endpoint to fetch user-specific tasks</li>
+                    <li>• <strong>Database:</strong> Query to filter tasks by user assignment</li>
                   </ul>
                 </div>
                 
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <h4 className="font-medium text-green-900 mb-2">Requirement: "Filter tasks by status"</h4>
-                  <p className="text-sm text-green-800 mb-2"><strong>Technical Implementation:</strong></p>
-                  <ul className="text-sm text-green-700 space-y-1">
-                    <li>• <strong>HTML:</strong> Create &lt;select&gt; dropdown with status options</li>
-                    <li>• <strong>CSS:</strong> Style dropdown to match GOV.UK design system</li>
-                    <li>• <strong>JavaScript:</strong> Add event listener to filter tasks dynamically</li>
-                    <li>• <strong>Backend:</strong> Add status parameter to GET /tasks endpoint</li>
-                    <li>• <strong>Database:</strong> Add WHERE clause to filter by status column</li>
-                  </ul>
+                <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+                  <h4 className="font-medium text-emerald-900 mb-2">🎯 Key BA Insight</h4>
+                  <p className="text-sm text-emerald-800">
+                    One simple user story actually becomes work across <strong>multiple technical layers</strong>. 
+                    Understanding this helps you write better requirements and have more realistic conversations about scope and timelines.
+                  </p>
                 </div>
                 
-                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                  <h4 className="font-medium text-yellow-900 mb-2">Requirement: "Status changes immediately visible to all users"</h4>
-                  <p className="text-sm text-yellow-800 mb-2"><strong>Technical Implementation:</strong></p>
-                  <ul className="text-sm text-yellow-700 space-y-1">
-                    <li>• <strong>HTML:</strong> Create status update form with dropdown</li>
-                    <li>• <strong>CSS:</strong> Add visual feedback for status changes</li>
-                    <li>• <strong>JavaScript:</strong> Implement WebSocket connection for real-time updates</li>
-                    <li>• <strong>Backend:</strong> Create PUT /tasks/:id endpoint with WebSocket broadcast</li>
-                    <li>• <strong>Database:</strong> Update task status and log change history</li>
-                  </ul>
-                </div>
-                
-                <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                  <h4 className="font-medium text-purple-900 mb-2">Key BA Insight</h4>
-                  <p className="text-sm text-purple-800">
-                    Notice how <strong>one user requirement</strong> becomes <strong>work across 5 different technical layers</strong>? 
-                    This is why BAs who understand technical implementation write better requirements and make better decisions about scope, timeline, and complexity.
+                <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                  <h4 className="font-medium text-amber-900 mb-2">🚀 Why This Matters</h4>
+                  <p className="text-sm text-amber-800">
+                    When you say "just add a simple filter," developers think about database queries, API changes, 
+                    frontend updates, testing, and deployment. Now you'll understand why they ask so many questions!
                   </p>
                 </div>
               </div>
             </div>
-          </div>
+          </ExpandableSection>
         </div>
       )
     }
