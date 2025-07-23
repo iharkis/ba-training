@@ -183,72 +183,51 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
           </nav>
         </div>
 
-        {/* Chapter Progress and Navigation */}
+        {/* Simplified Chapter Navigation */}
         {showChapterNavigation && currentPage && (
-          <div className="py-4 border-t border-gray-100">
+          <div className="py-3">
             <div className="flex items-center justify-between">
-              {/* Previous Chapter - Enhanced Button */}
-              <div className="flex-1">
+              {/* Simple Previous Link */}
+              <div>
                 {previousChapter ? (
                   <Link 
                     href={previousChapter.path}
                     onClick={() => window.scrollTo(0, 0)}
-                    className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg transition-colors border border-gray-300 text-sm font-medium"
+                    className="inline-flex items-center px-3 py-2 text-sm text-gray-600 hover:text-tutorial-primary transition-colors rounded-lg hover:bg-gray-50"
                   >
-                    <ChevronRight className="w-4 h-4 mr-2 rotate-180" />
-                    <div>
-                      <div className="text-xs text-gray-500">Previous</div>
-                      <div className="font-medium">{previousChapter.title}</div>
-                    </div>
+                    <ChevronRight className="w-4 h-4 mr-1 rotate-180" />
+                    Previous
                   </Link>
-                ) : (
-                  <div></div>
-                )}
+                ) : <div />}
               </div>
 
-              {/* Current Chapter Info & Progress */}
-              <div className="flex-1 text-center px-4">
-                <div className="text-sm text-gray-500 mb-2">
-                  {currentChapter !== null && currentChapter > 0 && (
-                    <>Chapter {currentChapter} of {TOTAL_CHAPTERS}</>
-                  )}
-                  {currentChapter === 0 && <>Tutorial Introduction</>}
-                </div>
-                
-                {/* Overall Progress Bar */}
-                {currentChapter !== null && currentChapter >= 0 && (
-                  <div className="w-full max-w-xs mx-auto">
-                    <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
-                      <span>Progress</span>
-                      <span>{Math.round(((currentChapter) / TOTAL_CHAPTERS) * 100)}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-tutorial-primary rounded-full h-2 transition-all duration-300"
-                        style={{ width: `${((currentChapter) / TOTAL_CHAPTERS) * 100}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                )}
+              {/* Simplified Progress - Just a Dot Indicator */}
+              <div className="flex items-center space-x-2">
+                {Array.from({ length: Math.min(TOTAL_CHAPTERS + 1, 5) }, (_, i) => (
+                  <div
+                    key={i}
+                    className={`w-2 h-2 rounded-full transition-colors ${
+                      i <= (currentChapter || 0) 
+                        ? 'bg-tutorial-primary' 
+                        : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+                {TOTAL_CHAPTERS > 4 && <span className="text-xs text-gray-500">...</span>}
               </div>
 
-              {/* Next Chapter - Enhanced Button */}
-              <div className="flex-1 text-right">
+              {/* Simple Next Link */}
+              <div>
                 {nextChapter ? (
                   <a 
                     href={nextChapter.path}
                     onClick={(e) => handleChapterNavigation(e, nextChapter.path)}
-                    className="inline-flex items-center px-4 py-2 bg-tutorial-primary hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium cursor-pointer"
+                    className="inline-flex items-center px-3 py-2 text-sm bg-tutorial-primary text-white hover:bg-blue-600 transition-colors rounded-lg cursor-pointer"
                   >
-                    <div className="text-right">
-                      <div className="text-xs text-blue-100">Next</div>
-                      <div className="font-medium">{nextChapter.title}</div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 ml-2" />
+                    Continue
+                    <ChevronRight className="w-4 h-4 ml-1" />
                   </a>
-                ) : (
-                  <div></div>
-                )}
+                ) : <div />}
               </div>
             </div>
           </div>

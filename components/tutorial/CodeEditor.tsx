@@ -219,34 +219,16 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
 
   return (
     <div className="space-y-6">
-      {/* Top toolbar */}
+      {/* Simplified toolbar - only essential actions */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={() => setShowHints(!showHints)}
-            className="text-sm text-tutorial-primary hover:text-blue-700 flex items-center px-3 py-2 rounded border border-tutorial-primary"
-          >
-            <Lightbulb className="w-4 h-4 mr-1" />
-            Need Help? ({hints.length} hints)
-          </button>
-          
-          <button
-            onClick={() => {
-              setCode(startingCode)
-              setIsComplete(false)
-              setShowExplanation(false)
-            }}
-            className="text-sm text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 rounded border border-gray-300"
-          >
-            Reset
-          </button>
-          
+        <div className="flex items-center space-x-3">
           {!isComplete ? (
             <button
               onClick={checkCode}
               className="tutorial-button-primary"
             >
-              Check My Work
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Try it!
             </button>
           ) : (
             <button
@@ -255,66 +237,73 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
                 setValidationStatus(null)
                 onComplete?.()
               }}
-              className="tutorial-button-primary bg-green-600 hover:bg-green-700"
+              className="tutorial-button-primary bg-tutorial-success hover:bg-green-600"
             >
-              Next Step
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Continue
             </button>
           )}
           
-          
-          {/* Edit mode: Force complete button */}
-          {isEditMode && (
+          {/* Hints available but not prominent */}
+          {!showHints && hints.length > 0 && (
             <button
-              onClick={() => {
-                setIsComplete(true)
-                setShowExplanation(true)
-                onComplete?.()
-              }}
-              className="text-sm text-red-600 hover:text-red-800 flex items-center px-3 py-2 rounded border border-red-300 bg-red-50"
+              onClick={() => setShowHints(true)}
+              className="text-sm text-gray-500 hover:text-tutorial-primary transition-colors"
             >
-              <CheckCircle className="w-4 h-4 mr-1" />
-              Force Complete
+              💡 Get a hint
             </button>
           )}
         </div>
         
-        <div className="flex items-center space-x-2">
+        {/* Secondary actions - moved to right and de-emphasized */}
+        <div className="flex items-center space-x-2 text-xs">
+          <button
+            onClick={() => {
+              setCode(startingCode)
+              setIsComplete(false)
+              setShowExplanation(false)
+            }}
+            className="text-gray-400 hover:text-gray-600 transition-colors px-2 py-1"
+          >
+            Reset
+          </button>
+          
           {explanation && (
             <button
               onClick={() => setShowExplanation(true)}
-              className="text-sm text-tutorial-primary hover:text-blue-700 flex items-center px-3 py-2 rounded border border-tutorial-primary"
+              className="text-gray-400 hover:text-tutorial-primary transition-colors px-2 py-1"
             >
-              <Lightbulb className="w-4 h-4 mr-1" />
-              How does this relate to BA work?
-            </button>
-          )}
-          
-          {!isFullscreen && (
-            <button
-              onClick={() => setIsFullscreen(true)}
-              className="text-sm text-gray-600 hover:text-gray-900 flex items-center px-3 py-2 rounded border border-gray-300"
-            >
-              <Maximize2 className="w-4 h-4 mr-1" />
-              Full Screen
+              Why this matters
             </button>
           )}
         </div>
       </div>
 
-      {/* Validation Message */}
+      {/* Gentler feedback messages */}
       {validationMessage && (
-        <div className={`mb-4 p-3 rounded-lg border ${
+        <div className={`mb-4 p-4 rounded-xl ${
           validationStatus === 'success' 
-            ? 'bg-green-50 border-green-200 text-green-800' 
-            : 'bg-red-50 border-red-200 text-red-800'
+            ? 'bg-emerald-50 border border-emerald-200' 
+            : 'bg-amber-50 border border-amber-200'
         }`}>
-          <div className="flex items-center">
+          <div className="flex items-start">
             {validationStatus === 'success' ? (
-              <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
+              <CheckCircle className="w-5 h-5 mr-3 text-emerald-600 mt-0.5" />
             ) : (
-              <AlertCircle className="w-5 h-5 mr-2 text-red-600" />
+              <Lightbulb className="w-5 h-5 mr-3 text-amber-600 mt-0.5" />
             )}
-            <span className="text-sm font-medium">{validationMessage}</span>
+            <div>
+              <p className={`text-sm font-medium mb-1 ${
+                validationStatus === 'success' ? 'text-emerald-800' : 'text-amber-800'
+              }`}>
+                {validationStatus === 'success' ? '🎉 Great work!' : '💭 Almost there!'}
+              </p>
+              <p className={`text-sm ${
+                validationStatus === 'success' ? 'text-emerald-700' : 'text-amber-700'
+              }`}>
+                {validationMessage}
+              </p>
+            </div>
           </div>
         </div>
       )}

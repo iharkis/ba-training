@@ -21,30 +21,34 @@
     box-shadow: inset 0 0 0 2px;
   }
   
-  /* GOV.UK Typography */
+  /* Friendlier Typography - less intimidating sizes */
   h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-    line-height: 1.25;
+    font-weight: 600; /* Less bold, more approachable */
+    line-height: 1.4; /* More breathing room */
   }
   
   h1 {
-    font-size: 2.25rem; /* 36px */
+    font-size: 1.875rem; /* 30px - reduced from 36px */
     margin-bottom: 1.5rem;
+    color: #1f2937; /* Softer than pure black */
   }
   
   h2 {
-    font-size: 1.75rem; /* 28px */
-    margin-bottom: 1.25rem;
+    font-size: 1.5rem; /* 24px - reduced from 28px */
+    margin-bottom: 1.5rem; /* More space for breathing */
+    color: #374151; /* Gentler heading color */
   }
   
   h3 {
-    font-size: 1.5rem; /* 24px */
+    font-size: 1.25rem; /* 20px - reduced from 24px */
     margin-bottom: 1rem;
+    color: #374151;
   }
   
   p {
-    margin-bottom: 1.25rem;
-    line-height: 1.47;
+    margin-bottom: 1.5rem; /* More space between paragraphs */
+    line-height: 1.6; /* Better readability */
+    color: #4b5563; /* Softer body text */
   }
 
   /* Code block styling */
@@ -62,17 +66,18 @@
 }
 
 @layer components {
-  /* GOV.UK-style components */
+  /* Friendlier tutorial components */
   .tutorial-card {
-    @apply bg-gov-white border border-gray-300 p-6;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    @apply bg-gov-white border border-gray-200 p-8; /* More padding, gentler border */
+    border-radius: 12px; /* Friendly rounded corners */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Softer shadow */
   }
 
   .tutorial-button {
-    @apply px-6 py-3 font-bold text-center no-underline border-2 cursor-pointer;
-    font-size: 19px;
-    line-height: 1;
-    border-radius: 0; /* GOV.UK uses square corners */
+    @apply px-6 py-3 font-medium text-center no-underline border cursor-pointer; /* Less bold, thinner border */
+    font-size: 16px; /* Smaller, less intimidating */
+    line-height: 1.2;
+    border-radius: 8px; /* Friendly rounded corners */
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -80,21 +85,26 @@
     position: relative;
     vertical-align: top;
     white-space: nowrap;
+    transition: all 0.2s ease-in-out; /* Smooth interactions */
   }
 
   .tutorial-button-primary {
-    @apply tutorial-button bg-gov-green text-white border-gov-green;
+    @apply tutorial-button bg-tutorial-primary text-white border-tutorial-primary;
   }
   
   .tutorial-button-primary:hover {
-    background-color: #005a30; /* darker green */
-    border-color: #005a30;
+    background-color: #2563eb; /* Warmer hover */
+    border-color: #2563eb;
+    transform: translateY(-1px); /* Subtle lift effect */
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
   
   .tutorial-button-primary:focus {
-    background-color: #ffbf47; /* gov-yellow */
-    border-color: #0b0c0c;
-    color: #0b0c0c;
+    background-color: #3b82f6; /* Keep primary color on focus */
+    border-color: #1d4ed8;
+    color: white;
+    outline: 2px solid #f59e0b; /* Friendly focus outline */
+    outline-offset: 2px;
   }
 
   .tutorial-button-secondary {
@@ -111,26 +121,27 @@
   }
 
   .tutorial-input {
-    @apply w-full px-3 py-2 border-2 border-gov-black text-lg;
-    border-radius: 0; /* GOV.UK uses square corners */
-    font-size: 19px;
+    @apply w-full px-4 py-3 border border-gray-300 text-base; /* Gentler border, better spacing */
+    border-radius: 8px; /* Friendly rounded corners */
+    font-size: 16px;
+    transition: all 0.2s ease-in-out;
   }
   
   .tutorial-input:focus {
-    outline: 3px solid #ffbf47;
-    outline-offset: 0;
-    box-shadow: inset 0 0 0 2px;
+    outline: none;
+    border-color: #3b82f6; /* Use primary color */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Soft focus ring */
   }
 
-  /* GOV.UK Progress indicators */
+  /* Friendlier Progress indicators */
   .progress-bar {
-    @apply w-full bg-gray-300 h-2;
-    border-radius: 0; /* square corners */
+    @apply w-full bg-gray-200 h-3; /* Slightly taller, softer background */
+    border-radius: 9999px; /* Fully rounded progress bar */
   }
 
   .progress-fill {
-    @apply bg-gov-green h-2 transition-all duration-300 ease-out;
-    border-radius: 0; /* square corners */
+    @apply bg-tutorial-success h-3 transition-all duration-500 ease-out; /* Smoother animation */
+    border-radius: 9999px; /* Fully rounded progress fill */
   }
 
   /* GOV.UK Step indicators */
@@ -162,58 +173,61 @@
     border-radius: 0; /* square corners */
   }
 
-  /* GOV.UK Explanation boxes */
+  /* Friendlier explanation boxes */
   .explanation-box {
-    @apply bg-blue-50 border-l-4 border-gov-blue p-6 my-6;
-    border-radius: 0; /* square corners */
+    @apply bg-blue-50 border-l-4 border-tutorial-primary p-8 my-8; /* More padding and spacing */
+    border-radius: 0 12px 12px 0; /* Rounded right corners only */
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1); /* Subtle shadow */
   }
 
   .explanation-title {
-    @apply font-bold text-gov-blue mb-3 text-xl;
+    @apply font-semibold text-tutorial-primary mb-4 text-lg; /* Less bold, smaller */
   }
 
   .explanation-text {
-    @apply text-gov-black leading-relaxed;
+    @apply text-gray-700 leading-relaxed; /* Softer text color */
   }
 
-  /* GOV.UK Concept callouts */
+  /* Encouraging concept callouts */
   .concept-callout {
-    @apply bg-yellow-50 border-4 border-gov-yellow p-6 my-6;
-    border-radius: 0; /* square corners */
+    @apply bg-amber-50 border border-tutorial-warning p-8 my-8; /* Single border, more padding */
+    border-radius: 12px; /* Fully rounded corners */
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1); /* Warm shadow */
   }
 
   .concept-title {
-    @apply font-bold text-gov-black mb-3 flex items-center text-lg;
+    @apply font-semibold text-amber-800 mb-4 flex items-center text-lg; /* Warmer color */
   }
 
   .concept-text {
-    @apply text-gov-black;
+    @apply text-gray-700; /* Softer text */
   }
 
-  /* GOV.UK Success/completion styling */
+  /* Celebratory success styling */
   .success-box {
-    @apply bg-green-50 border-4 border-gov-green p-6 my-6;
-    border-radius: 0; /* square corners */
+    @apply bg-emerald-50 border border-tutorial-success p-8 my-8; /* Single border */
+    border-radius: 12px; /* Friendly rounded corners */
+    box-shadow: 0 2px 4px rgba(34, 197, 94, 0.1); /* Success shadow */
   }
 
   .success-title {
-    @apply font-bold text-gov-green mb-3 text-lg;
+    @apply font-semibold text-tutorial-success mb-4 text-lg; /* Less intimidating */
   }
 
   .success-text {
-    @apply text-gov-black;
+    @apply text-gray-700; /* Consistent text color */
   }
 
-  /* Ministry of Silly Walks theming */
+  /* Friendlier Ministry theming */
   .ministry-header {
-    @apply bg-gov-blue text-white p-6;
-    border-radius: 0; /* square corners */
+    @apply bg-tutorial-primary text-white p-8; /* More padding */
+    border-radius: 12px 12px 0 0; /* Rounded top corners */
   }
 
   .ministry-content {
-    @apply bg-white border-2 border-gov-blue p-6;
-    border-top: none;
-    border-radius: 0; /* square corners */
+    @apply bg-white border border-gray-200 border-t-0 p-8; /* Gentler border, more padding */
+    border-radius: 0 0 12px 12px; /* Rounded bottom corners */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Soft shadow */
   }
 
   /* Responsive grid for tutorial layout */
