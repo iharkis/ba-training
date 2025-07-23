@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react'
-import { CheckCircle, AlertCircle, Lightbulb, Eye, Code, Maximize2, Minimize2, X } from 'lucide-react'
+import { CheckCircle, AlertCircle, Lightbulb, Eye, Code, Maximize2, Minimize2, X, Copy, Check, Sun, Moon } from 'lucide-react'
 import { saveCodeProgress, getCodeProgress } from '@/lib/progress'
-import CodeExplanationModal from './CodeExplanationModal'
+import InlineCodeHint from './InlineCodeHint'
 import FileTreeViewer from './FileTreeViewer'
+import FillInTheBlankExercise from './FillInTheBlankExercise'
+import { FillInTheBlankExercise as FillInTheBlankExerciseType } from '@/types/tutorial'
 import { useSearchParams } from 'next/navigation'
 
 type FileContentsMap = Map<string, string>
@@ -24,6 +26,7 @@ interface CodeEditorProps {
     realWorldConnection: string
     keyTerms: { [term: string]: string | undefined }
   }
+  fillInTheBlank?: FillInTheBlankExerciseType  // Optional fill-in-the-blank exercise
   onComplete?: () => void
   stepId?: string  // Add stepId for progress tracking
   codeBlock?: {
@@ -77,6 +80,98 @@ interface CodeInterfaceProps {
   setFileContents?: SetFileContentsFunction
   getFileStartingContent?: (fileName: string, language?: string) => string
   isEditMode?: boolean
+  validationMessage?: string
+  validationStatus?: 'success' | 'error' | null
+  setValidationMessage?: (message: string) => void
+  setValidationStatus?: (status: 'success' | 'error' | null) => void
+  isDarkMode?: boolean
+  setIsDarkMode?: (isDark: boolean) => void
+}
+
+// Syntax highlighting functions
+const highlightHTML = (code: string, isDark: boolean) => {
+  const colors = isDark ? {
+    tag: 'text-blue-400',
+    attribute: 'text-green-400',
+    value: 'text-yellow-300',
+    text: 'text-gray-300',
+    comment: 'text-gray-500'
+  } : {
+    tag: 'text-blue-600',
+    attribute: 'text-green-600',
+    value: 'text-red-600',
+    text: 'text-gray-800',
+    comment: 'text-gray-500'
+  }
+
+  const escaped = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
+  return escaped
+    .replace(/(&lt;\/?)([\w-]+)/g, `<span class="${colors.tag}">$1$2</span>`)
+    .replace(/([\w-]+)=(&quot;[^&]*&quot;)/g, `<span class="${colors.attribute}">$1</span>=<span class="${colors.value}">$2</span>`)
+    .replace(/&gt;/g, `<span class="${colors.tag}">&gt;</span>`)
+}
+
+const highlightCSS = (code: string, isDark: boolean) => {
+  const colors = isDark ? {
+    selector: 'text-yellow-300',
+    property: 'text-blue-400',
+    value: 'text-green-400',
+    comment: 'text-gray-500'
+  } : {
+    selector: 'text-purple-600',
+    property: 'text-blue-600',
+    value: 'text-green-600',
+    comment: 'text-gray-500'
+  }
+
+  return code
+    .replace(/\/\*(.*?)\*\//g, `<span class="${colors.comment}">/*$1*/</span>`)
+    .replace(/([^{}\s]+)\s*{/g, `<span class="${colors.selector}">$1</span> {`)
+    .replace(/(\w+[\w-]*)\s*:/g, `<span class="${colors.property}">$1</span>:`)
+    .replace(/:\s*([^;]+);/g, `: <span class="${colors.value}">$1</span>;`)
+}
+
+const highlightJavaScript = (code: string, isDark: boolean) => {
+  const colors = isDark ? {
+    keyword: 'text-purple-400',
+    string: 'text-green-400',
+    function: 'text-yellow-300',
+    comment: 'text-gray-500'
+  } : {
+    keyword: 'text-purple-600',
+    string: 'text-green-600',
+    function: 'text-blue-600',
+    comment: 'text-gray-500'
+  }
+
+  return code
+    .replace(/\/\/(.*?)$/gm, `<span class="${colors.comment}">//$1</span>`)
+    .replace(/\/\*(.*?)\*\//g, `<span class="${colors.comment}">/*$1*/</span>`)
+    .replace(/\b(const|let|var|function|if|else|for|while|return|document|getElementById|addEventListener)\b/g, 
+      `<span class="${colors.keyword}">$1</span>`)
+    .replace(/'([^']*)'/g, `<span class="${colors.string}">'$1'</span>`)
+    .replace(/"([^"]*)"/g, `<span class="${colors.string}">"$1"</span>`)
+    .replace(/(\w+)\s*\(/g, `<span class="${colors.function}">$1</span>(`)
+}
+
+const getHighlightedCode = (code: string, language: string, isDark: boolean) => {
+  switch (language) {
+    case 'html':
+      return highlightHTML(code, isDark)
+    case 'css':
+      return highlightCSS(code, isDark)
+    case 'javascript':
+    case 'typescript':
+      return highlightJavaScript(code, isDark)
+    default:
+      return code
+  }
 }
 
 // Move CodeInterface outside to prevent recreation  
@@ -113,7 +208,13 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
     fileContents = new Map(),
     setFileContents = () => {},
     getFileStartingContent = () => '',
-    isEditMode = false
+    isEditMode = false,
+    validationMessage = '',
+    validationStatus = null,
+    setValidationMessage = () => {},
+    setValidationStatus = () => {},
+    isDarkMode = false,
+    setIsDarkMode = () => {}
   } = props
 
   return (
@@ -149,12 +250,17 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
             </button>
           ) : (
             <button
-              onClick={() => onComplete?.()}
-              className="tutorial-button-primary"
+              onClick={() => {
+                setValidationMessage('')
+                setValidationStatus(null)
+                onComplete?.()
+              }}
+              className="tutorial-button-primary bg-green-600 hover:bg-green-700"
             >
               Next Step
             </button>
           )}
+          
           
           {/* Edit mode: Force complete button */}
           {isEditMode && (
@@ -195,8 +301,26 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
         </div>
       </div>
 
+      {/* Validation Message */}
+      {validationMessage && (
+        <div className={`mb-4 p-3 rounded-lg border ${
+          validationStatus === 'success' 
+            ? 'bg-green-50 border-green-200 text-green-800' 
+            : 'bg-red-50 border-red-200 text-red-800'
+        }`}>
+          <div className="flex items-center">
+            {validationStatus === 'success' ? (
+              <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
+            ) : (
+              <AlertCircle className="w-5 h-5 mr-2 text-red-600" />
+            )}
+            <span className="text-sm font-medium">{validationMessage}</span>
+          </div>
+        </div>
+      )}
+
       {/* Main coding area */}
-      <div className={`grid gap-4 md:gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-5 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 md:grid-cols-3 lg:grid-cols-5' : 'grid-cols-1 lg:grid-cols-2'}`}>
+      <div className={`grid gap-4 md:gap-6 ${isFullscreen ? 'grid-cols-1 lg:grid-cols-6 h-[calc(100vh-12rem)]' : showFileTree ? 'grid-cols-1 md:grid-cols-3 lg:grid-cols-6' : 'grid-cols-1 lg:grid-cols-2'}`}>
         {/* File Tree (only show if enabled) */}
         {showFileTree && (
           <div className="flex flex-col">
@@ -281,7 +405,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
                   setIsComplete(false)
                   setShowExplanation(false)
                 }}
-                className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded border border-gray-300"
+                className="text-xs text-blue-600 hover:text-blue-700 font-medium px-3 py-1 rounded-full bg-blue-50 border border-blue-200 hover:bg-blue-100"
               >
                 Return to Exercise
               </button>
@@ -292,28 +416,46 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
             <div className="bg-gray-800 text-white px-4 py-3 text-sm flex items-center justify-between">
               <span>
                 {selectedFileName ? (
-                  selectedFileName.includes('index.html') ? '📄 index.html' :
-                  selectedFileName.includes('styles.css') ? '🎨 styles.css' :
-                  selectedFileName.includes('script.js') ? '⚡ script.js' :
-                  selectedFileName.includes('.json') ? '📦 package.json' :
-                  `📄 ${selectedFileName.split('/').pop()}`
+                  selectedFileName.includes('index.html') ? 'index.html' :
+                  selectedFileName.includes('styles.css') ? 'styles.css' :
+                  selectedFileName.includes('script.js') ? 'script.js' :
+                  selectedFileName.includes('.json') ? 'package.json' :
+                  `${selectedFileName.split('/').pop()}`
                 ) : (
-                  language === 'html' ? '📄 index.html' :
-                  language === 'css' ? '🎨 styles.css' :
-                  language === 'typescript' ? '⚡ script.js' :
-                  language === 'javascript' ? '⚡ script.js' :
-                  language === 'json' ? '📦 package.json' :
-                  `📄 ${language} file`
+                  language === 'html' ? 'index.html' :
+                  language === 'css' ? 'styles.css' :
+                  language === 'typescript' ? 'script.js' :
+                  language === 'javascript' ? 'script.js' :
+                  language === 'json' ? 'package.json' :
+                  `${language} file`
                 )}
               </span>
+              {setIsDarkMode && (
+                <button
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className="p-1 rounded hover:bg-gray-700 transition-colors"
+                  title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </button>
+              )}
             </div>
-            <div className="relative bg-white h-full">
+            <div 
+              className="relative h-full"
+              style={{
+                backgroundColor: isDarkMode ? '#111827' : '#ffffff'
+              }}
+            >
               <textarea
                 key={textareaKey}
                 ref={textareaRef}
                 value={code}
                 onChange={handleCodeChange}
-                className="w-full p-6 font-mono text-base border-0 focus:ring-0 focus:outline-none resize-none bg-gray-50 h-full min-h-[400px] md:min-h-[500px] lg:min-h-[600px]"
+                className="w-full p-6 font-mono text-base border-0 focus:ring-0 focus:outline-none resize-none h-full min-h-[400px] md:min-h-[500px] lg:min-h-[600px]"
+                style={{
+                  backgroundColor: isDarkMode ? '#1f2937' : '#f9fafb',
+                  color: isDarkMode ? '#e5e7eb' : '#111827'
+                }}
                 spellCheck={false}
                 placeholder="Type your code here..."
               />
@@ -322,7 +464,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
         </div>
 
         {/* Preview */}
-        <div className="flex flex-col md:col-span-1 lg:col-span-2">
+        <div className="flex flex-col md:col-span-1 lg:col-span-3">
           <div className="flex items-center justify-between mb-3">
             <label className="text-base font-medium text-gray-700">
               Live Preview
@@ -331,7 +473,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
           
           <div className="border-2 border-gray-200 rounded-lg overflow-hidden bg-white flex-1 min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
             <div className="bg-gray-100 px-4 py-2 text-sm text-gray-600 border-b">
-              🌐 Live Website Preview
+              Live Website Preview
             </div>
             <div className="p-4 h-full">
               {(language === 'html' || language === 'css'  || language === 'typescript') ? (
@@ -370,7 +512,8 @@ export default function CodeEditor({
   stepId,
   codeBlock,
   currentChapter = 1,
-  showFileTree = true
+  showFileTree = true,
+  fillInTheBlank
 }: CodeEditorProps) {
   const [code, setCode] = useState(startingCode)
   const [showHints, setShowHints] = useState(false)
@@ -378,12 +521,27 @@ export default function CodeEditor({
   const [isComplete, setIsComplete] = useState(false)
   const [currentHint, setCurrentHint] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [showCodeExplanation, setShowCodeExplanation] = useState(false)
   const [selectedFileName, setSelectedFileName] = useState<string>('')
   const [fileContents, setFileContents] = useState<Map<string, string>>(new Map())
+  const [fillInTheBlankComplete, setFillInTheBlankComplete] = useState(false)
+  const [copySuccess, setCopySuccess] = useState<boolean>(false)
+  const [validationMessage, setValidationMessage] = useState<string>('')
+  const [validationStatus, setValidationStatus] = useState<'success' | 'error' | null>(null)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const searchParams = useSearchParams()
   const isEditMode = searchParams.get('edit') !== null
+
+  // Copy to clipboard function
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopySuccess(true)
+      setTimeout(() => setCopySuccess(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy text: ', err)
+    }
+  }
 
   // Load saved code progress on mount
   useEffect(() => {
@@ -397,6 +555,11 @@ export default function CodeEditor({
         setCode(startingCode)
       }
     }
+    
+    // Clear validation messages when starting a new step
+    setValidationMessage('')
+    setValidationStatus(null)
+    setIsComplete(false) // Always start with incomplete state
     
     // Auto-populate HTML content from Chapter 1 when starting CSS exercises in Chapter 2
     if (currentChapter === 2 && language === 'css') {
@@ -551,33 +714,70 @@ button:hover {
   }, [stepId, startingCode, currentChapter, language])
 
   const checkCode = () => {
-    // More forgiving comparison for beginners
-    const normalizedCode = code
-      .toLowerCase()
-      .replace(/\s+/g, ' ')
-      .replace(/"/g, '"')
-      .replace(/'/g, '"')
-      .trim()
+    // Fill-in-the-blank exercise is optional - skip this check
+
+    // First, check if the user made any meaningful changes from the starting code
+    const normalizeForComparison = (code: string) => {
+      return code
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/"/g, '"')
+        .replace(/'/g, '"')
+        .replace(/<!--.*?-->/g, '') // Remove HTML comments
+        .trim()
+    }
+
+    const normalizedCode = normalizeForComparison(code)
+    const normalizedStartingCode = normalizeForComparison(startingCode)
+    const normalizedTarget = normalizeForComparison(targetCode)
+
+    // Check if user made meaningful changes (not just whitespace/formatting)
+    const hasChangesFromStarting = normalizedCode !== normalizedStartingCode
     
-    const normalizedTarget = targetCode
-      .toLowerCase()
-      .replace(/\s+/g, ' ')
-      .replace(/"/g, '"')
-      .replace(/'/g, '"')
-      .trim()
-    
+    if (!hasChangesFromStarting) {
+      // Show hint that they need to make changes
+      setValidationStatus('error')
+      setValidationMessage('You need to make some changes to the code first. Look for the comment that shows where to add your code.')
+      setShowHints(true)
+      return
+    }
+
     // Check if the essential content is there (more forgiving)
     const hasRequiredElements = () => {
       if (language === 'html') {
         // Check for key elements based on the target
         if (targetCode.includes('<h1>Ministry of Silly Walks</h1>')) {
-          return normalizedCode.includes('<h1>ministry of silly walks</h1>')
+          // Step 2: Just check if the h1 tag is present
+          const hasH1 = normalizedCode.includes('<h1>ministry of silly walks</h1>')
+          
+          // Debug logging to help troubleshoot
+          console.log('Step 2 validation debug:', {
+            normalizedCode,
+            hasH1,
+            targetIncludes: targetCode.includes('<h1>Ministry of Silly Walks</h1>'),
+            lookingFor: '<h1>ministry of silly walks</h1>'
+          })
+          
+          return hasH1
         }
         if (targetCode.includes('<p>Task Management System</p>')) {
-          return normalizedCode.includes('<h1>ministry of silly walks</h1>') && 
-                 normalizedCode.includes('<p>task management system</p>')
+          // Step 3: Check for both h1 and p tags
+          const hasH1 = normalizedCode.includes('<h1>ministry of silly walks</h1>')
+          const hasP = normalizedCode.includes('<p>task management system</p>')
+          
+          // Debug logging to help troubleshoot
+          console.log('Step 3 validation debug:', {
+            normalizedCode,
+            hasH1,
+            hasP,
+            targetIncludes: targetCode.includes('<p>Task Management System</p>'),
+            lookingFor: '<p>task management system</p>'
+          })
+          
+          return hasH1 && hasP
         }
         if (targetCode.includes('placeholder="Enter task description"')) {
+          // Step 4: Check for h1, p, h2, and input
           return normalizedCode.includes('<h1>ministry of silly walks</h1>') && 
                  normalizedCode.includes('<p>task management system</p>') &&
                  normalizedCode.includes('<h2>add new task</h2>') &&
@@ -585,6 +785,7 @@ button:hover {
                  normalizedCode.includes('placeholder')
         }
         if (targetCode.includes('<h3>Evaluate Mr. Smith')) {
+          // Step 5: Check for task display section
           return normalizedCode.includes('<h1>ministry of silly walks</h1>') && 
                  normalizedCode.includes('<h2>current tasks</h2>') &&
                  normalizedCode.includes('<h3>evaluate mr. smith') &&
@@ -593,16 +794,58 @@ button:hover {
         }
       }
       
+      // For CSS and JavaScript, check for more substantial changes
+      if (language === 'css' || language === 'typescript') {
+        // Check if they've added meaningful content beyond just copying
+        const codeLines = code.split('\n').filter(line => line.trim().length > 0)
+        const startingLines = startingCode.split('\n').filter(line => line.trim().length > 0)
+        
+        // Must have added at least some new lines of code
+        if (codeLines.length <= startingLines.length) {
+          return false
+        }
+        
+        // Check for specific patterns in the target
+        const targetLower = targetCode.toLowerCase()
+        const codeLower = code.toLowerCase()
+        
+        // Look for key patterns that should be present
+        if (targetLower.includes('background') && !codeLower.includes('background')) return false
+        if (targetLower.includes('function') && !codeLower.includes('function')) return false
+        if (targetLower.includes('color') && !codeLower.includes('color')) return false
+        
+        return true
+      }
+      
       // Fallback to exact match for other languages
       return normalizedCode === normalizedTarget
     }
     
     if (hasRequiredElements()) {
       setIsComplete(true)
-      setShowExplanation(true)
-      onComplete?.()
+      setValidationStatus('success')
+      setValidationMessage('Perfect! Your code is correct. Click "Next Step" to continue.')
+      // Don't automatically advance - user must click Next
     } else {
-      // Give helpful feedback
+      setIsComplete(false) // Ensure they can't advance
+      setValidationStatus('error')
+      
+      // Provide specific error messages based on what's missing
+      let errorMessage = 'Your code isn\'t quite right yet. '
+      if (language === 'html') {
+        if (targetCode.includes('<h1>Ministry of Silly Walks</h1>') && !normalizedCode.includes('<h1>ministry of silly walks</h1>')) {
+          errorMessage += 'Make sure you\'ve added the <h1> heading with "Ministry of Silly Walks".'
+        } else if (targetCode.includes('<p>Task Management System</p>') && !normalizedCode.includes('<p>task management system</p>')) {
+          errorMessage += 'Make sure you\'ve added both the <h1> heading and the <p> subtitle.'
+        } else if (targetCode.includes('<input') && !normalizedCode.includes('<input')) {
+          errorMessage += 'Make sure you\'ve added the <h2> section heading and the <input> field.'
+        } else if (targetCode.includes('<h3>Evaluate Mr. Smith')) {
+          errorMessage += 'Make sure you\'ve added the task display section with heading, description, and assignment.'
+        }
+      }
+      errorMessage += ' Try again or view the hints for help.'
+      
+      setValidationMessage(errorMessage)
       setShowHints(true)
     }
   }
@@ -641,15 +884,61 @@ button:hover {
 
   // Get starting content for a file - ALWAYS prioritize existing user content
   const getFileStartingContent = useCallback((fileName: string, language?: string) => {
-    // CRITICAL: ALWAYS check if user has existing content first!
-    const existingContent = fileContents.get(fileName)
-    if (existingContent && existingContent.trim().length > 0) {
-      return existingContent
-    }
-
     // Check for completed content from previous chapters/steps
     if (fileName.endsWith('index.html') || language === 'html') {
-      // For Chapter 2+, try to load completed HTML content from Chapter 1
+      // For Chapter 3+, ALWAYS provide enhanced HTML structure with form elements (override saved content)
+      if (currentChapter >= 3) {
+        // Check if existing content has the enhanced structure, if not, use new template
+        const existingContent = fileContents.get(fileName)
+        if (existingContent && existingContent.includes('addTaskBtn') && existingContent.includes('prioritySelect')) {
+          return existingContent
+        }
+        return `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministry of Silly Walks - Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Ministry of Silly Walks</h1>
+    <p>Task Management System</p>
+    
+    <h2>Add New Task</h2>
+    <div class="task-form">
+        <input type="text" id="taskInput" placeholder="Enter task description" required>
+        
+        <select id="prioritySelect" required>
+            <option value="Low">Low Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="High">High Priority</option>
+            <option value="Critical">Critical Priority</option>
+        </select>
+        
+        <input type="date" id="dueDateInput" required>
+        <button id="addTaskBtn">Add Task</button>
+    </div>
+    
+    <h2>Current Tasks</h2>
+    <div id="taskList">
+        <div class="task-card">
+            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+            <div class="task-meta">
+                <span class="priority-badge priority-high">High Priority</span>
+                <span class="due-date">Due: 25/07/2025</span>
+            </div>
+            <p>Status: Pending</p>
+            <p>Assigned to: John Cleese</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>`
+      }
+      
+      // For Chapter 2, try to load completed HTML content from Chapter 1
       if (currentChapter >= 2) {
         const htmlStepIds = ['html-basics', 'add-subtitle', 'simple-form', 'display-sample-task']
         for (const htmlStepId of htmlStepIds) {
@@ -703,9 +992,124 @@ button:hover {
       
       return baseTemplate
     }
+
+    // For non-HTML files, check if user has existing content first
+    const existingContent = fileContents.get(fileName)
+    if (existingContent && existingContent.trim().length > 0) {
+      return existingContent
+    }
     
     if (fileName.endsWith('styles.css') || language === 'css') {
-      // For Chapter 2+, try to load completed CSS from previous steps
+      // For Chapter 3+, provide enhanced CSS with form styling
+      if (currentChapter >= 3) {
+        return `/* Ministry of Silly Walks - Task Manager Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #003d7a;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+}
+
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input, select, button {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[type="text"], input[type="date"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+select {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+button {
+    background-color: #003d7a;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #002a5c;
+}
+
+.task-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.task-meta {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.priority-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.priority-critical { 
+    background-color: #fee2e2; 
+    color: #991b1b; 
+}
+
+.priority-high { 
+    background-color: #fef3c7; 
+    color: #92400e; 
+}
+
+.priority-medium { 
+    background-color: #dbeafe; 
+    color: #1e40af; 
+}
+
+.priority-low { 
+    background-color: #f0fdf4; 
+    color: #166534; 
+}
+
+.due-date {
+    color: #6b7280;
+    font-weight: 500;
+}`
+      }
+      
+      // For Chapter 2, try to load completed CSS from previous steps
       if (currentChapter >= 2) {
         const cssStepIds = ['add-basic-styles', 'style-headings', 'style-form-task']
         // Check in reverse order to get the latest progress
@@ -741,7 +1145,7 @@ button:hover {
       
       return `// Ministry of Silly Walks - Task Manager JavaScript
 
-// Add your JavaScript code here`
+// Add your JavaScript code here to handle priority and due dates`
     }
     
     if (fileName.endsWith('package.json') || language === 'json') {
@@ -783,14 +1187,29 @@ button:hover {
     <p>Task Management System</p>
     
     <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <button id="addTaskBtn">Add Task</button>
+    <div class="task-form">
+        <input type="text" id="taskInput" placeholder="Enter task description" required>
+        
+        <select id="prioritySelect" required>
+            <option value="Low">Low Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="High">High Priority</option>
+            <option value="Critical">Critical Priority</option>
+        </select>
+        
+        <input type="date" id="dueDateInput" required>
+        <button id="addTaskBtn">Add Task</button>
+    </div>
     
     <h2>Current Tasks</h2>
     <div id="taskList">
-        <div>
+        <div class="task-card">
             <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
+            <div class="task-meta">
+                <span class="priority-badge priority-high">High Priority</span>
+                <span class="due-date">Due: 25/07/2025</span>
+            </div>
+            <p>Status: Pending</p>
             <p>Assigned to: John Cleese</p>
         </div>
     </div>
@@ -859,7 +1278,7 @@ button:hover {
             {instructions && instructions.length > 0 && (
               <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
                 <h4 className="font-semibold text-blue-900 mb-3 flex items-center">
-                  📝 What to do:
+                  What to do:
                 </h4>
                 <ol className="space-y-2">
                   {instructions.map((instruction, index) => (
@@ -873,8 +1292,69 @@ button:hover {
                 </ol>
                 <div className="mt-3 p-3 bg-blue-100 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    💡 <strong>Tip:</strong> Look for the comment in the code that shows exactly where to type!
+                    <strong>Tip:</strong> Look for the comment in the code that shows exactly where to type!
                   </p>
+                </div>
+              </div>
+            )}
+
+            {/* Fill-in-the-blank exercise */}
+            {fillInTheBlank && (
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                  Interactive Exercise:
+                </h4>
+                <FillInTheBlankExercise
+                  template={fillInTheBlank.template}
+                  answers={fillInTheBlank.answers}
+                  hints={fillInTheBlank.hints}
+                  options={fillInTheBlank.options}
+                  description={fillInTheBlank.description}
+                  onComplete={setFillInTheBlankComplete}
+                />
+              </div>
+            )}
+
+            {/* Hints Display */}
+            {showHints && hints && hints.length > 0 && (
+              <div className="mb-6">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-yellow-900 flex items-center">
+                      Need Help? Here are some hints:
+                    </h4>
+                    <button
+                      onClick={() => setShowHints(false)}
+                      className="text-sm text-yellow-600 hover:text-yellow-800 font-medium px-2 py-1 rounded"
+                    >
+                      Hide Hints
+                    </button>
+                  </div>
+                  <div className="space-y-3">
+                    {hints.slice(0, currentHint + 1).map((hint, index) => (
+                      <div key={index} className="text-sm text-yellow-800 bg-yellow-100 p-3 rounded">
+                        <div className="font-medium mb-1">Hint {index + 1}:</div>
+                        <div>{hint}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {currentHint < hints.length - 1 && (
+                    <div className="mt-4 text-center">
+                      <button
+                        onClick={() => setCurrentHint(currentHint + 1)}
+                        className="text-sm text-yellow-700 hover:text-yellow-900 font-medium px-3 py-1 rounded border border-yellow-300 bg-yellow-100 hover:bg-yellow-200"
+                      >
+                        Show Next Hint ({currentHint + 2} of {hints.length})
+                      </button>
+                    </div>
+                  )}
+                  {currentHint === hints.length - 1 && (
+                    <div className="mt-4 text-center">
+                      <p className="text-sm text-yellow-700 font-medium">
+                        That's all the hints! You've got this!
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -888,19 +1368,35 @@ button:hover {
                     Code to Copy & Paste:
                   </h4>
                   <button
-                    onClick={() => setShowCodeExplanation(true)}
-                    className="text-sm text-tutorial-primary hover:text-blue-700 flex items-center px-3 py-1 rounded border border-tutorial-primary"
+                    onClick={() => copyToClipboard(codeBlock.code)}
+                    className="flex items-center px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                   >
-                    <Lightbulb className="w-4 h-4 mr-1" />
-                    What does this code do?
+                    {copySuccess ? (
+                      <>
+                        <Check className="w-4 h-4 mr-1" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4 mr-1" />
+                        Copy Code
+                      </>
+                    )}
                   </button>
                 </div>
                 <div className="bg-gray-800 text-white p-3 rounded overflow-x-auto">
                   <pre className="text-sm font-mono whitespace-pre-wrap">{codeBlock.code}</pre>
                 </div>
                 <p className="text-xs text-gray-600 mt-2">
-                  💡 Don't worry about understanding every line - just copy and paste it exactly as shown!
+                  Don't worry about understanding every line - just copy and paste it exactly as shown!
                 </p>
+                
+                {/* Inline Code Hint */}
+                <InlineCodeHint
+                  title={`How This ${language === 'html' ? 'HTML' : language === 'css' ? 'CSS' : language === 'typescript' ? 'TypeScript' : language === 'json' ? 'JSON' : 'JavaScript'} Code Works`}
+                  explanations={codeBlock.explanations}
+                  language={language}
+                />
               </div>
             )}
           </div>
@@ -938,6 +1434,12 @@ button:hover {
             setFileContents={setFileContents}
             getFileStartingContent={getFileStartingContent}
             isEditMode={isEditMode}
+            validationMessage={validationMessage}
+            validationStatus={validationStatus}
+            setValidationMessage={setValidationMessage}
+            setValidationStatus={setValidationStatus}
+            isDarkMode={isDarkMode}
+            setIsDarkMode={setIsDarkMode}
           />
         </div>
       ) : (
@@ -952,7 +1454,7 @@ button:hover {
                 {/* Show instructions in fullscreen */}
                 {instructions && instructions.length > 0 && (
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
-                    <h4 className="font-medium text-blue-900 mb-2 text-sm">📝 Steps to complete:</h4>
+                    <h4 className="font-medium text-blue-900 mb-2 text-sm">Steps to complete:</h4>
                     <ol className="space-y-1">
                       {instructions.map((instruction, index) => (
                         <li key={index} className="flex items-start text-xs">
@@ -975,15 +1477,33 @@ button:hover {
                         Code to Copy:
                       </h4>
                       <button
-                        onClick={() => setShowCodeExplanation(true)}
-                        className="text-xs text-tutorial-primary hover:text-blue-700 flex items-center px-2 py-1 rounded border border-tutorial-primary"
+                        onClick={() => copyToClipboard(codeBlock.code)}
+                        className="flex items-center px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                       >
-                        <Lightbulb className="w-3 h-3 mr-1" />
-                        Explain code
+                        {copySuccess ? (
+                          <>
+                            <Check className="w-3 h-3 mr-1" />
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3 mr-1" />
+                            Copy
+                          </>
+                        )}
                       </button>
                     </div>
-                    <div className="bg-gray-800 text-white p-2 rounded overflow-x-auto max-h-24 overflow-y-auto">
+                    <div className="bg-gray-800 text-white p-3 rounded overflow-x-auto max-h-40 overflow-y-auto">
                       <pre className="text-xs font-mono whitespace-pre-wrap">{codeBlock.code}</pre>
+                    </div>
+                    
+                    {/* Inline Code Hint in Fullscreen */}
+                    <div className="mt-3">
+                      <InlineCodeHint
+                        title={`How This ${language === 'html' ? 'HTML' : language === 'css' ? 'CSS' : language === 'typescript' ? 'TypeScript' : language === 'json' ? 'JSON' : 'JavaScript'} Code Works`}
+                        explanations={codeBlock.explanations}
+                        language={language}
+                      />
                     </div>
                   </div>
                 )}
@@ -1032,31 +1552,17 @@ button:hover {
               setFileContents={setFileContents}
               getFileStartingContent={getFileStartingContent}
               isEditMode={isEditMode}
+              validationMessage={validationMessage}
+              validationStatus={validationStatus}
+              setValidationMessage={setValidationMessage}
+              setValidationStatus={setValidationStatus}
+              isDarkMode={isDarkMode}
+              setIsDarkMode={setIsDarkMode}
             />
           </div>
         </div>
       )}
       
-      {/* Code Explanation Modal */}
-      {codeBlock && (() => {
-        // Detect if the codeBlock contains CSS (starts with CSS selectors like "body {", "h1 {", etc.)
-        const isCSSContent = codeBlock.code.trim().match(/^[a-zA-Z][a-zA-Z0-9\-_]*\s*{/) || 
-                            codeBlock.code.includes('{') && codeBlock.code.includes(':') && 
-                            codeBlock.code.includes(';') && !codeBlock.code.includes('<')
-        
-        const detectedLanguage = isCSSContent ? 'css' : language
-        
-        return (
-          <CodeExplanationModal
-            isOpen={showCodeExplanation}
-            onClose={() => setShowCodeExplanation(false)}
-            title={`Understanding the ${detectedLanguage === 'html' ? 'HTML' : detectedLanguage === 'css' ? 'CSS' : detectedLanguage === 'typescript' ? 'TypeScript' : detectedLanguage === 'json' ? 'JSON' : 'JavaScript'} Code`}
-            code={codeBlock.code}
-            explanations={codeBlock.explanations}
-            language={detectedLanguage}
-          />
-        )
-      })()}
 
       {/* Story Context Modal */}
       {explanation && showExplanation && (

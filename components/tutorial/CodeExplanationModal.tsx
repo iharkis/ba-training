@@ -51,6 +51,32 @@ export default function CodeExplanationModal({
               <p className="text-gray-600 mb-4">
                 Don't worry about memorizing this - just understand what each part accomplishes for your users.
               </p>
+              
+              {/* Code Structure Guide */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="font-medium text-blue-900 mb-2 flex items-center">
+                  <Code className="w-4 h-4 mr-2" />
+                  Understanding Code Structure
+                </h4>
+                <div className="text-sm text-blue-800 space-y-2">
+                  <div className="flex items-start">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded mr-2 text-xs">&lt; &gt;</span>
+                    <span>Angle brackets indicate HTML tags that tell the browser what type of content follows</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded mr-2 text-xs">{ }</span>
+                    <span>Curly braces contain CSS properties that control appearance and layout</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded mr-2 text-xs">;</span>
+                    <span>Semicolons end CSS statements - like periods at the end of sentences</span>
+                  </div>
+                  <div className="flex items-start">
+                    <span className="font-mono bg-blue-100 px-2 py-1 rounded mr-2 text-xs">""</span>
+                    <span>Quotation marks surround text content or values that should be treated as literal strings</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -85,7 +111,7 @@ export default function CodeExplanationModal({
 
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <h4 className="font-medium text-gray-900 mb-2">Key Takeaway</h4>
-              <p className="text-gray-700 text-sm">
+              <p className="text-gray-700 text-sm mb-3">
                 {language === 'css' ? (
                   <>
                     This CSS code transforms the visual appearance of your webpage to meet professional standards. 
@@ -112,6 +138,17 @@ export default function CodeExplanationModal({
                   </>
                 )}
               </p>
+              
+              {/* Code Formatting Guide */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded p-3 mt-3">
+                <h5 className="font-medium text-yellow-900 mb-2">💡 Code Formatting Tips for BAs</h5>
+                <ul className="text-sm text-yellow-800 space-y-1">
+                  <li>• <strong>Indentation matters:</strong> Nested code is indented to show hierarchy and structure</li>
+                  <li>• <strong>Whitespace helps:</strong> Empty lines separate logical sections for better readability</li>
+                  <li>• <strong>Case sensitivity:</strong> HTML tags can be lowercase, but CSS properties are case-sensitive</li>
+                  <li>• <strong>Consistent naming:</strong> Use descriptive names for IDs and classes (e.g., "main-heading" not "h1")</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

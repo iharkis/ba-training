@@ -48,9 +48,12 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center space-x-4">
             <Link href="/tutorial/introduction" className="tutorial-button-primary px-6 py-3">
               {completedSteps > 0 ? 'Continue Tutorial' : 'Start Tutorial'}
+            </Link>
+            <Link href="/demo-app" className="tutorial-button-secondary px-6 py-3">
+              🚀 Try Demo App
             </Link>
           </div>
           

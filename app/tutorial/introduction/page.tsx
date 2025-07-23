@@ -30,8 +30,102 @@ export default function TutorialIntroduction() {
 
   const sections = [
     {
+      id: 'objectives',
+      title: 'Learning Objectives',
+      icon: <Target className="w-6 h-6" />,
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">What You'll Learn</h2>
+          <p className="text-gray-600 mb-6">
+            By the end of this tutorial, you'll understand how business requirements become working software 
+            and how to better collaborate with development teams.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="tutorial-card">
+              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                <span className="w-8 h-8 bg-tutorial-primary text-white rounded-full flex items-center justify-center text-sm mr-3">1</span>
+                Technical Understanding
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li>• How frontend, backend, and database work together</li>
+                <li>• What APIs are and how they connect systems</li>
+                <li>• How data flows through a web application</li>
+                <li>• Why certain technical architecture decisions are made</li>
+              </ul>
+            </div>
+
+            <div className="tutorial-card">
+              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                <span className="w-8 h-8 bg-tutorial-secondary text-white rounded-full flex items-center justify-center text-sm mr-3">2</span>
+                Development Process
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li>• How requirements translate to code</li>
+                <li>• The iterative nature of development</li>
+                <li>• How testing and debugging work</li>
+                <li>• Why developers ask certain questions</li>
+              </ul>
+            </div>
+
+            <div className="tutorial-card">
+              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                <span className="w-8 h-8 bg-tutorial-accent text-white rounded-full flex items-center justify-center text-sm mr-3">3</span>
+                Communication Skills
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li>• Speaking the same language as developers</li>
+                <li>• Understanding technical constraints and trade-offs</li>
+                <li>• Writing better technical requirements</li>
+                <li>• Asking the right questions during planning</li>
+              </ul>
+            </div>
+
+            <div className="tutorial-card">
+              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+                <span className="w-8 h-8 bg-tutorial-warning text-white rounded-full flex items-center justify-center text-sm mr-3">4</span>
+                Practical Application
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li>• Hands-on coding experience</li>
+                <li>• Building something real and functional</li>
+                <li>• Understanding the 'why' behind code</li>
+                <li>• Connecting technical concepts to business value</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="success-box">
+            <div className="success-title">By the End of This Tutorial</div>
+            <div className="success-text">
+              <p className="mb-3">You'll be able to:</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Understand when developers mention 'API endpoints' or 'database queries'</li>
+                <li>Write more technical user stories that developers can implement efficiently</li>
+                <li>Ask informed questions about technical feasibility and complexity</li>
+                <li>Bridge the communication gap between business stakeholders and engineering teams</li>
+                <li>Evaluate technical proposals and understand their business implications</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <Lightbulb className="w-5 h-5 mr-2" />
+              Why This Matters
+            </div>
+            <p className="concept-text">
+              Many project delays and budget overruns happen because of miscommunication between 
+              business and technical teams. By understanding how software is built, you become 
+              a more effective bridge between these worlds.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
       id: 'scenario',
-      title: 'Setting the Scene',
+      title: 'The Ministry of Silly Walks',
       icon: <Users className="w-6 h-6" />,
       content: (
         <div className="space-y-6">
@@ -82,7 +176,7 @@ export default function TutorialIntroduction() {
     },
     {
       id: 'stakeholders',
-      title: 'Meet the Team',
+      title: 'The Team You\'ll Work With',
       icon: <Users className="w-6 h-6" />,
       content: (
         <div className="space-y-6">
@@ -177,7 +271,7 @@ export default function TutorialIntroduction() {
     },
     {
       id: 'requirements',
-      title: 'Gathering Requirements',
+      title: 'Requirements & User Stories',
       icon: <FileText className="w-6 h-6" />,
       content: (
         <div className="space-y-6">
@@ -193,46 +287,93 @@ export default function TutorialIntroduction() {
               <div className="space-y-4">
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <p className="font-medium text-blue-900 mb-2">
-                    <strong>As a</strong> Walk Evaluator, <strong>I want to</strong> see all my assigned tasks in one place 
+                    <strong>As a</strong> Walk Evaluator, <strong>I want to</strong> see all my assigned tasks in one place{' '}
                     <strong>so that</strong> I can prioritise my daily work effectively.
                   </p>
                   <div className="text-sm text-blue-700">
-                    <strong>Acceptance Criteria:</strong>
-                    <ul className="list-disc list-inside mt-1 space-y-1">
-                      <li>Tasks are displayed in a clear list format</li>
-                      <li>I can see task priority, status, and due dates</li>
-                      <li>I can filter tasks by status (pending, in-progress, completed)</li>
-                    </ul>
+                    <strong>Acceptance Criteria (Gherkin Format):</strong>
+                    <div className="mt-2 space-y-3">
+                      <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                        <p className="font-mono text-xs">
+                          <strong className="text-blue-800">Scenario:</strong> Viewing task list<br/>
+                          <strong className="text-green-700">Given</strong> I am a Walk Evaluator<br/>
+                          <strong className="text-green-700">When</strong> I navigate to the task dashboard<br/>
+                          <strong className="text-red-700">Then</strong> I should see all my assigned tasks in a list format<br/>
+                          <strong className="text-red-700">And</strong> each task should display priority, status, and due date
+                        </p>
+                      </div>
+                      <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                        <p className="font-mono text-xs">
+                          <strong className="text-blue-800">Scenario:</strong> Filtering tasks by status<br/>
+                          <strong className="text-green-700">Given</strong> I have multiple tasks with different statuses<br/>
+                          <strong className="text-green-700">When</strong> I select "In Progress" from the status filter<br/>
+                          <strong className="text-red-700">Then</strong> I should only see tasks with "In Progress" status<br/>
+                          <strong className="text-red-700">And</strong> the filter should show the count of filtered tasks
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="bg-green-50 p-4 rounded-lg">
                   <p className="font-medium text-green-900 mb-2">
-                    <strong>As a</strong> Junior Analyst, <strong>I want to</strong> add new walk evaluation tasks 
+                    <strong>As a</strong> Junior Analyst, <strong>I want to</strong> add new walk evaluation tasks{' '}
                     <strong>so that</strong> I can track incoming applications.
                   </p>
                   <div className="text-sm text-green-700">
-                    <strong>Acceptance Criteria:</strong>
-                    <ul className="list-disc list-inside mt-1 space-y-1">
-                      <li>I can create tasks with title, description, and priority</li>
-                      <li>I can assign tasks to appropriate team members</li>
-                      <li>The system validates required fields</li>
-                    </ul>
+                    <strong>Acceptance Criteria (Gherkin Format):</strong>
+                    <div className="mt-2 space-y-3">
+                      <div className="bg-white p-3 rounded border-l-4 border-green-400">
+                        <p className="font-mono text-xs">
+                          <strong className="text-blue-800">Scenario:</strong> Creating a new task<br/>
+                          <strong className="text-green-700">Given</strong> I am a Junior Analyst<br/>
+                          <strong className="text-green-700">When</strong> I complete the task creation form with title, description, and priority<br/>
+                          <strong className="text-green-700">And</strong> I assign it to a team member<br/>
+                          <strong className="text-red-700">Then</strong> the task should be saved to the system<br/>
+                          <strong className="text-red-700">And</strong> it should appear in the assignee's task list
+                        </p>
+                      </div>
+                      <div className="bg-white p-3 rounded border-l-4 border-green-400">
+                        <p className="font-mono text-xs">
+                          <strong className="text-blue-800">Scenario:</strong> Validation of required fields<br/>
+                          <strong className="text-green-700">Given</strong> I am creating a new task<br/>
+                          <strong className="text-green-700">When</strong> I try to submit the form without a title<br/>
+                          <strong className="text-red-700">Then</strong> I should see an error message "Title is required"<br/>
+                          <strong className="text-red-700">And</strong> the task should not be saved
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="bg-yellow-50 p-4 rounded-lg">
                   <p className="font-medium text-yellow-900 mb-2">
-                    <strong>As a</strong> Quality Assessor, <strong>I want to</strong> update task status 
+                    <strong>As a</strong> Quality Assessor, <strong>I want to</strong> update task status{' '}
                     <strong>so that</strong> everyone knows the current progress.
                   </p>
                   <div className="text-sm text-yellow-700">
-                    <strong>Acceptance Criteria:</strong>
-                    <ul className="list-disc list-inside mt-1 space-y-1">
-                      <li>I can change task status between pending, in-progress, completed</li>
-                      <li>Status changes are immediately visible to all users</li>
-                      <li>I can add notes when updating status</li>
-                    </ul>
+                    <strong>Acceptance Criteria (Gherkin Format):</strong>
+                    <div className="mt-2 space-y-3">
+                      <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
+                        <p className="font-mono text-xs">
+                          <strong className="text-blue-800">Scenario:</strong> Updating task status<br/>
+                          <strong className="text-green-700">Given</strong> I am a Quality Assessor<br/>
+                          <strong className="text-green-700">And</strong> I have a task with status "Pending"<br/>
+                          <strong className="text-green-700">When</strong> I change the status to "In Progress"<br/>
+                          <strong className="text-red-700">Then</strong> the task status should update immediately<br/>
+                          <strong className="text-red-700">And</strong> all users should see the updated status
+                        </p>
+                      </div>
+                      <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
+                        <p className="font-mono text-xs">
+                          <strong className="text-blue-800">Scenario:</strong> Adding notes to status update<br/>
+                          <strong className="text-green-700">Given</strong> I am updating a task status<br/>
+                          <strong className="text-green-700">When</strong> I add a note "Waiting for additional documentation"<br/>
+                          <strong className="text-red-700">Then</strong> the note should be saved with the status change<br/>
+                          <strong className="text-red-700">And</strong> the note should be visible to all team members
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -278,112 +419,57 @@ export default function TutorialIntroduction() {
           </div>
 
           <div className="explanation-box">
-            <div className="explanation-title">What's Happening Here?</div>
+            <div className="explanation-title">What's Happening Here? Requirements → Technical Implementation</div>
             <div className="explanation-text">
               <p className="mb-3">
-                These requirements will directly drive our technical decisions. For example:
+                Each requirement directly translates into specific technical work. Here's the exact connection:
               </p>
-              <ul className="list-disc list-inside space-y-2">
-                <li><strong>Real-time updates</strong> → We'll need WebSocket connections or polling</li>
-                <li><strong>GOV.UK design</strong> → We'll use TailwindCSS with government styling</li>
-                <li><strong>Task filtering</strong> → We'll need database queries and frontend filtering</li>
-                <li><strong>User assignment</strong> → We'll need a user management system</li>
-              </ul>
+              <div className="space-y-4">
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <h4 className="font-medium text-blue-900 mb-2">Requirement: "See all assigned tasks in a list format"</h4>
+                  <p className="text-sm text-blue-800 mb-2"><strong>Technical Implementation:</strong></p>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    <li>• <strong>HTML:</strong> Create &lt;ul&gt; and &lt;li&gt; elements for task list structure</li>
+                    <li>• <strong>CSS:</strong> Style list items with proper spacing and visual hierarchy</li>
+                    <li>• <strong>JavaScript:</strong> Fetch task data from API and populate the list</li>
+                    <li>• <strong>Backend:</strong> Create GET /tasks endpoint with user filtering</li>
+                    <li>• <strong>Database:</strong> Design tasks table with user_id foreign key</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-medium text-green-900 mb-2">Requirement: "Filter tasks by status"</h4>
+                  <p className="text-sm text-green-800 mb-2"><strong>Technical Implementation:</strong></p>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    <li>• <strong>HTML:</strong> Create &lt;select&gt; dropdown with status options</li>
+                    <li>• <strong>CSS:</strong> Style dropdown to match GOV.UK design system</li>
+                    <li>• <strong>JavaScript:</strong> Add event listener to filter tasks dynamically</li>
+                    <li>• <strong>Backend:</strong> Add status parameter to GET /tasks endpoint</li>
+                    <li>• <strong>Database:</strong> Add WHERE clause to filter by status column</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <h4 className="font-medium text-yellow-900 mb-2">Requirement: "Status changes immediately visible to all users"</h4>
+                  <p className="text-sm text-yellow-800 mb-2"><strong>Technical Implementation:</strong></p>
+                  <ul className="text-sm text-yellow-700 space-y-1">
+                    <li>• <strong>HTML:</strong> Create status update form with dropdown</li>
+                    <li>• <strong>CSS:</strong> Add visual feedback for status changes</li>
+                    <li>• <strong>JavaScript:</strong> Implement WebSocket connection for real-time updates</li>
+                    <li>• <strong>Backend:</strong> Create PUT /tasks/:id endpoint with WebSocket broadcast</li>
+                    <li>• <strong>Database:</strong> Update task status and log change history</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                  <h4 className="font-medium text-purple-900 mb-2">Key BA Insight</h4>
+                  <p className="text-sm text-purple-800">
+                    Notice how <strong>one user requirement</strong> becomes <strong>work across 5 different technical layers</strong>? 
+                    This is why BAs who understand technical implementation write better requirements and make better decisions about scope, timeline, and complexity.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'objectives',
-      title: 'Learning Objectives',
-      icon: <Target className="w-6 h-6" />,
-      content: (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">What You'll Learn</h2>
-          <p className="text-gray-600 mb-6">
-            By the end of this tutorial, you'll understand how business requirements become working software 
-            and how to better collaborate with development teams.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="tutorial-card">
-              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="w-8 h-8 bg-tutorial-primary text-white rounded-full flex items-center justify-center text-sm mr-3">1</span>
-                Technical Understanding
-              </h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li>• How frontend, backend, and database work together</li>
-                <li>• What APIs are and how they connect systems</li>
-                <li>• How data flows through a web application</li>
-                <li>• Why certain technical architecture decisions are made</li>
-              </ul>
-            </div>
-
-            <div className="tutorial-card">
-              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="w-8 h-8 bg-tutorial-secondary text-white rounded-full flex items-center justify-center text-sm mr-3">2</span>
-                Development Process
-              </h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li>• How requirements translate to code</li>
-                <li>• The iterative nature of development</li>
-                <li>• How testing and debugging work</li>
-                <li>• Why developers ask certain questions</li>
-              </ul>
-            </div>
-
-            <div className="tutorial-card">
-              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="w-8 h-8 bg-tutorial-accent text-white rounded-full flex items-center justify-center text-sm mr-3">3</span>
-                Communication Skills
-              </h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li>• Speaking the same language as developers</li>
-                <li>• Understanding technical constraints and trade-offs</li>
-                <li>• Writing better technical requirements</li>
-                <li>• Asking the right questions during planning</li>
-              </ul>
-            </div>
-
-            <div className="tutorial-card">
-              <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="w-8 h-8 bg-tutorial-warning text-white rounded-full flex items-center justify-center text-sm mr-3">4</span>
-                Practical Application
-              </h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li>• Hands-on coding experience</li>
-                <li>• Building something real and functional</li>
-                <li>• Understanding the 'why' behind code</li>
-                <li>• Connecting technical concepts to business value</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="success-box">
-            <div className="success-title">By the End of This Tutorial</div>
-            <div className="success-text">
-              <p className="mb-3">You'll be able to:</p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Understand when developers mention 'API endpoints' or 'database queries'</li>
-                <li>Write more technical user stories that developers can implement efficiently</li>
-                <li>Ask informed questions about technical feasibility and complexity</li>
-                <li>Bridge the communication gap between business stakeholders and engineering teams</li>
-                <li>Evaluate technical proposals and understand their business implications</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="concept-callout">
-            <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
-              Why This Matters
-            </div>
-            <p className="concept-text">
-              Many project delays and budget overruns happen because of miscommunication between 
-              business and technical teams. By understanding how software is built, you become 
-              a more effective bridge between these worlds.
-            </p>
           </div>
         </div>
       )

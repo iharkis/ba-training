@@ -695,12 +695,7 @@ export default function FileTreeViewer({
                   )}
                 </div>
                 <span className="flex-1">{node.name}</span>
-                {isCurrentExerciseFile && (
-                  <span className="text-xs text-green-600 font-medium bg-green-100 px-2 py-0.5 rounded">
-                    Current Exercise
-                  </span>
-                )}
-                {node.type === 'file' && node.content && !isCurrentExerciseFile && (
+                {node.type === 'file' && node.content && (
                   <Eye className="w-3 h-3 text-gray-400" />
                 )}
               </div>

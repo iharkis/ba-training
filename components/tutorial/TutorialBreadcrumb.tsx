@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { useChapterSkipWarning } from '@/hooks/useChapterSkipWarning'
+import ChapterSkipWarning from './ChapterSkipWarning'
 
 const TUTORIAL_STRUCTURE = {
   '/': { title: 'Home', description: 'BA Development Tutorial' },
@@ -87,6 +89,18 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
     return null
   }
 
+  // Chapter skip warning system
+  const currentChapterNumber = getCurrentChapterNumber()
+  const { showWarning, handleNavigation, handleProceed, handleCancel } = useChapterSkipWarning({
+    currentChapter: currentChapterNumber || 0
+  })
+
+  // Custom link handler that checks for chapter skipping
+  const handleChapterNavigation = (e: React.MouseEvent, path: string) => {
+    e.preventDefault()
+    handleNavigation(path)
+  }
+
   const getPreviousChapter = () => {
     const currentChapter = getCurrentChapterNumber()
     if (currentChapter === null || currentChapter <= 0) return null
@@ -157,6 +171,7 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
                 ) : (
                   <Link 
                     href={crumb.path}
+                    onClick={() => window.scrollTo(0, 0)}
                     className="text-gray-600 hover:text-gray-900 flex items-center"
                   >
                     {crumb.icon && <crumb.icon className="w-4 h-4 mr-1" />}
@@ -172,14 +187,15 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
         {showChapterNavigation && currentPage && (
           <div className="py-4 border-t border-gray-100">
             <div className="flex items-center justify-between">
-              {/* Previous Chapter */}
+              {/* Previous Chapter - Enhanced Button */}
               <div className="flex-1">
                 {previousChapter ? (
                   <Link 
                     href={previousChapter.path}
-                    className="inline-flex items-center text-gray-600 hover:text-gray-900 text-sm"
+                    onClick={() => window.scrollTo(0, 0)}
+                    className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg transition-colors border border-gray-300 text-sm font-medium"
                   >
-                    <ChevronRight className="w-4 h-4 mr-1 rotate-180" />
+                    <ChevronRight className="w-4 h-4 mr-2 rotate-180" />
                     <div>
                       <div className="text-xs text-gray-500">Previous</div>
                       <div className="font-medium">{previousChapter.title}</div>
@@ -216,19 +232,20 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
                 )}
               </div>
 
-              {/* Next Chapter */}
+              {/* Next Chapter - Enhanced Button */}
               <div className="flex-1 text-right">
                 {nextChapter ? (
-                  <Link 
+                  <a 
                     href={nextChapter.path}
-                    className="inline-flex items-center text-gray-600 hover:text-gray-900 text-sm"
+                    onClick={(e) => handleChapterNavigation(e, nextChapter.path)}
+                    className="inline-flex items-center px-4 py-2 bg-tutorial-primary hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium cursor-pointer"
                   >
                     <div className="text-right">
-                      <div className="text-xs text-gray-500">Next</div>
+                      <div className="text-xs text-blue-100">Next</div>
                       <div className="font-medium">{nextChapter.title}</div>
                     </div>
-                    <ChevronRight className="w-4 h-4 ml-1" />
-                  </Link>
+                    <ChevronRight className="w-4 h-4 ml-2" />
+                  </a>
                 ) : (
                   <div></div>
                 )}
@@ -244,6 +261,15 @@ export default function TutorialBreadcrumb({ showChapterNavigation = true }: Tut
           </div>
         )}
       </div>
+
+      {/* Chapter Skip Warning Modal */}
+      {showWarning && (
+        <ChapterSkipWarning
+          currentChapter={currentChapterNumber || 0}
+          onProceed={handleProceed}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   )
 }

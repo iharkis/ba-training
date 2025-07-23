@@ -21,6 +21,12 @@ export default function Chapter1() {
     return params.toString() ? `${path}?${params.toString()}` : path
   }
 
+  // Helper function to change step and scroll to top
+  const changeStep = (newStep: number) => {
+    setCurrentStep(newStep)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   // Load progress on mount
   useEffect(() => {
     const progress = getProgress()
@@ -619,7 +625,7 @@ export default function Chapter1() {
                 {steps.map((step, index) => (
                   <button
                     key={step.id}
-                    onClick={() => setCurrentStep(index)}
+                    onClick={() => changeStep(index)}
                     className={`w-full text-left p-3 rounded-lg transition-colors ${
                       currentStep === index
                         ? 'bg-tutorial-primary text-white'
@@ -690,7 +696,7 @@ export default function Chapter1() {
                   
                   <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
                     <button
-                      onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                      onClick={() => changeStep(Math.max(0, currentStep - 1))}
                       disabled={currentStep === 0}
                       className={`flex items-center ${
                         currentStep === 0 
@@ -706,7 +712,7 @@ export default function Chapter1() {
                       onClick={() => {
                         markStepCompleteLocal(currentStep)
                         if (currentStep < steps.length - 1) {
-                          setCurrentStep(currentStep + 1)
+                          changeStep(currentStep + 1)
                           setShowBeginnerGuide(false) // Hide guide after first step
                         }
                       }}
@@ -732,7 +738,7 @@ export default function Chapter1() {
                     markStepCompleteLocal(currentStep)
                     setTimeout(() => {
                       if (currentStep < steps.length - 1) {
-                        setCurrentStep(currentStep + 1)
+                        changeStep(currentStep + 1)
                       }
                     }, 2000)
                   }}

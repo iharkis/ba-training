@@ -7,6 +7,8 @@ import { ArrowLeft, ArrowRight, CheckCircle, Zap, Lightbulb, Code } from 'lucide
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import CodeExplanationModal from '@/components/tutorial/CodeExplanationModal'
+import JavaScriptDiagram from '@/components/tutorial/JavaScriptDiagram'
+import SyntaxHighlighter from '@/components/tutorial/SyntaxHighlighter'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter3() {
@@ -19,6 +21,12 @@ export default function Chapter3() {
   const getUrlWithParams = (path: string) => {
     const params = new URLSearchParams(searchParams.toString())
     return params.toString() ? `${path}?${params.toString()}` : path
+  }
+
+  // Helper function to change step and scroll to top
+  const changeStep = (newStep: number) => {
+    setCurrentStep(newStep)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const steps = [
@@ -89,6 +97,8 @@ export default function Chapter3() {
             </p>
           </div>
 
+          <JavaScriptDiagram />
+
           <div className="bg-tutorial-primary text-white p-6 rounded-lg">
             <h3 className="text-lg font-bold mb-3">🎯 Learning Objective</h3>
             <p>
@@ -100,94 +110,109 @@ export default function Chapter3() {
     },
     {
       id: 'add-button',
-      title: 'Step 1: Adding an Add Task Button',
-      type: 'coding',
-      exercise: {
-        title: 'Add a Button to Submit New Tasks',
-        description: 'First, let\'s add a proper button next to our input field so users can submit new tasks. We\'ll also style it to match our government design.',
-        instructions: [
-          'Find the comment "<!-- Step 1: Add a button here -->" after the input field',
-          'Replace it with: <button id="addTaskBtn">Add Task</button>',
-          'The button will sit next to the input field',
-          'The CSS styling for the button is already provided in the style section',
-          'This gives users a clear way to submit their task'
-        ],
-        language: 'html' as const,
-        startingCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <!-- Step 1: Add a button here -->
-    
-    <h2>Current Tasks</h2>
-    <div id="taskList">
-        <div>
-            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
-            <p>Assigned to: John Cleese</p>
+      title: 'Step 1: Understanding the Complete HTML Structure',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">Step 1: Review the Complete HTML Structure</h2>
+          
+          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400 mb-4">
+            <p className="text-blue-900 font-medium mb-2">What's happening in this step:</p>
+            <ul className="text-blue-800 space-y-1 text-sm">
+              <li>• <strong>Your previous work:</strong> You built the basic HTML structure and added CSS styling in Chapters 1 & 2</li>
+              <li>• <strong>What we've added:</strong> The missing interactive elements needed for JavaScript functionality</li>
+              <li>• <strong>New elements include:</strong> A clickable button, proper IDs for JavaScript targeting, and a script tag</li>
+              <li>• <strong>Next step:</strong> You'll write JavaScript code that uses these elements to make the page interactive</li>
+            </ul>
+          </div>
+          
+          <p className="text-lg text-gray-600">
+            Let's examine the complete HTML structure that your JavaScript will work with:
+          </p>
+
+          <SyntaxHighlighter
+            language="html"
+            title="Complete HTML Structure with Priority and Due Date"
+            code={` 1  <!DOCTYPE html>
+ 2  <html lang="en-GB">
+ 3  <head>
+ 4      <meta charset="UTF-8">
+ 5      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 6      <title>Ministry of Silly Walks - Task Manager</title>
+ 7      <link rel="stylesheet" href="styles.css">
+ 8  </head>
+ 9  <body>
+10      <h1>Ministry of Silly Walks</h1>
+11      <p>Task Management System</p>
+12      
+13      <h2>Add New Task</h2>
+14      <div class="task-form">
+15          <input type="text" id="taskInput" placeholder="Enter task description" required>
+16          
+17          <select id="prioritySelect" required>
+18              <option value="Low">Low Priority</option>
+19              <option value="Medium" selected>Medium Priority</option>
+20              <option value="High">High Priority</option>
+21              <option value="Critical">Critical Priority</option>
+22          </select>
+23          
+24          <input type="date" id="dueDateInput" required>
+25          <button id="addTaskBtn">Add Task</button>
+26      </div>
+27      
+28      <h2>Current Tasks</h2>
+29      <div id="taskList">
+30          <div class="task-card">
+31              <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+32              <div class="task-meta">
+33                  <span class="priority-badge priority-high">High Priority</span>
+34                  <span class="due-date">Due: 25/07/2025</span>
+35              </div>
+36              <p>Status: Pending</p>
+37              <p>Assigned to: John Cleese</p>
+38          </div>
+39      </div>
+40      
+41      <script src="script.js"></script>
+42  </body>
+43  </html>`}
+          />
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-2">Enhanced Form Elements for Complete Task Management</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• <strong>Line 14:</strong> <code>id="taskInput"</code> - Task description input with required validation</li>
+                <li>• <strong>Lines 16-21:</strong> <code>id="prioritySelect"</code> - Dropdown for Low/Medium/High/Critical priority selection</li>
+                <li>• <strong>Line 23:</strong> <code>id="dueDateInput"</code> - Date picker for due date selection</li>
+                <li>• <strong>Line 24:</strong> <code>id="addTaskBtn"</code> - Button that triggers task creation with all fields</li>
+                <li>• <strong>Line 28:</strong> <code>id="taskList"</code> - Container where new tasks with priority and dates appear</li>
+                <li>• <strong>Line 40:</strong> JavaScript file loads after all HTML elements are ready</li>
+              </ul>
+            </div>
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <h4 className="font-medium text-green-900 mb-2">User Story Implementation</h4>
+              <ul className="text-sm text-green-800 space-y-1">
+                <li>• <strong>Priority Selection:</strong> Implements "I can prioritise my daily work effectively" user story</li>
+                <li>• <strong>Due Date Tracking:</strong> Enables deadline management and workload planning</li>
+                <li>• <strong>Form Validation:</strong> Ensures required fields are completed before task creation</li>
+                <li>• <strong>Visual Priority Badges:</strong> Makes task importance immediately visible to evaluators</li>
+                <li>• <strong>Structured Data:</strong> Creates consistent task format for easy filtering and sorting</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <Lightbulb className="w-5 h-5 mr-2" />
+              BA Insight: HTML Foundation for Interactive Features
+            </div>
+            <p className="concept-text">
+              Notice how the HTML structure directly supports the user stories we defined earlier. The input field and button enable "adding new tasks," while the task list container with proper IDs allows JavaScript to dynamically add new tasks. This is how requirements translate into technical implementation - the HTML provides the foundation that JavaScript can build upon.
+            </p>
+          </div>
         </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html>`,
-        targetCode: `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ministry of Silly Walks - Task Manager</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Ministry of Silly Walks</h1>
-    <p>Task Management System</p>
-    
-    <h2>Add New Task</h2>
-    <input type="text" id="taskInput" placeholder="Enter task description">
-    <button id="addTaskBtn">Add Task</button>
-    
-    <h2>Current Tasks</h2>
-    <div id="taskList">
-        <div>
-            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
-            <p>Review submitted video and assess walk silliness level.</p>
-            <p>Assigned to: John Cleese</p>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html>`,
-        hints: [
-          "Find the comment '<!-- Step 1: Add a button here -->' after the input field",
-          "Replace it with <button id=\"addTaskBtn\">Add Task</button>",
-          "The id=\"addTaskBtn\" is important - we'll use it in JavaScript later",
-          "The button styling is already included in the CSS",
-          "Notice the button gets a government blue color and hover effect"
-        ],
-        explanation: {
-          whatIsHappening: "You've added a professional-looking button with an ID attribute. The CSS styling gives it the government blue color that matches the heading, proper padding for easy clicking, and a hover effect that darkens when users mouse over it. The ID attribute will be crucial for JavaScript to find and control this button.",
-          whyItMatters: "This button represents the completion of a user story: 'As a Junior Analyst, I want a clear way to submit new tasks.' The visual design (blue, professional styling) reinforces that this is a primary action in the system. The hover effect provides immediate feedback, improving user confidence in their interactions.",
-          realWorldConnection: "When you write requirements like 'provide a submit button' or 'primary actions should be prominently displayed,' this is the implementation. The ID attribute represents how developers connect interface elements to functionality - understanding this helps you write more technically informed requirements about user interactions.",
-          keyTerms: {
-            "ID attribute": "A unique identifier that JavaScript can use to find and control specific HTML elements",
-            "Hover effect": "CSS that changes appearance when users mouse over elements, providing visual feedback",
-            "Primary action": "The most important button on a page, styled prominently to guide user behavior",
-            "Cursor pointer": "CSS that changes the mouse cursor to a hand, indicating the element is clickable"
-          }
-        }
-      }
+      )
     },
     {
       id: 'add-javascript',
@@ -197,32 +222,92 @@ export default function Chapter3() {
         title: 'Make the Add Task Button Work',
         description: 'Now let\'s add JavaScript to make the "Add Task" button actually work! We\'ll write the code in a separate JavaScript file to maintain clean separation of concerns.',
         instructions: [
-          'Add JavaScript code to the script.js file (you can see it in the file tree)',
-          'This code will listen for clicks on the Add Task button and create new tasks',
-          'Copy the JavaScript code from the code block below into the editor',
-          'Test it by typing in the input field and clicking "Add Task"'
+          'First, complete the fill-in-the-blank exercise to understand JavaScript interactions',
+          'Continue working in the JavaScript file - the HTML and CSS remain read-only',
+          'Start typing your JavaScript code in the script.js file below the comment',
+          'Replace it with the JavaScript code shown below',
+          'This will add event listeners and DOM manipulation to make the interface functional',
+          'Test it by typing in the input field and clicking "Add Task" in the preview'
         ],
+        fillInTheBlank: {
+          template: 'We will add an {{listener}} to the button that responds when users {{action}} it. The code will get the {{text}} from the input field, {{check}} if it\'s not empty, and then {{create}} a new task.',
+          answers: {
+            listener: 'event listener',
+            action: 'click',
+            text: 'value',
+            check: 'validate',
+            create: 'add'
+          } as { [key: string]: string },
+          hints: {
+            listener: 'What JavaScript feature "listens" for user interactions like clicks?',
+            action: 'What do users do with their mouse to activate a button?',
+            text: 'What property of an input field contains what the user typed?',
+            check: 'What should we do to ensure the user actually entered something?',
+            create: 'What do we want to do with the user\'s input - make a new task?'
+          } as { [key: string]: string },
+          options: {
+            listener: ['event listener', 'function', 'method', 'callback', 'handler', 'variable'],
+            action: ['click', 'hover', 'focus', 'submit', 'change', 'load'],
+            text: ['value', 'innerHTML', 'textContent', 'data', 'content', 'attribute'],
+            check: ['validate', 'execute', 'process', 'parse', 'compile', 'render'],
+            create: ['add', 'remove', 'update', 'delete', 'modify', 'replace']
+          } as { [key: string]: string[] },
+          description: 'Before we write JavaScript, let\'s understand how user interactions work: **Event Listeners** are JavaScript functions that "listen" for user actions (like clicks), **Input Values** are the text users type into form fields, and **Validation** means checking if the user entered valid data before processing it. For example: when a user clicks "Add Task", the event listener gets the input value, validates it\'s not empty, and then adds it to the task list.'
+        },
         codeBlock: {
           code: `document.getElementById('addTaskBtn').addEventListener('click', function() {
     const input = document.getElementById('taskInput');
+    const prioritySelect = document.getElementById('prioritySelect');
+    const dueDateInput = document.getElementById('dueDateInput');
+    
     const taskText = input.value.trim();
+    const priority = prioritySelect.value;
+    const dueDate = dueDateInput.value;
     
     if (taskText === '') {
         alert('Please enter a task description');
         return;
     }
     
+    if (!dueDate) {
+        alert('Please select a due date');
+        return;
+    }
+    
     const taskList = document.getElementById('taskList');
     const newTask = document.createElement('div');
+    const priorityColor = getPriorityColor(priority);
+    const formattedDate = new Date(dueDate).toLocaleDateString('en-UK');
+    
     newTask.innerHTML = \`
-        <h3>\${taskText}</h3>
-        <p>Status: Pending</p>
-        <p>Assigned to: Current User</p>
+        <div class="task-card">
+            <h3>\${taskText}</h3>
+            <div class="task-meta">
+                <span class="priority-badge \${priorityColor}">\${priority} Priority</span>
+                <span class="due-date">Due: \${formattedDate}</span>
+            </div>
+            <p>Status: Pending</p>
+            <p>Assigned to: Current User</p>
+        </div>
     \`;
     
     taskList.appendChild(newTask);
+    
+    // Clear form
     input.value = '';
-});`,
+    prioritySelect.value = 'Medium';
+    dueDateInput.value = '';
+});
+
+function getPriorityColor(priority) {
+    switch(priority) {
+        case 'Critical': return 'priority-critical';
+        case 'High': return 'priority-high';
+        case 'Medium': return 'priority-medium';
+        case 'Low': return 'priority-low';
+        default: return 'priority-medium';
+    }
+}`,
           explanations: [
             {
               line: "document.getElementById('addTaskBtn').addEventListener('click', function() {",
@@ -235,73 +320,120 @@ export default function Chapter3() {
               businessContext: "Accessing form inputs is fundamental to collecting user data in web applications."
             },
             {
-              line: "const taskText = input.value.trim();",
-              explanation: "This gets the text the user typed and removes extra spaces.",
-              businessContext: "Data cleaning (like trimming spaces) prevents common user input errors and improves data quality."
+              line: "const prioritySelect = document.getElementById('prioritySelect');",
+              explanation: "This gets the priority dropdown so we can read which priority the user selected.",
+              businessContext: "Priority selection enables users to communicate urgency and helps with workload management."
             },
             {
-              line: "if (taskText === '') { alert('Please enter a task description'); return; }",
-              explanation: "This validates that the user actually entered some text before creating a task.",
-              businessContext: "Input validation is crucial for data integrity and prevents users from creating empty or invalid records."
+              line: "const dueDateInput = document.getElementById('dueDateInput');",
+              explanation: "This gets the due date input field to capture when the task needs to be completed.",
+              businessContext: "Due date tracking is essential for deadline management and project planning."
             },
             {
-              line: "const newTask = document.createElement('div');",
-              explanation: "This creates a new HTML element to hold the new task information.",
-              businessContext: "Dynamic content creation allows applications to respond to user actions and update in real-time."
+              line: "if (!dueDate) { alert('Please select a due date'); return; }",
+              explanation: "This validates that the user selected a due date before creating the task.",
+              businessContext: "Date validation ensures all tasks have deadlines, which is crucial for project management and accountability."
             },
             {
-              line: "newTask.innerHTML = `<h3>${taskText}</h3>...`;",
-              explanation: "This fills the new task element with the user's text and standard task information.",
-              businessContext: "Template literals allow dynamic content generation - essential for data-driven applications."
+              line: "const priorityColor = getPriorityColor(priority);",
+              explanation: "This calls a helper function to determine which CSS class should be used for the priority badge color.",
+              businessContext: "Visual priority indicators help users quickly identify urgent tasks, improving workflow efficiency."
             },
             {
-              line: "taskList.appendChild(newTask); input.value = '';",
-              explanation: "This adds the new task to the list and clears the input for the next task.",
-              businessContext: "Providing immediate feedback and clearing forms improves user experience and workflow efficiency."
+              line: "const formattedDate = new Date(dueDate).toLocaleDateString('en-UK');",
+              explanation: "This formats the due date into a readable UK date format (DD/MM/YYYY).",
+              businessContext: "Proper date formatting ensures consistency and clarity in user interfaces, especially important for government systems."
+            },
+            {
+              line: "taskList.appendChild(newTask);",
+              explanation: "This adds the complete task card to the task list with all the priority and date information.",
+              businessContext: "Dynamic content updates provide immediate feedback and keep the interface current with user actions."
             }
           ]
         },
         language: 'typescript' as const,
         startingCode: `// Ministry of Silly Walks - Task Manager JavaScript
 
-// Step 2: Add JavaScript code here`,
-        targetCode: `document.getElementById('addTaskBtn').addEventListener('click', function() {
+// Add your JavaScript code here to handle priority and due dates`,
+        targetCode: `// Ministry of Silly Walks - Task Manager JavaScript
+
+// Enhanced HTML structure includes:
+// - Task description input (id="taskInput")
+// - Priority dropdown (id="prioritySelect") 
+// - Due date picker (id="dueDateInput")
+// - Add task button (id="addTaskBtn")
+// - Task list container (id="taskList")
+
+document.getElementById('addTaskBtn').addEventListener('click', function() {
     const input = document.getElementById('taskInput');
+    const prioritySelect = document.getElementById('prioritySelect');
+    const dueDateInput = document.getElementById('dueDateInput');
+    
     const taskText = input.value.trim();
+    const priority = prioritySelect.value;
+    const dueDate = dueDateInput.value;
     
     if (taskText === '') {
         alert('Please enter a task description');
         return;
     }
     
+    if (!dueDate) {
+        alert('Please select a due date');
+        return;
+    }
+    
     const taskList = document.getElementById('taskList');
     const newTask = document.createElement('div');
+    const priorityColor = getPriorityColor(priority);
+    const formattedDate = new Date(dueDate).toLocaleDateString('en-UK');
+    
     newTask.innerHTML = \`
-        <h3>\${taskText}</h3>
-        <p>Status: Pending</p>
-        <p>Assigned to: Current User</p>
+        <div class="task-card">
+            <h3>\${taskText}</h3>
+            <div class="task-meta">
+                <span class="priority-badge \${priorityColor}">\${priority} Priority</span>
+                <span class="due-date">Due: \${formattedDate}</span>
+            </div>
+            <p>Status: Pending</p>
+            <p>Assigned to: Current User</p>
+        </div>
     \`;
     
     taskList.appendChild(newTask);
+    
+    // Clear form
     input.value = '';
-});`,
+    prioritySelect.value = 'Medium';
+    dueDateInput.value = '';
+});
+
+function getPriorityColor(priority) {
+    switch(priority) {
+        case 'Critical': return 'priority-critical';
+        case 'High': return 'priority-high';
+        case 'Medium': return 'priority-medium';
+        case 'Low': return 'priority-low';
+        default: return 'priority-medium';
+    }
+}`,
         hints: [
-          "You're now editing the script.js file - notice this is separate from the HTML",
-          "Replace the comment with the JavaScript code from the code block",
-          "The JavaScript listens for clicks on the 'Add Task' button",
-          "When clicked, it gets the text from the input field and creates a new task",
-          "Test it by typing something and clicking the button in the preview!"
+          "Add your JavaScript code below the comment in the script.js file",
+          "Replace it with the JavaScript code from the code block above",
+          "The HTML and CSS files are read-only - you can view them but only edit JavaScript",
+          "Make sure to include the complete event listener function",
+          "After adding the code, test it by typing in the input field and clicking 'Add Task' in the preview"
         ],
         explanation: {
-          whatIsHappening: "You've added your first JavaScript functionality in a separate file! The code listens for clicks on the 'Add Task' button, gets the text from the input field, validates it's not empty, creates a new task element with the same styling as existing tasks, and adds it to the task list. It also clears the input field for the next task. Notice how the HTML, CSS, and JavaScript are now properly separated into different files.",
-          whyItMatters: "This implements the core user story: 'As a staff member, I want to add new tasks to my workload.' The validation prevents empty tasks (a business rule), and the automatic clearing of the input field improves user experience. Users can now actually use this system for their daily work - it's transformed from a static display to a working tool. Most importantly, you're following separation of concerns - HTML in index.html, CSS in styles.css, and JavaScript in script.js.",
-          realWorldConnection: "This is how professional web applications are structured. Requirements like 'maintain clean code architecture' and 'ensure maintainability' get implemented through proper separation of concerns. The JavaScript handles both user interface concerns (clearing the input, adding visual elements) and business logic (validation rules). Understanding this separation helps you write better technical requirements and communicate more effectively with development teams.",
+          whatIsHappening: "You've added JavaScript functionality while working with read-only HTML and CSS files! The existing interface structure from Chapters 1 & 2 now has interactive behavior. The JavaScript listens for button clicks, validates user input, creates new task elements, and updates the page dynamically. You're working purely in the JavaScript layer while the HTML and CSS remain untouched.",
+          whyItMatters: "This demonstrates how development teams often work - you receive completed interface designs and add functionality through JavaScript. The Ministry's professional-looking interface now has working features that staff can actually use. This separation allows teams to work independently and makes code more maintainable and organized.",
+          realWorldConnection: "In real projects, you often work with pre-built components and add JavaScript behavior. When you write requirements about 'interactive features' or 'user workflow,' this JavaScript layer is where those requirements get implemented. Understanding this separation helps you write better technical requirements and have informed discussions about feature implementation approaches.",
           keyTerms: {
-            "Event Listener": "Code that waits for user actions like clicks, key presses, or form submissions",
-            "DOM Manipulation": "Using JavaScript to change the content and structure of the web page",
+            "Event Listener": "JavaScript code that waits for and responds to user actions like clicks",
+            "DOM Manipulation": "Using JavaScript to change the content and structure of the web page in real-time",
             "Input Validation": "Checking that user-entered data meets business rules before processing",
             "Template Literals": "The backtick syntax (`) that lets you create HTML with dynamic content",
-            "Separation of Concerns": "Keeping HTML (structure), CSS (styling), and JavaScript (behavior) in separate files for better maintainability"
+            "Discrete Sections": "Keeping different concerns (HTML structure, CSS styling, JavaScript behavior) separate and focused"
           }
         }
       }
@@ -325,7 +457,7 @@ export default function Chapter3() {
     }
   }
 
-  const allStepsComplete = completedSteps.length === steps.length
+  const allStepsComplete = completedSteps.length === steps.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -361,7 +493,7 @@ export default function Chapter3() {
                 {steps.map((step, index) => (
                   <button
                     key={step.id}
-                    onClick={() => setCurrentStep(index)}
+                    onClick={() => changeStep(index)}
                     className={`w-full text-left p-3 rounded-lg transition-colors ${
                       currentStep === index
                         ? 'bg-tutorial-primary text-white'
@@ -437,7 +569,7 @@ export default function Chapter3() {
                   
                   <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
                     <button
-                      onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                      onClick={() => changeStep(Math.max(0, currentStep - 1))}
                       disabled={currentStep === 0}
                       className={`flex items-center ${
                         currentStep === 0 
@@ -453,7 +585,7 @@ export default function Chapter3() {
                       onClick={() => {
                         markStepCompleteLocal(currentStep)
                         if (currentStep < steps.length - 1) {
-                          setCurrentStep(currentStep + 1)
+                          changeStep(currentStep + 1)
                         }
                       }}
                       className="tutorial-button-primary"
@@ -478,7 +610,7 @@ export default function Chapter3() {
                     markStepCompleteLocal(currentStep)
                     setTimeout(() => {
                       if (currentStep < steps.length - 1) {
-                        setCurrentStep(currentStep + 1)
+                        changeStep(currentStep + 1)
                       }
                     }, 2000)
                   }}

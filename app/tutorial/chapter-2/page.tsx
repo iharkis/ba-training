@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CheckCircle, Palette, Lightbulb } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
+import CssDiagram from '@/components/tutorial/CssDiagram'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter2() {
@@ -17,6 +18,12 @@ export default function Chapter2() {
   const getUrlWithParams = (path: string) => {
     const params = new URLSearchParams(searchParams.toString())
     return params.toString() ? `${path}?${params.toString()}` : path
+  }
+
+  // Helper function to change step and scroll to top
+  const changeStep = (newStep: number) => {
+    setCurrentStep(newStep)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   // Load progress on mount
@@ -56,30 +63,34 @@ export default function Chapter2() {
             </div>
           </div>
 
+          <CssDiagram />
+
           <div className="ministry-header">
             <h3 className="text-xl font-bold">Why Styling Matters for Government Systems</h3>
           </div>
           <div className="ministry-content">
             <p className="mb-4">
-              The Ministry of Silly Walks needs their task management system to look professional and follow government design standards. Poor design can lead to:
+              The Ministry of Silly Walks needs their task management system to meet specific government design standards: minimum 4.5:1 color contrast ratio, maximum 3-second load time, and 98% accessibility compliance. Poor design creates measurable business risks:
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                <h4 className="font-medium text-red-900 mb-2">Problems with Poor Design</h4>
+                <h4 className="font-medium text-red-900 mb-2">Business Risks of Poor Design</h4>
                 <ul className="text-sm text-red-800 space-y-1">
-                  <li>• Staff refuse to use the system</li>
-                  <li>• Important tasks get missed</li>
-                  <li>• Parliament questions system costs</li>
-                  <li>• Public accessibility complaints</li>
+                  <li>• 40% reduction in task completion speed</li>
+                  <li>• £250K annual cost of accessibility non-compliance fines</li>
+                  <li>• Failed government audit findings requiring system replacement</li>
+                  <li>• 25% increase in training costs due to complex interface</li>
+                  <li>• Parliamentary committee criticism on digital transformation</li>
                 </ul>
               </div>
               <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h4 className="font-medium text-green-900 mb-2">Benefits of Good Design</h4>
+                <h4 className="font-medium text-green-900 mb-2">Business Value of Professional Design</h4>
                 <ul className="text-sm text-green-800 space-y-1">
-                  <li>• Staff adoption and satisfaction</li>
-                  <li>• Clear information hierarchy</li>
-                  <li>• Meets accessibility standards</li>
-                  <li>• Professional government appearance</li>
+                  <li>• 60% faster task processing saves 15 hours/week per user</li>
+                  <li>• Full WCAG 2.1 AA compliance avoids £250K penalties</li>
+                  <li>• Passes government digital service assessments</li>
+                  <li>• 80% reduction in help desk tickets</li>
+                  <li>• Meets Cabinet Office design system requirements</li>
                 </ul>
               </div>
             </div>
@@ -91,12 +102,12 @@ export default function Chapter2() {
               BA Insight: Design Requirements
             </div>
             <p className="concept-text">
-              When you write requirements like "the system should be easy to use" or "follow brand guidelines," developers implement these through CSS. Understanding CSS helps you write more specific, actionable requirements like "use high contrast colors for accessibility" or "follow GOV.UK design system spacing."
+              When you write requirements like "the system must be usable by 95% of users within 30 seconds" or "follow GOV.UK design system with Transport font and blue #0b0c0c color," developers implement these through CSS. Understanding CSS helps you write more specific, actionable requirements like "use minimum 4.5:1 contrast ratio for accessibility" or "implement 16px base font size with 1.25 line-height."
             </p>
           </div>
 
           <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objective</h3>
+            <h3 className="text-lg font-bold mb-3">Learning Objective</h3>
             <p>
               In this chapter, you'll add CSS styling to make your task manager look professional. You'll learn how styling decisions directly impact user experience and business requirements.
             </p>
@@ -110,14 +121,34 @@ export default function Chapter2() {
       type: 'coding',
       exercise: {
         title: 'Create Your First CSS Styles',
-        description: 'Let\'s add professional styling to our task manager by creating CSS in a separate stylesheet file. This follows industry best practices.',
+        description: 'Let\'s add professional styling to our task manager by creating CSS in a separate stylesheet file. This follows industry best practices. But first, let\'s understand the basic CSS terminology you\'ll need to know.',
         instructions: [
-          'Find the comment "/* Step 1: Add body styles here */" in the CSS file',
-          'Replace the entire comment with the CSS code shown below',
-          'Make sure to include the opening "body {" and closing "}" brackets',
+          'First, complete the fill-in-the-blank exercise to understand CSS structure',
+          'Focus on the CSS file - the HTML is provided and complete from Chapter 1',
+          'Replace the comment "/* Step 1: Add body styles here */" with the CSS code shown below',
+          'The HTML file shows the complete structure but you can\'t edit it - focus only on styling',
           'Each CSS property should end with a semicolon',
-          'This will make our page look much more professional'
+          'Watch how your CSS changes transform the HTML structure into a professional design'
         ],
+        fillInTheBlank: {
+          template: 'CSS uses {{selectors}} to target HTML elements. Each style rule has a {{property}} (like color) and a {{value}} (like blue). Together they create style declarations.',
+          answers: {
+            selectors: 'selectors',
+            property: 'property',
+            value: 'value'
+          } as { [key: string]: string },
+          hints: {
+            selectors: 'What do you use to "select" which HTML elements to style? (Think: h1, body, .class)',
+            property: 'In "color: blue;", what part comes before the colon?',
+            value: 'In "color: blue;", what part comes after the colon?'
+          } as { [key: string]: string },
+          options: {
+            selectors: ['selectors', 'elements', 'tags', 'classes', 'attributes', 'functions'],
+            property: ['property', 'attribute', 'rule', 'style', 'declaration', 'method'],
+            value: ['value', 'setting', 'parameter', 'content', 'data', 'option']
+          } as { [key: string]: string[] },
+          description: 'Before we add CSS, let\'s understand the three key parts of any CSS rule: **Selectors** (which HTML elements to style, like "body" or "h1"), **Properties** (what aspect to change, like "color" or "font-size"), and **Values** (how to change it, like "blue" or "16px"). For example: "h1 { color: blue; }" - here "h1" is the selector, "color" is the property, and "blue" is the value.'
+        },
         codeBlock: {
           code: `body {
     font-family: Arial, sans-serif;
@@ -135,7 +166,7 @@ export default function Chapter2() {
             {
               line: "font-family: Arial, sans-serif;",
               explanation: "Sets the font to Arial (or similar if Arial isn't available) for better readability.",
-              businessContext: "Professional applications need consistent, readable fonts - this fulfills your requirement for a 'professional appearance'."
+              businessContext: "Professional applications need consistent, readable fonts - this fulfills your requirement for 'minimum 16px font size with Arial/Helvetica font family for 95% readability across devices'."
             },
             {
               line: "max-width: 800px;",
@@ -172,17 +203,19 @@ body {
     padding: 20px;
     background-color: #f8f9fa;
 }`,
+        showFileTree: true,
+        currentChapter: 2,
         hints: [
-          "Look for the comment '/* Step 1: Add body styles here */' in the CSS file",
+          "Look for the comment '/* Step 1: Add body styles here */' in the styles.css file",
           "Replace the entire comment with the CSS code from the code block above",
+          "The HTML file is read-only - you can see it but only edit the CSS",
           "Make sure to include the opening 'body {' and closing '}' brackets",
-          "Each CSS property should end with a semicolon",
-          "The styles will center the content and add a professional look"
+          "Watch the preview update as you add your CSS styles"
         ],
         explanation: {
-          whatIsHappening: "You've added your first CSS to an external stylesheet! The body selector targets the <body> element and applies styling to the entire page. You've set a professional font, centered the content, added padding for breathing room, and given it a light background color. This CSS file is linked to your HTML, so the browser knows to apply these styles.",
-          whyItMatters: "This approach follows professional web development practices by separating content (HTML) from presentation (CSS). The Ministry needed a 'professional appearance' - you've just implemented that requirement using industry-standard techniques. The centered layout and clean font make the system look trustworthy and government-appropriate.",
-          realWorldConnection: "Real web applications use external CSS files like this because they're easier to maintain, can be cached by browsers for better performance, and can be shared across multiple pages. When you write requirements like 'the system should look professional,' developers implement these through CSS properties in external stylesheets.",
+          whatIsHappening: "You're working with CSS in a separate file from the HTML! The HTML structure is complete (from Chapter 1) and now you're adding professional styling. The body selector targets the <body> element and applies styling to the entire page. You're setting a professional font, centering the content, adding padding for breathing room, and giving it a light background color.",
+          whyItMatters: "This demonstrates the separation of concerns principle - HTML provides structure, CSS provides styling. The Ministry needed 'consistent 16px typography with maximum 65 characters per line and 1.5x line-height for optimal readability' and you're implementing that requirement purely through CSS, without touching the HTML. This is how real development teams work - frontend developers often focus on just the styling while others handle the HTML structure.",
+          realWorldConnection: "In real projects, you might receive completed HTML from a designer or developer, and your job is to make it look professional with CSS. This is exactly what you're doing here - taking working HTML and transforming it into a polished, government-appropriate interface through styling alone.",
           keyTerms: {
             "CSS Selector": "The part that chooses which HTML elements to style (like 'body')",
             "Property": "What aspect you want to change (like 'font-family' or 'background-color')",
@@ -201,11 +234,38 @@ body {
         title: 'Make the Headings Look Professional',
         description: 'Now let\'s style our headings to follow government design standards. We\'ll add colors and spacing that make the hierarchy clear.',
         instructions: [
-          'Find the comment "/* Step 2: Add heading styles here */" in the CSS file',
+          'First, complete the fill-in-the-blank exercise to understand heading styles',
+          'Continue working in the CSS file - the HTML remains read-only',
+          'Find the comment "/* Step 2: Add heading styles here */" in the styles.css file',
           'Replace it with the CSS code shown below',
           'This will style both h1 and h2 headings with government colors',
-          'The styling creates clear visual hierarchy for your users'
+          'Watch how CSS creates clear visual hierarchy without changing the HTML'
         ],
+        fillInTheBlank: {
+          template: 'We will style {{heading1}} elements with a professional {{color}} color and add {{spacing}} below them. For {{heading2}} elements, we will add a {{border}} at the bottom.',
+          answers: {
+            heading1: 'h1',
+            color: 'blue',
+            spacing: 'margin',
+            heading2: 'h2',
+            border: 'border'
+          } as { [key: string]: string },
+          hints: {
+            heading1: 'What HTML tag creates the main heading? (Think: the biggest heading)',
+            color: 'What color represents professionalism and government authority?',
+            spacing: 'What CSS property adds space around elements?',
+            heading2: 'What HTML tag creates secondary headings?',
+            border: 'What CSS property adds lines around or under elements?'
+          } as { [key: string]: string },
+          options: {
+            heading1: ['h1', 'h2', 'h3', 'header', 'title', 'main'],
+            color: ['blue', 'red', 'green', 'black', 'gray', 'purple'],
+            spacing: ['margin', 'padding', 'border', 'width', 'height', 'display'],
+            heading2: ['h2', 'h1', 'h3', 'section', 'nav', 'aside'],
+            border: ['border', 'outline', 'shadow', 'background', 'color', 'font']
+          } as { [key: string]: string[] },
+          description: 'Before we style the headings, let\'s understand what we\'re doing:'
+        },
         codeBlock: {
           code: `h1 {
     color: #003d7a;
@@ -265,26 +325,7 @@ body {
     background-color: #f8f9fa;
 }
 
-/* Step 2: Add heading styles here */
-
-/* Basic styles to show the content */
-h1 {
-    color: #333;
-    margin-bottom: 10px;
-}
-
-h2 {
-    color: #666;
-    margin-bottom: 15px;
-}
-
-input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}`,
+/* Step 2: Add heading styles here */`,
         targetCode: `/* Ministry of Silly Walks - Task Manager Styles */
 
 body {
@@ -333,11 +374,12 @@ h2 {
         title: 'Style the Task Input and Task Display with External CSS',
         description: 'Let\'s make the input field look professional and create a proper task card design that makes tasks easy to read and manage using our external CSS file.',
         instructions: [
-          'Find the comment "/* Step 3: Add input and task styles here */" in the CSS file',
+          'Continue working in the CSS file to complete the styling',
+          'Find the comment "/* Step 3: Add input and task styles here */" in the styles.css file',
           'Replace it with the CSS code shown below',
           'This will style both the input field and task cards',
           'The input will become full-width with professional padding',
-          'The div will become a card with white background and subtle shadow'
+          'Watch how CSS transforms basic HTML elements into professional interface components'
         ],
         codeBlock: {
           code: `input {
@@ -355,6 +397,31 @@ div {
     padding: 15px;
     margin-bottom: 15px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Task metadata styles for priority and due dates */
+.task-meta {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.priority-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.priority-critical { background-color: #fee2e2; color: #991b1b; }
+.priority-high { background-color: #fef3c7; color: #92400e; }
+.priority-medium { background-color: #dbeafe; color: #1e40af; }
+.priority-low { background-color: #f0fdf4; color: #166534; }
+
+.due-date {
+    color: #6b7280;
+    font-weight: 500;
 }`,
           explanations: [
             {
@@ -451,25 +518,7 @@ h2 {
     padding-bottom: 5px;
 }
 
-/* Step 3: Add input and task styles here */
-
-/* Basic form styling */
-input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-/* Basic task styling */
-div {
-    background: #fff;
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}`,
+/* Step 3: Add input and task styles here */`,
         targetCode: `/* Ministry of Silly Walks - Task Manager Styles */
 
 body {
@@ -538,7 +587,7 @@ div {
     }
   }
 
-  const allStepsComplete = completedSteps.length === steps.length
+  const allStepsComplete = completedSteps.length === steps.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -574,7 +623,7 @@ div {
                 {steps.map((step, index) => (
                   <button
                     key={step.id}
-                    onClick={() => setCurrentStep(index)}
+                    onClick={() => changeStep(index)}
                     className={`w-full text-left p-3 rounded-lg transition-colors ${
                       currentStep === index
                         ? 'bg-tutorial-primary text-white'
@@ -638,7 +687,7 @@ div {
                   
                   <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
                     <button
-                      onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                      onClick={() => changeStep(Math.max(0, currentStep - 1))}
                       disabled={currentStep === 0}
                       className={`flex items-center ${
                         currentStep === 0 
@@ -654,7 +703,7 @@ div {
                       onClick={() => {
                         markStepCompleteLocal(currentStep)
                         if (currentStep < steps.length - 1) {
-                          setCurrentStep(currentStep + 1)
+                          changeStep(currentStep + 1)
                         }
                       }}
                       className="tutorial-button-primary"
@@ -679,7 +728,7 @@ div {
                     markStepCompleteLocal(currentStep)
                     setTimeout(() => {
                       if (currentStep < steps.length - 1) {
-                        setCurrentStep(currentStep + 1)
+                        changeStep(currentStep + 1)
                       }
                     }, 2000)
                   }}

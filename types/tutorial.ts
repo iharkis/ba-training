@@ -32,6 +32,16 @@ export interface CodeExercise {
   targetCode: string;
   hints: string[];
   explanation: CodeExplanation;
+  // Optional fill-in-the-blank exercise
+  fillInTheBlank?: FillInTheBlankExercise;
+}
+
+export interface FillInTheBlankExercise {
+  template: string; // Template with blanks marked as {{answer}}
+  answers: { [key: string]: string }; // Correct answers for each blank
+  hints?: { [key: string]: string }; // Hints for each blank
+  options?: { [key: string]: string[] }; // Dropdown options for each blank
+  description?: string;
 }
 
 export interface CodeExplanation {
@@ -107,4 +117,48 @@ export interface TutorialSession {
   notes: string[];
   questionsAsked: string[];
   conceptsLearned: string[];
+}
+
+// Task Management System Types
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  priority: 'Low' | 'Medium' | 'High' | 'Critical';
+  status: 'Pending' | 'In Progress' | 'Review' | 'Completed' | 'Blocked';
+  dueDate: string; // ISO date string
+  assignedTo: string;
+  assignedBy: string;
+  createdAt: string;
+  updatedAt: string;
+  notes: TaskNote[];
+}
+
+export interface TaskNote {
+  id: string;
+  taskId: string;
+  content: string;
+  author: string;
+  createdAt: string;
+  statusChange?: {
+    from: Task['status'];
+    to: Task['status'];
+  };
+}
+
+export interface TaskFilter {
+  status?: Task['status'];
+  priority?: Task['priority'];
+  assignedTo?: string;
+  dueBefore?: string;
+  dueAfter?: string;
+}
+
+export interface TaskSummary {
+  total: number;
+  byStatus: Record<Task['status'], number>;
+  byPriority: Record<Task['priority'], number>;
+  overdue: number;
+  dueToday: number;
+  dueThisWeek: number;
 }
