@@ -330,48 +330,17 @@ export default function Chapter1() {
           explanations: [
             {
               line: "<h1>",
-              explanation: (
-                <div>
-                  <p className="mb-3">This is an HTML opening tag:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
-                    <li><code>&lt;</code> = Starts an HTML tag (like opening a label)</li>
-                    <li><code>h1</code> = The tag name (stands for 'heading level 1' - the biggest heading)</li>
-                    <li><code>&gt;</code> = Ends the opening tag</li>
-                  </ul>
-                  <p>This tells the browser: 'Everything after this should be displayed as the main heading until you see the closing tag'</p>
-                </div>
-              ),
+              explanation: "This is an HTML opening tag: < starts an HTML tag (like opening a label), h1 is the tag name (stands for 'heading level 1' - the biggest heading), > ends the opening tag. This tells the browser: 'Everything after this should be displayed as the main heading until you see the closing tag'",
               businessContext: "H1 tags create the largest, most prominent text on the page - perfect for the main system title that users need to see immediately. Search engines and screen readers also look for H1 tags to understand what the page is about, making this important for accessibility and SEO."
             },
             {
               line: "Ministry of Silly Walks",
-              explanation: (
-                <div>
-                  <p className="mb-3">This is the content between the HTML tags:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
-                    <li>This is plain text (no special characters or symbols)</li>
-                    <li>Whatever text you put here is what users will actually see on the webpage</li>
-                    <li>The browser will display this text using the formatting rules for H1 tags (large, bold, prominent)</li>
-                  </ul>
-                  <p>Think of HTML tags like formatting instructions, and this text is what gets formatted</p>
-                </div>
-              ),
+              explanation: "This is the content between the HTML tags: This is plain text (no special characters or symbols). Whatever text you put here is what users will actually see on the webpage. The browser will display this text using the formatting rules for H1 tags (large, bold, prominent). Think of HTML tags like formatting instructions, and this text is what gets formatted.",
               businessContext: "Clear system identification helps users know they're in the right place - essential for user confidence and navigation. When users land on your page, the first thing they see should immediately tell them what system they're using. This prevents confusion and reduces support requests."
             },
             {
               line: "</h1>",
-              explanation: (
-                <div>
-                  <p className="mb-3">This is the closing HTML tag:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
-                    <li><code>&lt;</code> = Starts the tag (same as opening)</li>
-                    <li><code>/</code> = Forward slash indicates this is a closing tag (like pressing 'end formatting' in Word)</li>
-                    <li><code>h1</code> = Must match exactly with the opening tag name</li>
-                    <li><code>&gt;</code> = Ends the tag</li>
-                  </ul>
-                  <p>This tells the browser: 'Stop applying H1 formatting here - the heading is finished'</p>
-                </div>
-              ),
+              explanation: "This is the closing HTML tag: < starts the tag (same as opening), / forward slash indicates this is a closing tag (like pressing 'end formatting' in Word), h1 must match exactly with the opening tag name, > ends the tag. This tells the browser: 'Stop applying H1 formatting here - the heading is finished'.",
               businessContext: "HTML tags work in pairs - like parentheses in writing or quotation marks. The opening tag starts the formatting, the closing tag stops it. This precision ensures the heading style applies only to the text we want, and anything after this tag will use normal formatting. Without closing tags, formatting would 'leak' to other parts of the page."
             }
           ]
@@ -433,22 +402,19 @@ export default function Chapter1() {
           'Copy and paste the code shown below',
           'This will appear as smaller text below the main heading'
         ],
+        hints: [
+          "Look for the comment line that says <!-- Step 2: Add a subtitle here -->",
+          "Paragraph tags work like headings: <p> opens, </p> closes",
+          "The text between the tags is what users will see on the webpage",
+          "This should go right below your h1 heading in the body section",
+          "Need help? Try typing exactly: <p>Task Management System</p>"
+        ],
         codeBlock: {
           code: `<p>Task Management System</p>`,
           explanations: [
             {
               line: "<p>",
-              explanation: (
-                <div>
-                  <p className="mb-3">This is an HTML paragraph opening tag:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
-                    <li><code>&lt;</code> = Starts an HTML tag</li>
-                    <li><code>p</code> = Tag name (stands for 'paragraph')</li>
-                    <li><code>&gt;</code> = Ends the opening tag</li>
-                  </ul>
-                  <p>This tells the browser: 'The text that follows should be displayed as a normal paragraph with standard text size and spacing'</p>
-                </div>
-              ),
+              explanation: "This is an HTML paragraph opening tag: < starts an HTML tag, p is the tag name (stands for 'paragraph'), > ends the opening tag. This tells the browser: 'The text that follows should be displayed as a normal paragraph with standard text size and spacing'",
               businessContext: "Paragraphs create readable text blocks that are smaller than headings - perfect for descriptions and explanatory text. They automatically add appropriate spacing above and below the text, making content easier to read and scan."
             },
             {

@@ -550,69 +550,22 @@ displayTasksFromAPI(apiData);`,
           explanations: [
             {
               line: "if (apiResponse.status !== 'success') {",
-              explanation: (
-                <div>
-                  <p className="mb-3">Breaking down this condition check:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
-                    <li><code>if</code> = Starts a conditional statement (like saying 'IF this is true, THEN do something')</li>
-                    <li><code>apiResponse.status</code> = Get the 'status' property from the apiResponse object</li>
-                    <li><code>!==</code> = 'Not equal to' comparison operator (checks if two things are different)</li>
-                    <li><code>'success'</code> = A text string we're comparing against</li>
-                    <li><code>{'{'}</code> = Opens a block of code that runs IF the condition is true</li>
-                  </ul>
-                  <p>So this reads: 'IF the status is NOT equal to success, THEN run the code inside the curly braces'</p>
-                </div>
-              ),
+              explanation: "Breaking down this condition check: 'if' starts a conditional statement (like saying 'IF this is true, THEN do something'), apiResponse.status gets the 'status' property from the apiResponse object, !== means 'not equal to' (checks if two things are different), 'success' is a text string we're comparing against, { opens a block of code that runs IF the condition is true. So this reads: 'IF the status is NOT equal to success, THEN run the code inside the curly braces'",
               businessContext: "This is like checking if a delivery arrived successfully before opening the package. APIs can fail for many reasons (network issues, server problems, invalid requests), so we always check the status first. If something went wrong, we handle the error instead of trying to use broken data."
             },
             {
               line: "const tasks = apiResponse.data.tasks;",
-              explanation: (
-                <div>
-                  <p className="mb-3">Let's break this down step by step:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li><code>const</code> = Creates a new variable (like a labeled box to store information)</li>
-                    <li><code>tasks</code> = The name we're giving to our variable (we could call it anything)</li>
-                    <li><code>=</code> = Assignment operator (means 'put the value on the right into the variable on the left')</li>
-                    <li><code>apiResponse.data.tasks</code> = Navigate through the response object: start with apiResponse, go into its data property, then get the tasks property</li>
-                    <li><code>;</code> = Semicolon ends the statement (like a period ends a sentence)</li>
-                  </ul>
-                </div>
-              ),
+              explanation: "Let's break this down step by step: 'const' creates a new variable (like a labeled box to store information), 'tasks' is the name we're giving to our variable (we could call it anything), = is the assignment operator (means 'put the value on the right into the variable on the left'), apiResponse.data.tasks navigates through the response object: start with apiResponse, go into its data property, then get the tasks property, ; semicolon ends the statement (like a period ends a sentence).",
               businessContext: "Think of apiResponse like a filing cabinet: apiResponse is the cabinet, .data is a drawer, and .tasks is a folder inside that drawer. We're making a copy of what's in that folder and giving it an easy name ('tasks') so we can work with it. APIs often wrap the actual data inside other information (like status codes, error messages, pagination), so we need to 'unwrap' it to get to what we really want."
             },
             {
               line: "taskElement.innerHTML = `<h3>${task.title}</h3>...`;",
-              explanation: (
-                <div>
-                  <p className="mb-3">Building HTML from data:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
-                    <li><code>taskElement.innerHTML</code> = Access the 'inside content' of our HTML element (like the inside of a box)</li>
-                    <li><code>=</code> = Assignment (we're putting new content inside)</li>
-                    <li>Backticks (`) = Template literal - allows us to mix text with variables</li>
-                    <li><code>&lt;h3&gt;</code> = HTML heading tag (creates a medium-sized heading)</li>
-                    <li><code>${'{task.title}'}</code> = JavaScript variable insertion - takes the 'title' from our task data and puts it here</li>
-                    <li><code>&lt;/h3&gt;</code> = Closing tag for the heading</li>
-                  </ul>
-                  <p>This creates HTML like: <code>&lt;h3&gt;Review John's silly walk&lt;/h3&gt;</code></p>
-                </div>
-              ),
+              explanation: "Building HTML from data: taskElement.innerHTML accesses the 'inside content' of our HTML element (like the inside of a box), = is assignment (we're putting new content inside), backticks (`) create a template literal - allows us to mix text with variables, <h3> is an HTML heading tag (creates a medium-sized heading), ${task.title} is JavaScript variable insertion - takes the 'title' from our task data and puts it here, </h3> is the closing tag for the heading. This creates HTML like: <h3>Review John's silly walk</h3>",
               businessContext: "This is the magic moment where raw data becomes something users can actually see and understand! We're taking the technical task information from our database (like 'title: Review Johns silly walk') and turning it into formatted, readable HTML that appears on the webpage. Good BAs understand this transformation because it affects how users experience the system."
             },
             {
               line: "taskContainer.appendChild(taskElement);",
-              explanation: (
-                <div>
-                  <p className="mb-3">Adding our new element to the webpage:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
-                    <li><code>taskContainer</code> = The HTML element on our page where we want to put the task (like a specific container or box)</li>
-                    <li><code>.appendChild()</code> = A method (function) that adds a new child element inside a parent element</li>
-                    <li><code>taskElement</code> = The new HTML element we just created with our task information</li>
-                    <li><code>;</code> = End of statement</li>
-                  </ul>
-                  <p>This is like taking a completed task card and physically placing it in the 'task board' section of your webpage</p>
-                </div>
-              ),
+              explanation: "Adding our new element to the webpage: taskContainer is the HTML element on our page where we want to put the task (like a specific container or box), .appendChild() is a method (function) that adds a new child element inside a parent element, taskElement is the new HTML element we just created with our task information, ; ends the statement. This is like taking a completed task card and physically placing it in the 'task board' section of your webpage.",
               businessContext: "This is how dynamic web applications work! Instead of having to refresh the entire page (like old websites), we dynamically add new content to specific sections. Users see the new task appear instantly without losing their place or having to wait for a page reload. This creates a smooth, app-like experience that users expect from modern systems."
             }
           ]

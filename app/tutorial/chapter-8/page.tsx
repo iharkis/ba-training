@@ -122,7 +122,7 @@ export default function Chapter8() {
                 <h4 className="font-semibold text-green-900 mb-2">Business Context for Performance Requirements:</h4>
                 <div className="space-y-3 text-sm">
                   <div className="border-l-4 border-green-500 pl-3">
-                    <div><strong>Customer Impact:</strong> "Page load delays >3 seconds increase abandonment by 40%"</div>
+                    <div><strong>Customer Impact:</strong> "Page load delays &gt;3 seconds increase abandonment by 40%"</div>
                     <div><strong>Business Rule:</strong> Peak usage during business hours (9-5) vs off-hours</div>
                   </div>
                   
