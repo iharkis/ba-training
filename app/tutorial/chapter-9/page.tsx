@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight, CheckCircle, Zap, Lightbulb, Timer, TrendingUp, Users, Target } from 'lucide-react'
+import { ArrowLeft, CheckCircle, Lightbulb, Users, Briefcase, Target, Award, BookOpen } from 'lucide-react'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter9() {
@@ -27,55 +27,55 @@ export default function Chapter9() {
 
   const steps = [
     {
-      id: 'performance-introduction',
-      title: 'Understanding Performance',
+      id: 'real-world-application',
+      title: 'Applying Your Knowledge',
       type: 'explanation',
       content: (
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Chapter 9: Performance Considerations</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Chapter 9: Real Projects & Working with Dev Teams</h2>
           <p className="text-lg text-gray-600">
-            Your task management system works perfectly for John Cleese and Terry Jones. But what happens when the entire Ministry starts using it? What about when Parliament wants real-time reports? This chapter covers performance optimization and scalability.
+            Congratulations! You've built a complete web application from HTML basics to enterprise architecture. Now let's explore how to apply this knowledge in real projects and collaborate effectively with development teams.
           </p>
 
           <div className="explanation-box">
-            <div className="explanation-title">What is Application Performance?</div>
+            <div className="explanation-title">From Tutorial to Real Projects</div>
             <div className="explanation-text">
               <p className="mb-3">
-                Performance refers to how fast and efficiently your application responds to user actions and handles increasing workloads. Poor performance directly impacts user satisfaction and business productivity.
+                The Ministry of Silly Walks scenario taught you fundamental concepts, but real projects have additional complexities: stakeholder management, regulatory requirements, legacy system integration, and evolving business needs.
               </p>
               <ul className="list-disc list-inside space-y-2">
-                <li><strong>Response Time:</strong> How quickly the system responds to user actions</li>
-                <li><strong>Throughput:</strong> How many requests the system can handle simultaneously</li>
-                <li><strong>Scalability:</strong> How well the system performs as usage grows</li>
-                <li><strong>Resource Efficiency:</strong> Optimal use of memory, CPU, and network</li>
+                <li><strong>Business Complexity:</strong> Multiple stakeholders with competing priorities</li>
+                <li><strong>Technical Constraints:</strong> Legacy systems, security requirements, compliance</li>
+                <li><strong>Team Dynamics:</strong> Collaboration across business and technical teams</li>
+                <li><strong>Change Management:</strong> Evolving requirements and scope adjustments</li>
               </ul>
             </div>
           </div>
 
           <div className="ministry-header">
-            <h3 className="text-xl font-bold">Ministry Performance Requirements</h3>
+            <h3 className="text-xl font-bold">What You've Learned</h3>
           </div>
           <div className="ministry-content">
             <p className="mb-4">
-              Government systems must handle varying loads efficiently while maintaining reliability:
+              Through building the task management system, you now understand:
             </p>
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                <h4 className="font-medium text-yellow-900 mb-2">Current Usage Patterns</h4>
-                <ul className="text-sm text-yellow-800 space-y-1">
-                  <li>• 50 Ministry staff during business hours</li>
-                  <li>• Peak loads during silly walk application periods</li>
-                  <li>• Monthly reporting requiring data aggregation</li>
-                  <li>• Parliamentary questions needing instant responses</li>
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="font-medium text-blue-900 mb-2">Technical Concepts</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• How HTML, CSS, and JavaScript work together</li>
+                  <li>• Frontend-backend communication via APIs</li>
+                  <li>• Database design and data persistence</li>
+                  <li>• Testing, debugging, and performance optimization</li>
                 </ul>
               </div>
               <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h4 className="font-medium text-green-900 mb-2">Performance Goals</h4>
+                <h4 className="font-medium text-green-900 mb-2">BA Skills Enhanced</h4>
                 <ul className="text-sm text-green-800 space-y-1">
-                  <li>• Page loads under 2 seconds</li>
-                  <li>• Support 100+ concurrent users</li>
-                  <li>• 99.9% uptime during business hours</li>
-                  <li>• Reports generated within 30 seconds</li>
+                  <li>• Writing more precise technical requirements</li>
+                  <li>• Understanding implementation trade-offs</li>
+                  <li>• Collaborating effectively with developers</li>
+                  <li>• Defining testable acceptance criteria</li>
                 </ul>
               </div>
             </div>
@@ -83,112 +83,103 @@ export default function Chapter9() {
 
           <div className="concept-callout">
             <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
-              BA Insight: Performance Requirements
+              <Award className="w-5 h-5 mr-2" />
+              Your Achievement
             </div>
             <p className="concept-text">
-              When you write requirements like "the system should be fast" or "handle lots of users," you need to be specific. Understanding performance concepts helps you write measurable requirements like "pages should load within 3 seconds" or "support 50 concurrent users with sub-second response times."
+              You've gained practical understanding of web development that will make you a more effective Business Analyst. You can now have informed technical discussions, write better requirements, and bridge the gap between business needs and technical solutions more effectively.
             </p>
           </div>
 
           <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objective</h3>
+            <h3 className="text-lg font-bold mb-3">Chapter Objective</h3>
             <p>
-              In this chapter, you'll learn about performance bottlenecks, optimization strategies, and how to write performance requirements. You'll understand the trade-offs between performance, cost, and complexity in system design.
+              In this final chapter, you'll learn how to apply your new knowledge in real projects, improve collaboration with development teams, and continue your learning journey as a technically-informed Business Analyst.
             </p>
           </div>
         </div>
       )
     },
     {
-      id: 'performance-bottlenecks',
-      title: 'Step 1: Identifying Performance Bottlenecks',
+      id: 'working-with-dev-teams',
+      title: 'Step 1: Collaborating with Developers',
       type: 'explanation',
       content: (
         <div className="space-y-6">
-          <h3 className="text-xl font-bold text-gray-900">Common Performance Issues</h3>
+          <h3 className="text-xl font-bold text-gray-900">Building Effective Partnerships</h3>
           
           <div className="space-y-6">
-            <div className="bg-red-50 p-6 rounded-lg border border-red-200">
-              <h4 className="font-medium text-red-900 mb-3 text-lg flex items-center">
-                <Timer className="w-5 h-5 mr-2" />
-                Frontend Performance Issues
+            <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+              <h4 className="font-medium text-green-900 mb-3 text-lg flex items-center">
+                <Users className="w-5 h-5 mr-2" />
+                Communication Best Practices
               </h4>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div>
-                  <h5 className="font-medium text-red-800 mb-2">Common Problems:</h5>
-                  <ul className="text-sm text-red-700 space-y-1">
-                    <li>• Large JavaScript files slow page loading</li>
-                    <li>• Images not optimized for web</li>
-                    <li>• Too many HTTP requests</li>
-                    <li>• Inefficient DOM manipulation</li>
-                    <li>• No caching of static resources</li>
+                  <h5 className="font-medium text-green-800 mb-2">Speaking the Same Language:</h5>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    <li>• Use technical terms correctly (API, database, frontend, backend)</li>
+                    <li>• Reference specific examples from your learning ("like our task API endpoints")</li>
+                    <li>• Ask clarifying questions about implementation approaches</li>
+                    <li>• Understand the "why" behind technical decisions</li>
                   </ul>
                 </div>
                 <div>
-                  <h5 className="font-medium text-red-800 mb-2">Ministry Impact:</h5>
-                  <ul className="text-sm text-red-700 space-y-1">
-                    <li>• Staff waste time waiting for pages to load</li>
-                    <li>• Mobile users on slower connections struggle</li>
-                    <li>• Reduced productivity during peak times</li>
-                    <li>• Poor user experience leads to resistance</li>
-                  </ul>
+                  <h5 className="font-medium text-green-800 mb-2">Effective Requirements Writing:</h5>
+                  <div className="bg-white p-3 rounded border-l-4 border-green-500">
+                    <p className="text-sm text-green-700 mb-2"><strong>Before:</strong> "The system should be user-friendly and fast."</p>
+                    <p className="text-sm text-green-700"><strong>After:</strong> "The task list should load within 2 seconds and display clear error messages when network requests fail, similar to how our prototype handles API timeouts."</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-orange-50 p-6 rounded-lg border border-orange-200">
-              <h4 className="font-medium text-orange-900 mb-3 text-lg flex items-center">
-                <TrendingUp className="w-5 h-5 mr-2" />
-                Backend Performance Issues
+            <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-3 text-lg flex items-center">
+                <Target className="w-5 h-5 mr-2" />
+                Technical Discussions You Can Now Participate In
               </h4>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <h5 className="font-medium text-orange-800 mb-2">Common Problems:</h5>
-                  <ul className="text-sm text-orange-700 space-y-1">
-                    <li>• Inefficient database queries</li>
-                    <li>• Missing database indexes</li>
-                    <li>• No API response caching</li>
-                    <li>• Blocking operations on main thread</li>
-                    <li>• Memory leaks in long-running processes</li>
+                  <h5 className="font-medium text-blue-800 mb-2">Architecture Decisions:</h5>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    <li>• "Should we use localStorage or a database for this data?"</li>
+                    <li>• "What API endpoints do we need for this feature?"</li>
+                    <li>• "How will frontend validation relate to backend validation?"</li>
+                    <li>• "What happens if the API call fails?"</li>
                   </ul>
                 </div>
                 <div>
-                  <h5 className="font-medium text-orange-800 mb-2">Ministry Impact:</h5>
-                  <ul className="text-sm text-orange-700 space-y-1">
-                    <li>• API calls take too long to respond</li>
-                    <li>• System becomes unresponsive under load</li>
-                    <li>• Database locks prevent concurrent access</li>
-                    <li>• Server crashes during high usage</li>
+                  <h5 className="font-medium text-blue-800 mb-2">Quality Discussions:</h5>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    <li>• "What unit tests should cover this business logic?"</li>
+                    <li>• "How do we test the integration between systems?"</li>
+                    <li>• "What performance requirements apply here?"</li>
+                    <li>• "How will users know when something goes wrong?"</li>
                   </ul>
                 </div>
               </div>
             </div>
 
             <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-              <h4 className="font-medium text-purple-900 mb-3 text-lg flex items-center">
-                <Users className="w-5 h-5 mr-2" />
-                Scalability Challenges
-              </h4>
-              <div className="grid md:grid-cols-2 gap-4">
+              <h4 className="font-medium text-purple-900 mb-3 text-lg">Collaborative Practices</h4>
+              <div className="space-y-4">
                 <div>
-                  <h5 className="font-medium text-purple-800 mb-2">Growth Scenarios:</h5>
+                  <h5 className="font-medium text-purple-800 mb-2">During Planning:</h5>
                   <ul className="text-sm text-purple-700 space-y-1">
-                    <li>• Ministry expands to include other departments</li>
-                    <li>• Integration with external systems</li>
-                    <li>• Real-time collaboration features</li>
-                    <li>• Advanced reporting and analytics</li>
-                    <li>• Mobile app development</li>
+                    <li>• Participate in technical design discussions</li>
+                    <li>• Ask about implementation complexity and alternatives</li>
+                    <li>• Understand dependencies between features</li>
+                    <li>• Help prioritize based on business value and technical effort</li>
                   </ul>
                 </div>
                 <div>
-                  <h5 className="font-medium text-purple-800 mb-2">Technical Challenges:</h5>
+                  <h5 className="font-medium text-purple-800 mb-2">During Development:</h5>
                   <ul className="text-sm text-purple-700 space-y-1">
-                    <li>• Single server becomes bottleneck</li>
-                    <li>• Database cannot handle increased load</li>
-                    <li>• File-based storage limitations</li>
-                    <li>• Network bandwidth constraints</li>
-                    <li>• Development team coordination complexity</li>
+                    <li>• Review work-in-progress and provide early feedback</li>
+                    <li>• Help clarify requirements when questions arise</li>
+                    <li>• Participate in debugging user-reported issues</li>
+                    <li>• Validate that implementation meets business intent</li>
                   </ul>
                 </div>
               </div>
@@ -197,40 +188,67 @@ export default function Chapter9() {
 
           <div className="concept-callout">
             <div className="concept-title">
-              <Zap className="w-5 h-5 mr-2" />
-              Performance Monitoring
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: Applying Technical Knowledge in Practice
             </div>
-            <div className="concept-text">
-              <p className="mb-3">Understanding performance requires measurement:</p>
-              <ul className="text-sm space-y-1">
-                <li>• <strong>Frontend:</strong> Browser DevTools, Lighthouse scores, Real User Monitoring</li>
-                <li>• <strong>Backend:</strong> Application logs, database query times, server resource usage</li>
-                <li>• <strong>User Experience:</strong> Page load times, interaction responsiveness, error rates</li>
-              </ul>
-              <p className="mt-3 text-sm">What gets measured can be improved - establish baselines and track improvements.</p>
-            </div>
-          </div>
-
-          <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-            <h4 className="font-medium text-green-900 mb-3 text-lg">🔧 Hands-On: Measuring Your Ministry System</h4>
-            <div className="space-y-4">
-              <div className="bg-white p-4 rounded border-l-4 border-green-500">
-                <h5 className="font-medium text-green-800 mb-2">Try This Now:</h5>
-                <ol className="text-sm text-green-700 space-y-2">
-                  <li>1. <strong>Open your Ministry task system</strong> in the browser</li>
-                  <li>2. <strong>Press F12</strong> to open Developer Tools</li>
-                  <li>3. <strong>Go to the Network tab</strong> and refresh the page</li>
-                  <li>4. <strong>Look for:</strong> How long does the page take to load? How many requests are made?</li>
-                  <li>5. <strong>Create a new task</strong> and watch the API call in the Network tab</li>
-                </ol>
+            <div className="concept-text space-y-4">
+              <p>
+                Your technical understanding transforms you from a requirements documenter into a strategic partner who can guide better business decisions, improve project outcomes, and facilitate more effective collaboration between business and technical teams.
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">How Technical Knowledge Changes Your BA Practice:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <div><strong>Before:</strong> "Users want faster page loads"</div>
+                    <div><strong>After:</strong> "Users expect &lt;2 second load times; this requires caching, CDN, or database optimization. What's the business impact vs cost tradeoff?"</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <div><strong>Before:</strong> "The system should integrate with other systems"</div>
+                    <div><strong>After:</strong> "Integration requires API design, error handling, data mapping, and ongoing maintenance. Let's define specific integration scenarios and success criteria."</div>
+                  </div>
+                </div>
               </div>
-              <div className="bg-white p-4 rounded border-l-4 border-blue-500">
-                <h5 className="font-medium text-blue-800 mb-2">What You'll See:</h5>
-                <ul className="text-sm text-blue-700 space-y-1">
-                  <li>• <strong>HTML document:</strong> Usually loads in 50-200ms</li>
-                  <li>• <strong>CSS/JS files:</strong> May take 100-500ms depending on size</li>
-                  <li>• <strong>API calls:</strong> Database queries typically 5-50ms</li>
-                  <li>• <strong>Total page load:</strong> Should be under 2 seconds</li>
+
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Strategic Conversations You Can Now Facilitate:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Architecture Decisions:</strong> "Given our scalability requirements, should we prioritize database optimization or frontend caching?"</div>
+                  <div><strong>Risk Assessment:</strong> "This API integration introduces network dependency risks. What's our contingency plan?"</div>
+                  <div><strong>Technical Debt:</strong> "The current system design limits future features. When should we refactor vs work around?"</div>
+                  <div><strong>Resource Planning:</strong> "Database changes require migration planning. How does this impact our timeline?"</div>
+                </div>
+              </div>
+
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-purple-900 mb-2">Improving Developer Collaboration:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Intelligent Questions:</strong> Ask about performance implications, error scenarios, and technical constraints</div>
+                  <div><strong>Better Bug Reports:</strong> Include steps to reproduce, expected vs actual behavior, browser/environment details</div>
+                  <div><strong>Realistic Expectations:</strong> Understand why "simple" changes might be complex technically</div>
+                  <div><strong>Solution-Oriented:</strong> Suggest alternative approaches when original requirements are technically challenging</div>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-amber-900 mb-2">Your Continued Learning Path:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Stay Current:</strong> Follow web development trends that impact business applications</div>
+                  <div><strong>Practice Skills:</strong> Build small projects to deepen your technical understanding</div>
+                  <div><strong>Bridge Communities:</strong> Attend both business and technical conferences/meetups</div>
+                  <div><strong>Mentor Others:</strong> Share your knowledge with other BAs and business stakeholders</div>
+                  <div><strong>Specialization:</strong> Consider focusing on areas like API design, data analysis, or user experience</div>
+                </div>
+              </div>
+
+              <div className="bg-red-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-red-900 mb-2">Remember: Your Core Value Remains Business Focus:</h4>
+                <ul className="text-sm space-y-1">
+                  <li>• Technical knowledge enhances your BA skills, it doesn't replace them</li>
+                  <li>• Always connect technical decisions back to business value</li>
+                  <li>• Your unique value is translating between business and technical perspectives</li>
+                  <li>• Use technical understanding to ask better questions, not to make technical decisions</li>
                 </ul>
               </div>
             </div>
@@ -239,343 +257,289 @@ export default function Chapter9() {
       )
     },
     {
-      id: 'optimization-strategies',
-      title: 'Step 2: Optimization Strategies',
+      id: 'applying-knowledge',
+      title: 'Step 2: Applying Your Knowledge to Real Projects',
       type: 'explanation',
       content: (
         <div className="space-y-6">
-          <h3 className="text-xl font-bold text-gray-900">Performance Improvement Techniques</h3>
+          <h3 className="text-xl font-bold text-gray-900">From Ministry to Your Organization</h3>
           
           <div className="space-y-6">
-            <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-900 mb-3 text-lg">🚀 Frontend Optimizations</h4>
+            <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
+              <h4 className="font-medium text-yellow-900 mb-3 text-lg flex items-center">
+                <Briefcase className="w-5 h-5 mr-2" />
+                Identifying Technical Patterns in Your Projects
+              </h4>
               <div className="space-y-4">
                 <div>
-                  <h5 className="font-medium text-blue-800 mb-2">Code Optimization:</h5>
-                  <ul className="text-sm text-blue-700 space-y-1">
-                    <li>• Bundle JavaScript files to reduce HTTP requests</li>
-                    <li>• Minify and compress CSS and JavaScript</li>
-                    <li>• Remove unused code and dependencies</li>
-                    <li>• Use code splitting for large applications</li>
+                  <h5 className="font-medium text-yellow-800 mb-2">Common Project Types:</h5>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <h6 className="font-medium text-yellow-700 mb-1">Data Management Systems:</h6>
+                      <ul className="text-xs text-yellow-600 space-y-1">
+                        <li>• Customer databases → Similar to task storage</li>
+                        <li>• Reporting dashboards → Like Ministry analytics</li>
+                        <li>• File management → Enhanced version of our system</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h6 className="font-medium text-yellow-700 mb-1">User-Facing Applications:</h6>
+                      <ul className="text-xs text-yellow-600 space-y-1">
+                        <li>• Customer portals → Like our task interface</li>
+                        <li>• Internal tools → Similar to Ministry system</li>
+                        <li>• Mobile apps → Frontend connecting to same APIs</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h5 className="font-medium text-yellow-800 mb-2">Questions You Can Now Ask:</h5>
+                  <ul className="text-sm text-yellow-700 space-y-1">
+                    <li>• "Will this data need to be shared across different systems?"</li>
+                    <li>• "How many users will access this simultaneously?"</li>
+                    <li>• "What happens if the connection to the backend fails?"</li>
+                    <li>• "How will we handle data validation and error messages?"</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-3 text-lg">Enhanced Requirements Templates</h4>
+              <div className="space-y-4">
+                <div>
+                  <h5 className="font-medium text-blue-800 mb-2">User Story with Technical Context:</h5>
+                  <div className="bg-white p-3 rounded border">
+                    <p className="text-sm text-blue-700 mb-2">
+                      <strong>As a</strong> sales manager<br/>
+                      <strong>I want to</strong> export customer data to Excel<br/>
+                      <strong>So that</strong> I can analyze trends offline
+                    </p>
+                    <p className="text-xs text-blue-600 mt-2">
+                      <strong>Technical Notes:</strong> Export should be generated server-side to handle large datasets, with progress indicator for long-running operations. Consider pagination for datasets over 10,000 records.
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <h5 className="font-medium text-blue-800 mb-2">Acceptance Criteria with Technical Details:</h5>
+                  <div className="bg-white p-3 rounded border">
+                    <p className="text-sm text-blue-700 mb-2">
+                      <strong>Given</strong> a user uploads a file larger than 5MB<br/>
+                      <strong>When</strong> they submit the upload form<br/>
+                      <strong>Then</strong> they should see a progress bar and be able to continue using other features<br/>
+                      <strong>And</strong> receive a notification when upload completes or fails
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+              <h4 className="font-medium text-green-900 mb-3 text-lg">Technical Review Checklist</h4>
+              <div className="space-y-3">
+                <div>
+                  <h5 className="font-medium text-green-800 mb-2">Before Development Starts:</h5>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    <li>☐ Are API endpoints clearly defined?</li>
+                    <li>☐ Is data flow between frontend and backend understood?</li>
+                    <li>☐ Are performance requirements specified?</li>
+                    <li>☐ Are error scenarios and handling defined?</li>
+                    <li>☐ Is testing approach agreed upon?</li>
                   </ul>
                 </div>
                 <div>
-                  <h5 className="font-medium text-blue-800 mb-2">Resource Optimization:</h5>
+                  <h5 className="font-medium text-green-800 mb-2">During Development:</h5>
+                  <ul className="text-sm text-green-700 space-y-1">
+                    <li>☐ Does the implementation match business requirements?</li>
+                    <li>☐ Are error messages user-friendly and actionable?</li>
+                    <li>☐ Does the user interface handle loading states appropriately?</li>
+                    <li>☐ Are performance requirements being met?</li>
+                    <li>☐ Is the solution testable and maintainable?</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'continuing-learning',
+      title: 'Step 3: Your Continuing Learning Journey',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold text-gray-900">Building on Your Foundation</h3>
+          
+          <div className="space-y-6">
+            <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
+              <h4 className="font-medium text-purple-900 mb-3 text-lg flex items-center">
+                <BookOpen className="w-5 h-5 mr-2" />
+                Next Steps for Technical Learning
+              </h4>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-medium text-purple-800 mb-2">Immediate Applications:</h5>
+                  <ul className="text-sm text-purple-700 space-y-1">
+                    <li>• Review existing project requirements with your new perspective</li>
+                    <li>• Attend technical design meetings as an active participant</li>
+                    <li>• Practice writing more specific acceptance criteria</li>
+                    <li>• Ask developers to walk through implementations</li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium text-purple-800 mb-2">Continued Learning:</h5>
+                  <ul className="text-sm text-purple-700 space-y-1">
+                    <li>• Learn about your organization's specific tech stack</li>
+                    <li>• Understand integration patterns used in your systems</li>
+                    <li>• Explore DevOps and deployment processes</li>
+                    <li>• Study security and compliance requirements</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-3 text-lg">Advanced Topics to Explore</h4>
+              <div className="space-y-4">
+                <div>
+                  <h5 className="font-medium text-blue-800 mb-2">System Architecture:</h5>
                   <ul className="text-sm text-blue-700 space-y-1">
-                    <li>• Optimize images (WebP format, proper sizing)</li>
-                    <li>• Enable browser caching for static assets</li>
-                    <li>• Use Content Delivery Networks (CDNs)</li>
-                    <li>• Implement lazy loading for images and content</li>
+                    <li>• Microservices vs. monolithic applications</li>
+                    <li>• Cloud computing and serverless architectures</li>
+                    <li>• Event-driven systems and messaging</li>
+                    <li>• Data architecture and warehousing</li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium text-blue-800 mb-2">Modern Development Practices:</h5>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    <li>• Agile development and DevOps practices</li>
+                    <li>• Continuous integration and deployment</li>
+                    <li>• Infrastructure as code</li>
+                    <li>• Monitoring and observability</li>
                   </ul>
                 </div>
               </div>
             </div>
 
             <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-              <h4 className="font-medium text-green-900 mb-3 text-lg">⚡ Backend Optimizations</h4>
+              <h4 className="font-medium text-green-900 mb-3 text-lg">Career Impact</h4>
               <div className="space-y-4">
                 <div>
-                  <h5 className="font-medium text-green-800 mb-2">Database Performance:</h5>
+                  <h5 className="font-medium text-green-800 mb-2">Enhanced BA Capabilities:</h5>
                   <ul className="text-sm text-green-700 space-y-1">
-                    <li>• Add indexes to frequently queried columns</li>
-                    <li>• Optimize complex queries and joins</li>
-                    <li>• Implement database connection pooling</li>
-                    <li>• Consider read replicas for reporting</li>
+                    <li>• More accurate effort estimation discussions</li>
+                    <li>• Better understanding of technical constraints</li>
+                    <li>• Improved stakeholder communication about technical trade-offs</li>
+                    <li>• Stronger partnership with development teams</li>
                   </ul>
                 </div>
                 <div>
-                  <h5 className="font-medium text-green-800 mb-2">API Performance:</h5>
+                  <h5 className="font-medium text-green-800 mb-2">Career Opportunities:</h5>
                   <ul className="text-sm text-green-700 space-y-1">
-                    <li>• Cache frequently requested data</li>
-                    <li>• Implement pagination for large datasets</li>
-                    <li>• Use asynchronous processing for slow operations</li>
-                    <li>• Optimize JSON serialization</li>
+                    <li>• Technical Product Manager roles</li>
+                    <li>• Solution Architect positions</li>
+                    <li>• Digital transformation projects</li>
+                    <li>• Integration and API strategy work</li>
                   </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-              <h4 className="font-medium text-purple-900 mb-3 text-lg">📈 Scalability Solutions</h4>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h5 className="font-medium text-purple-800 mb-2">Horizontal Scaling:</h5>
-                  <ul className="text-sm text-purple-700 space-y-1">
-                    <li>• Load balancing across multiple servers</li>
-                    <li>• Microservices architecture</li>
-                    <li>• Auto-scaling based on demand</li>
-                    <li>• Distributed caching systems</li>
-                  </ul>
-                </div>
-                <div>
-                  <h5 className="font-medium text-purple-800 mb-2">Vertical Scaling:</h5>
-                  <ul className="text-sm text-purple-700 space-y-1">
-                    <li>• Upgrade server hardware (CPU, RAM)</li>
-                    <li>• Optimize application resource usage</li>
-                    <li>• Database performance tuning</li>
-                    <li>• Memory management improvements</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-            <h4 className="font-medium text-yellow-900 mb-3 text-lg">⚖️ Performance vs. Cost Trade-offs</h4>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <h5 className="font-medium text-yellow-800 mb-2">High-Impact, Low-Cost:</h5>
-                <ul className="text-sm text-yellow-700 space-y-1">
-                  <li>• Enable compression and caching</li>
-                  <li>• Optimize database queries</li>
-                  <li>• Minify and compress assets</li>
-                  <li>• Remove unused code</li>
-                </ul>
-              </div>
-              <div>
-                <h5 className="font-medium text-yellow-800 mb-2">High-Impact, High-Cost:</h5>
-                <ul className="text-sm text-yellow-700 space-y-1">
-                  <li>• Redesign for microservices</li>
-                  <li>• Implement distributed systems</li>
-                  <li>• Major database restructuring</li>
-                  <li>• Complete frontend rewrite</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'performance-requirements',
-      title: 'Step 3: Writing Performance Requirements',
-      type: 'explanation',
-      content: (
-        <div className="space-y-6">
-          <h3 className="text-xl font-bold text-gray-900">Defining Measurable Performance Criteria</h3>
-          
-          <div className="ministry-content">
-            <p className="mb-6">
-              Good performance requirements are specific, measurable, and tied to business objectives:
-            </p>
-
-            <div className="space-y-6">
-              <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-                <h4 className="font-medium text-green-900 mb-3 text-lg">✅ Well-Written Performance Requirements</h4>
-                <div className="space-y-4">
-                  <div className="bg-white p-4 rounded border-l-4 border-green-500">
-                    <h5 className="font-medium text-green-800 mb-2">Response Time:</h5>
-                    <p className="text-sm text-green-700">
-                      "The task list page shall load within 2 seconds for 95% of requests when accessed by up to 50 concurrent users over a standard broadband connection."
-                    </p>
-                  </div>
-                  <div className="bg-white p-4 rounded border-l-4 border-green-500">
-                    <h5 className="font-medium text-green-800 mb-2">Throughput:</h5>
-                    <p className="text-sm text-green-700">
-                      "The system shall support 100 concurrent users performing typical Ministry tasks (viewing, creating, updating tasks) with average response times under 1 second."
-                    </p>
-                  </div>
-                  <div className="bg-white p-4 rounded border-l-4 border-green-500">
-                    <h5 className="font-medium text-green-800 mb-2">Availability:</h5>
-                    <p className="text-sm text-green-700">
-                      "The system shall maintain 99.5% uptime during business hours (9 AM - 5 PM, Monday-Friday), with planned maintenance only during agreed maintenance windows."
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-red-50 p-6 rounded-lg border border-red-200">
-                <h4 className="font-medium text-red-900 mb-3 text-lg">❌ Poorly Written Performance Requirements</h4>
-                <div className="space-y-3">
-                  <div className="bg-white p-4 rounded border-l-4 border-red-500">
-                    <p className="text-sm text-red-700 mb-1">"The system should be fast."</p>
-                    <p className="text-xs text-red-600">Problem: No measurable criteria or context</p>
-                  </div>
-                  <div className="bg-white p-4 rounded border-l-4 border-red-500">
-                    <p className="text-sm text-red-700 mb-1">"The system should handle lots of users."</p>
-                    <p className="text-xs text-red-600">Problem: "Lots" is not quantified</p>
-                  </div>
-                  <div className="bg-white p-4 rounded border-l-4 border-red-500">
-                    <p className="text-sm text-red-700 mb-1">"The system should never go down."</p>
-                    <p className="text-xs text-red-600">Problem: Unrealistic expectation</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                <h4 className="font-medium text-blue-900 mb-3 text-lg">📊 Performance Testing Strategy</h4>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h5 className="font-medium text-blue-800 mb-2">Load Testing:</h5>
-                    <ul className="text-sm text-blue-700 space-y-1">
-                      <li>• Test normal expected usage patterns</li>
-                      <li>• Verify system meets performance targets</li>
-                      <li>• Identify optimal concurrent user limits</li>
-                      <li>• Validate response time requirements</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h5 className="font-medium text-blue-800 mb-2">Stress Testing:</h5>
-                    <ul className="text-sm text-blue-700 space-y-1">
-                      <li>• Test beyond normal capacity limits</li>
-                      <li>• Identify breaking points</li>
-                      <li>• Verify graceful degradation</li>
-                      <li>• Test recovery after overload</li>
-                    </ul>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h4 className="text-lg font-bold mb-3">🎯 Chapter Summary</h4>
-            <p className="mb-3">
-              Performance is a critical non-functional requirement that directly impacts user satisfaction and business success. As a BA, you help ensure performance by:
+            <h4 className="text-lg font-bold mb-3">Congratulations!</h4>
+            <p className="mb-4">
+              You've completed the Web Development Tutorial for Business Analysts. You now have practical understanding of:
             </p>
-            <ul className="text-sm space-y-1">
-              <li>• Writing specific, measurable performance requirements</li>
-              <li>• Understanding the business impact of performance issues</li>
-              <li>• Collaborating with technical teams on optimization priorities</li>
-              <li>• Defining realistic performance targets based on user needs</li>
-              <li>• Ensuring performance testing is included in the project plan</li>
-            </ul>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'practical-performance-testing',
-      title: 'Step 3: Practical Performance Testing',
-      type: 'explanation',
-      content: (
-        <div className="space-y-6">
-          <h3 className="text-xl font-bold text-gray-900">Hands-On Performance Analysis</h3>
-          
-          <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-            <h4 className="font-medium text-blue-900 mb-3 text-lg">🔍 Using Browser DevTools for Performance</h4>
-            <div className="space-y-4">
-              <div className="bg-white p-4 rounded border-l-4 border-blue-500">
-                <h5 className="font-medium text-blue-800 mb-2">Exercise: Audit Your Ministry System</h5>
-                <ol className="text-sm text-blue-700 space-y-2">
-                  <li>1. Open your task management system in Chrome</li>
-                  <li>2. Press F12 → Go to "Lighthouse" tab</li>
-                  <li>3. Click "Generate report" for Performance</li>
-                  <li>4. Review the score and recommendations</li>
-                </ol>
-              </div>
-              <div className="bg-white p-4 rounded border-l-4 border-yellow-500">
-                <h5 className="font-medium text-yellow-800 mb-2">What Lighthouse Measures:</h5>
-                <ul className="text-sm text-yellow-700 space-y-1">
-                  <li>• <strong>First Contentful Paint:</strong> When first content appears</li>
-                  <li>• <strong>Speed Index:</strong> How quickly content is visually complete</li>
-                  <li>• <strong>Largest Contentful Paint:</strong> When main content finishes loading</li>
-                  <li>• <strong>Time to Interactive:</strong> When page becomes fully interactive</li>
-                </ul>
-              </div>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <ul className="space-y-1">
+                <li>✓ HTML structure and semantics</li>
+                <li>✓ CSS styling and responsive design</li>
+                <li>✓ JavaScript interactivity and logic</li>
+                <li>✓ API design and implementation</li>
+                <li>✓ Database integration and data management</li>
+              </ul>
+              <ul className="space-y-1">
+                <li>✓ Frontend-backend communication</li>
+                <li>✓ Testing and quality assurance</li>
+                <li>✓ Performance optimization</li>
+                <li>✓ Technical requirements writing</li>
+                <li>✓ Developer collaboration</li>
+              </ul>
             </div>
+            <p className="mt-4 text-sm opacity-90">
+              Use this knowledge to bridge business and technical teams more effectively, write better requirements, and contribute to successful project delivery.
+            </p>
           </div>
 
           <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-            <h4 className="font-medium text-green-900 mb-3 text-lg">📊 Simple Performance Testing for BAs</h4>
+            <h4 className="font-medium text-green-900 mb-3 text-lg">Your Complete System Architecture</h4>
+            <p className="text-sm text-green-800 mb-4">
+              You've built a full-stack web application that demonstrates enterprise-grade architecture:
+            </p>
             <div className="space-y-4">
               <div className="bg-white p-4 rounded border-l-4 border-green-500">
-                <h5 className="font-medium text-green-800 mb-2">Manual Testing Checklist:</h5>
-                <div className="space-y-3">
-                  <div>
-                    <h6 className="font-medium text-green-700 mb-1">Page Load Testing:</h6>
-                    <ul className="text-sm text-green-600 space-y-1">
-                      <li>☐ Page loads in under 3 seconds on slow 3G</li>
-                      <li>☐ Loading indicators appear for operations over 1 second</li>
-                      <li>☐ User can start interacting before everything is loaded</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h6 className="font-medium text-green-700 mb-1">Task Management Testing:</h6>
-                    <ul className="text-sm text-green-600 space-y-1">
-                      <li>☐ Creating 20 tasks in a row doesn't slow down</li>
-                      <li>☐ Task list with 100+ items remains responsive</li>
-                      <li>☐ Searching/filtering responds instantly</li>
-                    </ul>
-                  </div>
-                </div>
+                <h5 className="font-medium text-green-800 mb-2">Frontend Layer (Chapters 1-3):</h5>
+                <ul className="text-sm text-green-700 space-y-1">
+                  <li>• HTML structure defining semantic content</li>
+                  <li>• CSS styling creating professional user interface</li>
+                  <li>• JavaScript adding interactivity and business logic</li>
+                  <li>• Responsive design working across all devices</li>
+                </ul>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-blue-500">
+                <h5 className="font-medium text-blue-800 mb-2">API Layer (Chapters 4-5):</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• RESTful API endpoints for all CRUD operations</li>
+                  <li>• Proper HTTP methods and status codes</li>
+                  <li>• Input validation and error handling</li>
+                  <li>• JSON data exchange between frontend and backend</li>
+                </ul>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-purple-500">
+                <h5 className="font-medium text-purple-800 mb-2">Database Layer (Chapter 6):</h5>
+                <ul className="text-sm text-purple-700 space-y-1">
+                  <li>• SQLite database with proper schema design</li>
+                  <li>• ACID compliance for data integrity</li>
+                  <li>• Automatic audit trails with timestamps</li>
+                  <li>• Safe concurrent access for multiple users</li>
+                </ul>
               </div>
               <div className="bg-white p-4 rounded border-l-4 border-orange-500">
-                <h5 className="font-medium text-orange-800 mb-2">Simulate Real Conditions:</h5>
+                <h5 className="font-medium text-orange-800 mb-2">Integration & Quality (Chapters 7-9):</h5>
                 <ul className="text-sm text-orange-700 space-y-1">
-                  <li>• <strong>Network throttling:</strong> DevTools → Network tab → Slow 3G</li>
-                  <li>• <strong>CPU throttling:</strong> DevTools → Performance tab → CPU 4x slowdown</li>
-                  <li>• <strong>Mobile device:</strong> DevTools → Device toolbar → iPhone/Android</li>
+                  <li>• Frontend-backend integration with real API calls</li>
+                  <li>• Comprehensive testing and debugging strategies</li>
+                  <li>• Performance optimization and monitoring</li>
+                  <li>• User experience enhancements and error handling</li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-            <h4 className="font-medium text-purple-900 mb-3 text-lg">📝 Writing Performance Acceptance Criteria</h4>
-            <div className="space-y-4">
-              <div className="bg-white p-4 rounded">
-                <h5 className="font-medium text-purple-800 mb-2">Instead of vague requirements:</h5>
-                <div className="bg-red-50 p-3 rounded border-l-4 border-red-500">
-                  <p className="text-sm text-red-700">"The system should be fast and responsive"</p>
-                </div>
+          <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+            <h4 className="font-medium text-blue-900 mb-3 text-lg">Your New BA Superpowers</h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <h5 className="font-medium text-blue-800 mb-2">Technical Discussions:</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• "Should we use localStorage or a database?"</li>
+                  <li>• "How will the frontend validate user input?"</li>
+                  <li>• "What happens when the API call fails?"</li>
+                  <li>• "How do we prevent duplicate submissions?"</li>
+                </ul>
               </div>
-              <div className="bg-white p-4 rounded">
-                <h5 className="font-medium text-purple-800 mb-2">Write specific, testable criteria:</h5>
-                <div className="bg-green-50 p-3 rounded border-l-4 border-green-500">
-                  <div className="text-sm text-green-700 space-y-2">
-                    <p><strong>Page Load Performance:</strong></p>
-                    <ul className="text-xs space-y-1">
-                      <li>• Initial page load completes within 2 seconds on standard broadband</li>
-                      <li>• Page remains usable within 5 seconds on slow 3G connection</li>
-                      <li>• Loading indicators appear within 200ms of user action</li>
-                    </ul>
-                    <p><strong>Task Management Performance:</strong></p>
-                    <ul className="text-xs space-y-1">
-                      <li>• Task creation completes within 500ms under normal load</li>
-                      <li>• Task list displays 100+ items without noticeable lag</li>
-                      <li>• Search results appear within 300ms of typing</li>
-                    </ul>
-                  </div>
-                </div>
+              <div>
+                <h5 className="font-medium text-blue-800 mb-2">Requirements Writing:</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• Specific, testable acceptance criteria</li>
+                  <li>• Performance requirements with measurable targets</li>
+                  <li>• Error handling and edge case specifications</li>
+                  <li>• Integration requirements across system layers</li>
+                </ul>
               </div>
-            </div>
-          </div>
-
-          <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
-            <h4 className="font-medium text-yellow-900 mb-3 text-lg">🎯 Performance Requirements Template</h4>
-            <div className="bg-white p-4 rounded">
-              <h5 className="font-medium text-yellow-800 mb-2">Use this template for your projects:</h5>
-              <div className="text-sm text-yellow-700 space-y-3">
-                <div>
-                  <p><strong>GIVEN</strong> [specific conditions - device, network, data volume]</p>
-                  <p><strong>WHEN</strong> [user performs action]</p>
-                  <p><strong>THEN</strong> [measurable performance outcome with specific timings]</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded">
-                  <p className="text-xs text-gray-600">
-                    <strong>Example:</strong> GIVEN a user on a mobile device with 50+ tasks in their list, WHEN they search for a specific task, THEN search results should appear within 300ms and the interface should remain responsive during typing.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="concept-callout">
-            <div className="concept-title">
-              <Target className="w-5 h-5 mr-2" />
-              BA Impact on Performance
-            </div>
-            <div className="concept-text">
-              <p className="mb-3">
-                Your role in performance optimization:
-              </p>
-              <ul className="text-sm space-y-2">
-                <li>• <strong>Define realistic targets</strong> based on user expectations and business needs</li>
-                <li>• <strong>Prioritize optimizations</strong> by understanding which delays hurt users most</li>
-                <li>• <strong>Validate implementations</strong> against real user scenarios</li>
-                <li>• <strong>Communicate trade-offs</strong> between performance, features, and costs</li>
-              </ul>
             </div>
           </div>
         </div>
@@ -603,8 +567,8 @@ export default function Chapter9() {
               Back to Chapter 8
             </Link>
             <div className="text-center">
-              <h1 className="text-xl font-bold text-gray-900">Chapter 9: Performance Considerations</h1>
-              <p className="text-sm text-gray-600">Optimizing for speed and scalability</p>
+              <h1 className="text-xl font-bold text-gray-900">Chapter 9: Real Projects & Working with Dev Teams</h1>
+              <p className="text-sm text-gray-600">Applying your knowledge in the real world</p>
             </div>
             <div className="text-sm text-gray-500">
               Step {currentStep + 1} of {steps.length}
@@ -647,13 +611,22 @@ export default function Chapter9() {
               
               {allStepsComplete && (
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800 font-medium mb-2">Chapter 9 Complete!</p>
+                  <p className="text-sm text-green-800 font-medium mb-2">Tutorial Complete!</p>
+                  <p className="text-xs text-green-700 mb-3">
+                    You've built a complete task management system! See your creation in action.
+                  </p>
                   <Link 
-                    href={getUrlWithParams("/tutorial/chapter-10")} 
-                    className="inline-flex items-center text-sm text-green-700 hover:text-green-900"
+                    href="/demo-app" 
+                    className="inline-flex items-center text-sm bg-green-700 text-white px-3 py-2 rounded hover:bg-green-800 mb-2 w-full justify-center"
                   >
-                    Start Chapter 10
-                    <ArrowRight className="w-4 h-4 ml-1" />
+                    View Your Demo
+                    <ArrowLeft className="w-4 h-4 ml-1 rotate-180" />
+                  </Link>
+                  <Link 
+                    href="/" 
+                    className="inline-flex items-center text-xs text-green-700 hover:text-green-900 justify-center"
+                  >
+                    Back to Home
                   </Link>
                 </div>
               )}
@@ -699,17 +672,22 @@ export default function Chapter9() {
                       markStepCompleteLocal(currentStep)
                       if (currentStep < steps.length - 1) {
                         setCurrentStep(currentStep + 1)
+                      } else {
+                        // Navigate to demo when tutorial is complete
+                        window.location.href = '/demo-app'
                       }
                     }}
                     className="tutorial-button-primary"
                   >
                     {completedSteps.includes(currentStep) 
                       ? currentStep === steps.length - 1 
-                        ? 'Complete Chapter' 
+                        ? 'View Demo' 
                         : 'Next Step'
                       : 'Continue Learning'
                     }
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    {currentStep < steps.length - 1 && (
+                      <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
+                    )}
                   </button>
                 </div>
               </div>

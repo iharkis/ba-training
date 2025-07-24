@@ -290,7 +290,7 @@ export default function TutorialIntroduction() {
             chunks={[
               {
                 id: 'task-overview',
-                title: '📋 Core Task Management',
+                title: 'Core Task Management',
                 content: (
                   <div className="tutorial-card border-l-4 border-l-blue-500">
                     <h3 className="font-semibold text-gray-900 mb-4">Main User Stories</h3>
@@ -319,7 +319,7 @@ export default function TutorialIntroduction() {
               },
               {
                 id: 'detailed-acceptance',
-                title: '🔍 Detailed Acceptance Criteria',
+                title: 'Detailed Acceptance Criteria',
                 content: (
                   <div className="space-y-4">
                     <ExpandableSection title="📊 Task List Requirements" variant="gentle">
@@ -359,7 +359,7 @@ export default function TutorialIntroduction() {
               },
               {
                 id: 'non-functional',
-                title: '⚙️ System Requirements',
+                title: 'System Requirements',
                 content: (
                   <div className="tutorial-card border-l-4 border-l-green-500">
                     <h3 className="font-semibold text-gray-900 mb-3">Non-Functional Requirements</h3>

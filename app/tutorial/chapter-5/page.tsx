@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckCircle, Database, Lightbulb, Code, HardDrive, Shield } from 'lucide-react'
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
@@ -13,545 +13,11 @@ export default function Chapter5() {
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
 
+  // Helper function to preserve URL parameters
   const getUrlWithParams = (path: string) => {
     const params = new URLSearchParams(searchParams.toString())
     return params.toString() ? `${path}?${params.toString()}` : path
   }
-
-  const steps = [
-    {
-      id: 'testing-introduction',
-      title: 'Understanding Testing',
-      type: 'explanation',
-      content: (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Chapter 5: Testing & Quality Assurance</h2>
-          <p className="text-lg text-gray-600">
-            Your task manager works perfectly... or does it? What happens when someone enters an empty task? What if the database is down? This is where testing comes in!
-          </p>
-
-          <div className="explanation-box">
-            <div className="explanation-title">What is Software Testing?</div>
-            <div className="explanation-text">
-              <p className="mb-3">
-                Software testing is the process of checking that your application works correctly in different situations, including when things go wrong.
-              </p>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-medium mb-2">What We Test</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>• Features work as expected</li>
-                    <li>• Error handling works</li>
-                    <li>• Performance is acceptable</li>
-                    <li>• Security is maintained</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2">Why We Test</h4>
-                  <ul className="text-sm space-y-1">
-                    <li>• Catch bugs before users do</li>
-                    <li>• Ensure quality standards</li>
-                    <li>• Build confidence in changes</li>
-                    <li>• Document expected behavior</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="ministry-header">
-            <h3 className="text-xl font-bold">Why the Ministry Needs Testing</h3>
-          </div>
-          <div className="ministry-content">
-            <p className="mb-4">
-              The Ministry of Silly Walks can't afford bugs! Imagine if a software glitch accidentally approved a perfectly normal walk, or if the system crashed during a critical evaluation period.
-            </p>
-            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-              <h4 className="font-medium text-red-900 mb-2">Potential Problems Without Testing</h4>
-              <ul className="text-sm text-red-800 space-y-1">
-                <li>• Empty task submissions crash the system</li>
-                <li>• Database errors aren't handled gracefully</li>
-                <li>• Users can submit invalid silly walk applications</li>
-                <li>• System performance degrades under load</li>
-                <li>• Security vulnerabilities go unnoticed</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="concept-callout">
-            <div className="concept-title">
-              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
-              BA Insight: Testing in Requirements
-            </div>
-            <p className="concept-text">
-              When you write "the system should handle invalid input gracefully" or "performance should remain stable under high load," you're defining testing requirements. Good BAs think about edge cases, error conditions, and quality standards from the beginning, not as an afterthought.
-            </p>
-          </div>
-
-          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objectives</h3>
-            <ul className="space-y-2">
-              <li>• Understand different types of testing</li>
-              <li>• Learn about quality assurance practices</li>
-              <li>• Explore automated vs manual testing</li>
-              <li>• See how testing fits into the development process</li>
-            </ul>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'types-of-testing',
-      title: 'Step 1: Types of Testing',
-      type: 'explanation',
-      content: (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Types of Testing</h2>
-          <p className="text-lg text-gray-600">
-            Different types of testing check different aspects of your application. Think of them as different inspections for a building.
-          </p>
-
-          <div className="explanation-box">
-            <div className="explanation-title">The Testing Pyramid</div>
-            <div className="explanation-text">
-              <div className="bg-white border border-gray-200 rounded p-4">
-                <div className="text-center mb-4">
-                  <div className="mx-auto w-0 h-0" style={{
-                    borderLeft: '100px solid transparent',
-                    borderRight: '100px solid transparent',
-                    borderBottom: '60px solid #fee2e2'
-                  }}></div>
-                  <div className="mt-2 text-sm font-medium text-red-800">Manual Testing</div>
-                  <div className="text-xs text-red-600">Slow, expensive, but catches UX issues</div>
-                </div>
-                <div className="text-center mb-4">
-                  <div className="mx-auto w-0 h-0" style={{
-                    borderLeft: '120px solid transparent',
-                    borderRight: '120px solid transparent',
-                    borderBottom: '60px solid #fef3c7'
-                  }}></div>
-                  <div className="mt-2 text-sm font-medium text-yellow-800">Integration Testing</div>
-                  <div className="text-xs text-yellow-600">Tests how different parts work together</div>
-                </div>
-                <div className="text-center">
-                  <div className="mx-auto w-0 h-0" style={{
-                    borderLeft: '140px solid transparent',
-                    borderRight: '140px solid transparent',
-                    borderBottom: '60px solid #dcfce7'
-                  }}></div>
-                  <div className="mt-2 text-sm font-medium text-green-800">Unit Testing</div>
-                  <div className="text-xs text-green-600">Fast, automated tests of individual functions</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <h4 className="font-medium text-green-900 mb-3">Unit Testing</h4>
-              <div className="text-sm text-green-800 space-y-2">
-                <div><strong>What:</strong> Test individual functions</div>
-                <div><strong>Example:</strong> "Does the add task function work?"</div>
-                <div><strong>Speed:</strong> Very fast</div>
-                <div><strong>Cost:</strong> Low</div>
-              </div>
-            </div>
-
-            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-              <h4 className="font-medium text-yellow-900 mb-3">Integration Testing</h4>
-              <div className="text-sm text-yellow-800 space-y-2">
-                <div><strong>What:</strong> Test how parts work together</div>
-                <div><strong>Example:</strong> "Does frontend talk to backend?"</div>
-                <div><strong>Speed:</strong> Medium</div>
-                <div><strong>Cost:</strong> Medium</div>
-              </div>
-            </div>
-
-            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-              <h4 className="font-medium text-red-900 mb-3">Manual Testing</h4>
-              <div className="text-sm text-red-800 space-y-2">
-                <div><strong>What:</strong> Human testers use the app</div>
-                <div><strong>Example:</strong> "Is the interface intuitive?"</div>
-                <div><strong>Speed:</strong> Slow</div>
-                <div><strong>Cost:</strong> High</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="ministry-content">
-            <h4 className="font-medium mb-3">Ministry Testing Examples</h4>
-            <div className="space-y-3">
-              <div className="bg-white border border-gray-200 rounded p-3">
-                <h5 className="font-medium text-gray-900 mb-1">Unit Test Example</h5>
-                <p className="text-sm text-gray-600 mb-2">Testing the "calculate silliness score" function:</p>
-                <div className="bg-gray-50 p-2 rounded font-mono text-xs">
-                  Input: walk_data = {`{"hops": 3, "wiggles": 7, "duration": 45}`}<br/>
-                  Expected: silliness_score = 8.5<br/>
-                  Actual: silliness_score = 8.5 ✅
-                </div>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded p-3">
-                <h5 className="font-medium text-gray-900 mb-1">Integration Test Example</h5>
-                <p className="text-sm text-gray-600 mb-2">Testing the complete task creation flow:</p>
-                <div className="bg-gray-50 p-2 rounded font-mono text-xs">
-                  1. User clicks "Add Task" → ✅<br/>
-                  2. Frontend sends POST request → ✅<br/>
-                  3. Backend validates data → ✅<br/>
-                  4. Database saves task → ✅<br/>
-                  5. Frontend shows new task → ✅
-                </div>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded p-3">
-                <h5 className="font-medium text-gray-900 mb-1">Manual Test Example</h5>
-                <p className="text-sm text-gray-600 mb-2">Testing user experience:</p>
-                <div className="bg-gray-50 p-2 rounded text-xs">
-                  "Can a new Ministry employee easily figure out how to submit a silly walk application without training?"
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="concept-callout">
-            <div className="concept-title">
-              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
-              BA Insight: Test Coverage
-            </div>
-            <p className="concept-text">
-              Different testing types catch different problems. Unit tests catch logic errors quickly, integration tests catch communication issues, and manual tests catch usability problems. When writing requirements, consider what could go wrong and how each type of testing would catch it.
-            </p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'test-cases',
-      title: 'Step 2: Writing Test Cases',
-      type: 'coding',
-      exercise: {
-        title: 'Create Test Cases for Task Creation',
-        description: 'Test cases define what should happen in different scenarios. Let\'s write test cases for our task creation feature.',
-        instructions: [
-          'Review the test cases below - these define expected behavior',
-          'Each test case has a scenario, input, and expected result',
-          'Notice how we test both success and failure cases',
-          'These test cases help developers know what to build'
-        ],
-        language: 'typescript' as const,
-        startingCode: `// Test Cases for Task Creation Feature
-// These define what should happen in different scenarios
-
-describe('Task Creation', () => {
-  
-  test('should create task with valid input', () => {
-    // Arrange
-    const validTask = {
-      title: 'Review silly walk application',
-      description: 'Evaluate Mr. Smith\\'s application',
-      assignedTo: 'John Cleese'
-    }
-    
-    // Act
-    const result = createTask(validTask)
-    
-    // Assert
-    expect(result.success).toBe(true)
-    expect(result.task.id).toBeDefined()
-    expect(result.task.title).toBe('Review silly walk application')
-    expect(result.task.status).toBe('pending')
-  })
-
-  test('should reject empty title', () => {
-    // Arrange
-    const invalidTask = {
-      title: '',
-      description: 'Some description',
-      assignedTo: 'John Cleese'
-    }
-    
-    // Act
-    const result = createTask(invalidTask)
-    
-    // Assert
-    expect(result.success).toBe(false)
-    expect(result.error).toContain('Title is required')
-  })
-
-  test('should reject task with title longer than 100 characters', () => {
-    // Arrange
-    const longTitle = 'a'.repeat(101)
-    const invalidTask = {
-      title: longTitle,
-      description: 'Some description',
-      assignedTo: 'John Cleese'
-    }
-    
-    // Act
-    const result = createTask(invalidTask)
-    
-    // Assert
-    expect(result.success).toBe(false)
-    expect(result.error).toContain('Title must be 100 characters or less')
-  })
-
-  test('should assign default status as pending', () => {
-    // Arrange
-    const validTask = {
-      title: 'Test task',
-      description: 'Test description',
-      assignedTo: 'Test User'
-    }
-    
-    // Act
-    const result = createTask(validTask)
-    
-    // Assert
-    expect(result.task.status).toBe('pending')
-    expect(result.task.createdAt).toBeDefined()
-  })
-
-})`,
-        targetCode: `// Test Cases for Task Creation Feature
-// These define what should happen in different scenarios
-
-describe('Task Creation', () => {
-  
-  test('should create task with valid input', () => {
-    // Arrange
-    const validTask = {
-      title: 'Review silly walk application',
-      description: 'Evaluate Mr. Smith\\'s application',
-      assignedTo: 'John Cleese'
-    }
-    
-    // Act
-    const result = createTask(validTask)
-    
-    // Assert
-    expect(result.success).toBe(true)
-    expect(result.task.id).toBeDefined()
-    expect(result.task.title).toBe('Review silly walk application')
-    expect(result.task.status).toBe('pending')
-  })
-
-  test('should reject empty title', () => {
-    // Arrange
-    const invalidTask = {
-      title: '',
-      description: 'Some description',
-      assignedTo: 'John Cleese'
-    }
-    
-    // Act
-    const result = createTask(invalidTask)
-    
-    // Assert
-    expect(result.success).toBe(false)
-    expect(result.error).toContain('Title is required')
-  })
-
-  test('should reject task with title longer than 100 characters', () => {
-    // Arrange
-    const longTitle = 'a'.repeat(101)
-    const invalidTask = {
-      title: longTitle,
-      description: 'Some description',
-      assignedTo: 'John Cleese'
-    }
-    
-    // Act
-    const result = createTask(invalidTask)
-    
-    // Assert
-    expect(result.success).toBe(false)
-    expect(result.error).toContain('Title must be 100 characters or less')
-  })
-
-  test('should assign default status as pending', () => {
-    // Arrange
-    const validTask = {
-      title: 'Test task',
-      description: 'Test description',
-      assignedTo: 'Test User'
-    }
-    
-    // Act
-    const result = createTask(validTask)
-    
-    // Assert
-    expect(result.task.status).toBe('pending')
-    expect(result.task.createdAt).toBeDefined()
-  })
-
-})`,
-        hints: [
-          "Test cases follow a pattern: Arrange, Act, Assert",
-          "We test both success cases (valid input) and failure cases (invalid input)",
-          "Each test case has a clear, descriptive name",
-          "Assertions check that the actual result matches expected behavior",
-          "Edge cases like empty strings and length limits are important to test"
-        ],
-        explanation: {
-          whatIsHappening: "You're looking at automated test cases written in a testing framework. These tests define exactly what should happen when users create tasks in different scenarios. The tests use the 'Arrange, Act, Assert' pattern: set up the test data, perform the action, and check the results. Each test covers a specific scenario, from happy path (valid input) to edge cases (empty title, too long title).",
-          whyItMatters: "Test cases serve as both executable documentation and quality gates. They tell developers exactly what the feature should do, and they automatically check that the implementation works correctly. When you change code later, these tests will catch any breaking changes immediately. They also help ensure that edge cases and error conditions are properly handled.",
-          realWorldConnection: "When you write requirements like 'task titles must be between 1 and 100 characters' or 'system should display helpful error messages for invalid input,' you're defining what these test cases should verify. Good test cases translate requirements into specific, measurable outcomes. They bridge the gap between business requirements and technical implementation.",
-          keyTerms: {
-            "Test Case": "A specific scenario that tests one aspect of functionality",
-            "Arrange-Act-Assert": "A pattern for organizing test code: set up data, perform action, verify results",
-            "Assertion": "A statement that checks if the actual result matches the expected result",
-            "Edge Case": "Unusual or extreme input that might cause problems",
-            "Test Suite": "A collection of related test cases that test a feature or component"
-          }
-        }
-      }
-    },
-    {
-      id: 'quality-assurance',
-      title: 'Step 3: Quality Assurance Process',
-      type: 'explanation',
-      content: (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Quality Assurance Process</h2>
-          <p className="text-lg text-gray-600">
-            Quality Assurance (QA) isn't just about finding bugs - it's about building quality into the entire development process.
-          </p>
-
-          <div className="explanation-box">
-            <div className="explanation-title">QA Throughout Development</div>
-            <div className="explanation-text">
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                  <div>
-                    <h4 className="font-medium">Requirements Review</h4>
-                    <p className="text-sm text-gray-600">QA reviews requirements for clarity and testability</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                  <div>
-                    <h4 className="font-medium">Test Planning</h4>
-                    <p className="text-sm text-gray-600">Create test cases and define testing strategy</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                  <div>
-                    <h4 className="font-medium">Development Testing</h4>
-                    <p className="text-sm text-gray-600">Developers write and run unit tests</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
-                  <div>
-                    <h4 className="font-medium">Integration Testing</h4>
-                    <p className="text-sm text-gray-600">Test how different parts work together</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
-                  <div>
-                    <h4 className="font-medium">User Acceptance Testing</h4>
-                    <p className="text-sm text-gray-600">Business users verify the system meets their needs</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <h4 className="font-medium text-green-900 mb-3">Automated Testing Benefits</h4>
-              <ul className="text-sm text-green-800 space-y-2">
-                <li>• Runs fast and frequently</li>
-                <li>• Catches regressions immediately</li>
-                <li>• Provides consistent results</li>
-                <li>• Enables confident code changes</li>
-                <li>• Reduces manual testing burden</li>
-              </ul>
-            </div>
-
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-900 mb-3">Manual Testing Benefits</h4>
-              <ul className="text-sm text-blue-800 space-y-2">
-                <li>• Catches usability issues</li>
-                <li>• Tests real user scenarios</li>
-                <li>• Evaluates subjective qualities</li>
-                <li>• Explores edge cases creatively</li>
-                <li>• Validates business logic</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="ministry-content">
-            <h4 className="font-medium mb-3">Ministry QA Checklist</h4>
-            <div className="bg-white border border-gray-200 rounded p-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <h5 className="font-medium text-gray-900 mb-2">🔍 Functionality</h5>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• All features work as specified</li>
-                    <li>• Error messages are helpful</li>
-                    <li>• Data validation works correctly</li>
-                    <li>• Edge cases are handled</li>
-                  </ul>
-                </div>
-                <div>
-                  <h5 className="font-medium text-gray-900 mb-2">🎨 User Experience</h5>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• Interface is intuitive</li>
-                    <li>• Loading times are acceptable</li>
-                    <li>• Mobile experience works</li>
-                    <li>• Accessibility requirements met</li>
-                  </ul>
-                </div>
-                <div>
-                  <h5 className="font-medium text-gray-900 mb-2">🔒 Security</h5>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• User authentication works</li>
-                    <li>• Data is properly protected</li>
-                    <li>• Input validation prevents attacks</li>
-                    <li>• Permissions are enforced</li>
-                  </ul>
-                </div>
-                <div>
-                  <h5 className="font-medium text-gray-900 mb-2">⚡ Performance</h5>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• Pages load quickly</li>
-                    <li>• System handles expected load</li>
-                    <li>• Database queries are efficient</li>
-                    <li>• Memory usage is reasonable</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="concept-callout">
-            <div className="concept-title">
-              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
-              BA Insight: Quality Requirements
-            </div>
-            <p className="concept-text">
-              Quality isn't just about bugs - it includes performance, usability, security, and maintainability. When writing requirements, consider: "How fast should this be?" "What happens if this fails?" "How intuitive should this be for new users?" "What are the security implications?" Including quality requirements helps teams build better software from the start.
-            </p>
-          </div>
-
-          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Key Takeaways</h3>
-            <ul className="space-y-2">
-              <li>• Testing should happen throughout development, not just at the end</li>
-              <li>• Different types of testing catch different types of problems</li>
-              <li>• Automated tests provide fast feedback, manual tests catch UX issues</li>
-              <li>• Quality requirements are as important as functional requirements</li>
-              <li>• Good testing practices lead to more reliable, maintainable software</li>
-            </ul>
-          </div>
-        </div>
-      )
-    }
-  ]
 
   useEffect(() => {
     const progress = getProgress()
@@ -561,20 +27,804 @@ describe('Task Creation', () => {
     setCompletedSteps(completed)
   }, [])
 
+  const steps = [
+    {
+      id: 'database-introduction',
+      title: 'Understanding Databases',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900">Chapter 5: Database Integration</h2>
+          <p className="text-lg text-gray-600">
+            Excellent! You've built a working API, but the data still disappears when the server restarts. Real applications need persistent, reliable data storage. Let's integrate a database.
+          </p>
+
+          <div className="explanation-box">
+            <div className="explanation-title">What is a Database?</div>
+            <div className="explanation-text">
+              <p className="mb-3">
+                A database is like a digital filing cabinet that stores, organizes, and retrieves information efficiently. Unlike files or arrays in memory, databases are designed for reliability, speed, and concurrent access by multiple users.
+              </p>
+              <ul className="list-disc list-inside space-y-2">
+                <li><strong>Persistence:</strong> Data survives server restarts and system failures</li>
+                <li><strong>Concurrency:</strong> Multiple users can access data simultaneously</li>
+                <li><strong>ACID Properties:</strong> Atomicity, Consistency, Isolation, Durability</li>
+                <li><strong>Query Language:</strong> Structured ways to find and manipulate data</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="ministry-header">
+            <h3 className="text-xl font-bold">Why the Ministry Needs a Database</h3>
+          </div>
+          <div className="ministry-content">
+            <p className="mb-4">
+              Government systems require enterprise-grade data management with audit trails, backup procedures, and regulatory compliance:
+            </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                <h4 className="font-medium text-red-900 mb-2">Current Issues</h4>
+                <ul className="text-sm text-red-800 space-y-1">
+                  <li>• Data lost on server restart</li>
+                  <li>• No data backup or recovery</li>
+                  <li>• No audit trail for changes</li>
+                  <li>• Cannot handle multiple users safely</li>
+                </ul>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                <h4 className="font-medium text-green-900 mb-2">Database Benefits</h4>
+                <ul className="text-sm text-green-800 space-y-1">
+                  <li>• Permanent data storage</li>
+                  <li>• Automated backup and recovery</li>
+                  <li>• Transaction logging and audit trails</li>
+                  <li>• Safe concurrent access</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: Data Architecture
+            </div>
+            <div className="concept-text space-y-4">
+              <p>
+                Data requirements are among the most critical and costly to change later in development. Understanding database concepts helps you identify data needs early, write complete requirements, and avoid expensive architectural changes during development.
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Business Requirements → Database Design:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <div><strong>Requirement:</strong> "Track task assignment history for auditing"</div>
+                    <div><strong>Database Design:</strong> Task_History table with timestamps, user_id, previous/new values</div>
+                    <div><strong>BA Questions:</strong> How long to retain? Who can access? What triggers logging?</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <div><strong>Requirement:</strong> "System must handle 1000+ concurrent users"</div>
+                    <div><strong>Database Design:</strong> Connection pooling, indexing strategy, query optimization</div>
+                    <div><strong>BA Questions:</strong> Peak usage patterns? Read vs write ratios? Performance SLAs?</div>
+                  </div>
+
+                  <div className="border-l-4 border-purple-500 pl-3">
+                    <div><strong>Requirement:</strong> "Users can only see their own department's tasks"</div>
+                    <div><strong>Database Design:</strong> User-Department-Task relationships, row-level security</div>
+                    <div><strong>BA Questions:</strong> Department hierarchies? Cross-department access? Admin overrides?</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Data Requirements Discovery Framework:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Data Entities:</strong> What "things" does the business need to track? (Users, Tasks, Projects)</div>
+                  <div><strong>Relationships:</strong> How do these entities connect? (One-to-many? Many-to-many?)</div>
+                  <div><strong>Lifecycle:</strong> How is data created, updated, archived, or deleted?</div>
+                  <div><strong>Retention:</strong> How long must data be kept? What are the legal requirements?</div>
+                  <div><strong>Access Patterns:</strong> Who reads/writes what data? How frequently?</div>
+                  <div><strong>Compliance:</strong> GDPR, SOX, industry regulations affecting data handling</div>
+                </div>
+              </div>
+
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-purple-900 mb-2">Critical BA Questions for Database Requirements:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Volume:</strong> How much data? Growth projections over 3-5 years?</div>
+                  <div><strong>Performance:</strong> How fast must queries respond? Acceptable downtime?</div>
+                  <div><strong>Security:</strong> Who can access what data? Encryption requirements?</div>
+                  <div><strong>Integration:</strong> Does this connect to other systems? Data synchronization needs?</div>
+                  <div><strong>Reporting:</strong> What analytics or reports are needed? Real-time or batch?</div>
+                  <div><strong>Disaster Recovery:</strong> Backup frequency? Recovery time objectives?</div>
+                </div>
+              </div>
+
+              <div className="bg-red-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-red-900 mb-2">Costly Data Requirement Mistakes to Avoid:</h4>
+                <ul className="text-sm space-y-1">
+                  <li>• Not considering data relationships early (leads to complex joins or denormalization)</li>
+                  <li>• Missing audit trail requirements (expensive to retrofit)</li>
+                  <li>• Underestimating data volumes (performance issues in production)</li>
+                  <li>• Ignoring regulatory compliance until late in development</li>
+                  <li>• Not planning for data migration from existing systems</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
+            <h3 className="text-lg font-bold mb-3">Learning Objective</h3>
+            <p>
+              In this chapter, you'll integrate SQLite database with your API, learn about database schemas, and understand how enterprise data management works. You'll see how business requirements translate into database design decisions.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'setup-database',
+      title: 'Step 1: Setting Up SQLite Database',
+      type: 'coding',
+      exercise: {
+        title: 'Add Database Configuration',
+        description: 'We\'ll add SQLite database integration to our API server, replacing the in-memory array with persistent storage.',
+        instructions: [
+          'Install and configure SQLite database package',
+          'Create a database initialization function',
+          'Set up the tasks table with appropriate columns',
+          'Add database connection to the server startup'
+        ],
+        language: 'typescript' as const,
+        codeBlock: {
+          code: `const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+
+// Database setup
+const dbPath = path.join(__dirname, 'ministry_tasks.db');
+const db = new sqlite3.Database(dbPath);
+
+// Initialize database
+function initializeDatabase() {
+  return new Promise((resolve, reject) => {
+    db.serialize(() => {
+      // Create tasks table
+      db.run(\`
+        CREATE TABLE IF NOT EXISTS tasks (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          description TEXT,
+          assignedTo TEXT,
+          completed BOOLEAN DEFAULT 0,
+          createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      \`, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          // Insert sample data if table is empty
+          db.get("SELECT COUNT(*) as count FROM tasks", (err, row) => {
+            if (err) {
+              reject(err);
+            } else if (row.count === 0) {
+              db.run(\`
+                INSERT INTO tasks (title, description, assignedTo) 
+                VALUES (?, ?, ?)
+              \`, [
+                "Evaluate Mr. Smith's Silly Walk Application",
+                "Review submitted video and assess walk silliness level.",
+                "John Cleese"
+              ], (err) => {
+                if (err) reject(err);
+                else resolve();
+              });
+            } else {
+              resolve();
+            }
+          });
+        }
+      });
+    });
+  });
+}`,
+          explanations: [
+            {
+              line: "const sqlite3 = require('sqlite3').verbose();",
+              explanation: "Import SQLite database library for Node.js with verbose error reporting enabled.",
+              businessContext: "SQLite is perfect for learning and small applications - it's a file-based database that doesn't require a separate server."
+            },
+            {
+              line: "const db = new sqlite3.Database(dbPath);",
+              explanation: "Create a database connection to a file called 'ministry_tasks.db' in the current directory.",
+              businessContext: "This creates a persistent database file that will survive server restarts, solving the data loss problem."
+            },
+            {
+              line: "CREATE TABLE IF NOT EXISTS tasks (...)",
+              explanation: "Define the structure of the tasks table with columns for all our task properties.",
+              businessContext: "This creates the data schema - the blueprint for how task information is organized and stored."
+            },
+            {
+              line: "id INTEGER PRIMARY KEY AUTOINCREMENT",
+              explanation: "Create an auto-incrementing ID column that uniquely identifies each task.",
+              businessContext: "Every task gets a unique identifier automatically, enabling precise tracking and updates."
+            },
+            {
+              line: "createdAt DATETIME DEFAULT CURRENT_TIMESTAMP",
+              explanation: "Automatically record when each task was created, providing an audit trail.",
+              businessContext: "This implements the requirement for 'audit trails' - tracking when tasks were added to the system."
+            }
+          ]
+        },
+        startingCode: `const express = require('express');
+const cors = require('cors');
+// Step 1: Add database imports here
+// const sqlite3 = require('sqlite3').verbose();
+// const path = require('path');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Step 1: Add database setup here
+// const dbPath = path.join(__dirname, 'ministry_tasks.db');
+// const db = new sqlite3.Database(dbPath);
+
+// In-memory task storage (to be replaced)
+let tasks = [
+  {
+    id: 1,
+    title: "Evaluate Mr. Smith's Silly Walk Application",
+    description: "Review submitted video and assess walk silliness level.",
+    assignedTo: "John Cleese",
+    completed: false
+  }
+];
+
+// Step 1: Add database initialization function here
+
+// Routes (to be updated in next steps)
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Ministry of Silly Walks Task Management API',
+    version: '1.0.0 - Now with Database!',
+    database: 'SQLite'
+  });
+});
+
+// Start server
+// Step 1: Add database initialization before starting server
+app.listen(PORT, () => {
+  console.log(\`Server running on http://localhost:\${PORT}\`);
+});`,
+        targetCode: `const express = require('express');
+const cors = require('cors');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Database setup
+const dbPath = path.join(__dirname, 'ministry_tasks.db');
+const db = new sqlite3.Database(dbPath);
+
+// Initialize database
+function initializeDatabase() {
+  return new Promise((resolve, reject) => {
+    db.serialize(() => {
+      // Create tasks table
+      db.run(\`
+        CREATE TABLE IF NOT EXISTS tasks (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          description TEXT,
+          assignedTo TEXT,
+          completed BOOLEAN DEFAULT 0,
+          createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      \`, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          // Insert sample data if table is empty
+          db.get("SELECT COUNT(*) as count FROM tasks", (err, row) => {
+            if (err) {
+              reject(err);
+            } else if (row.count === 0) {
+              db.run(\`
+                INSERT INTO tasks (title, description, assignedTo) 
+                VALUES (?, ?, ?)
+              \`, [
+                "Evaluate Mr. Smith's Silly Walk Application",
+                "Review submitted video and assess walk silliness level.",
+                "John Cleese"
+              ], (err) => {
+                if (err) reject(err);
+                else resolve();
+              });
+            } else {
+              resolve();
+            }
+          });
+        }
+      });
+    });
+  });
+}
+
+// Routes
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Ministry of Silly Walks Task Management API',
+    version: '1.0.0 - Now with Database!',
+    database: 'SQLite'
+  });
+});
+
+// Start server with database initialization
+async function startServer() {
+  try {
+    await initializeDatabase();
+    console.log('Database initialized successfully');
+    
+    app.listen(PORT, () => {
+      console.log(\`Server running on http://localhost:\${PORT}\`);
+      console.log('Database file: ministry_tasks.db');
+    });
+  } catch (error) {
+    console.error('Failed to initialize database:', error);
+    process.exit(1);
+  }
+}
+
+startServer();`,
+        hints: [
+          "Start by importing SQLite3 library with verbose() for better error reporting",
+          "Create a database file path using path.join(__dirname, 'ministry_tasks.db') for persistence",
+          "Write an initializeDatabase() function that returns a Promise for proper async handling",
+          "Use db.serialize() to ensure database operations run in the correct order",
+          "Create the tasks table with columns for id, title, description, assignedTo, completed, createdAt, updatedAt",
+          "Set id as INTEGER PRIMARY KEY AUTOINCREMENT for automatic unique identifiers",
+          "Add audit trail columns (createdAt, updatedAt) with DEFAULT CURRENT_TIMESTAMP for automatic timestamps",
+          "Insert sample data only if the table is empty to avoid duplicates on restart",
+          "Replace the simple app.listen() with an async startServer() function that initializes the database first"
+        ],
+        explanation: {
+          whatIsHappening: "You've replaced the temporary in-memory array with a persistent SQLite database! The server now creates a database file, defines a proper table schema with audit timestamps, and initializes sample data. The database connection is established before the server starts accepting requests.",
+          whyItMatters: "This solves the fundamental problem of data persistence. Tasks now survive server restarts, and the audit trail timestamps meet compliance requirements. The database schema enforces data consistency and provides a foundation for more advanced features like user management and reporting.",
+          realWorldConnection: "This mirrors how real enterprise applications handle data - with persistent storage, proper schemas, and initialization procedures. When you write requirements about 'data retention' or 'audit compliance,' this is the type of infrastructure that enables those capabilities. Understanding database integration helps you write more informed requirements about data management and system reliability.",
+          keyTerms: {
+            "Database schema": "The structure and organization of data tables and columns",
+            "Primary key": "A unique identifier for each row in a database table",
+            "AUTOINCREMENT": "Automatically generates unique sequential numbers for new records",
+            "Audit trail": "Automatic recording of when data was created or modified"
+          }
+        }
+      }
+    },
+    {
+      id: 'convert-api-endpoints',
+      title: 'Step 2: Converting API to Use Database',
+      type: 'coding',
+      exercise: {
+        title: 'Update CRUD Endpoints for Database',
+        description: 'Now let\'s update all our API endpoints to use the database instead of the in-memory array.',
+        instructions: [
+          'Replace the GET /tasks route with database query functionality',
+          'Replace the POST /tasks route with database insert functionality', 
+          'Replace the PUT /tasks/:id route with database update functionality',
+          'Replace the DELETE /tasks/:id route with database delete functionality',
+          'Copy each route from the code block and replace the corresponding route in your editor'
+        ],
+        language: 'typescript' as const,
+        codeBlock: {
+          code: `// GET all tasks
+app.get('/tasks', (req, res) => {
+  db.all("SELECT * FROM tasks ORDER BY createdAt DESC", (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: rows,
+      count: rows.length
+    });
+  });
+});
+
+// POST new task
+app.post('/tasks', (req, res) => {
+  const { title, description, assignedTo } = req.body;
+  
+  if (!title) {
+    return res.status(400).json({
+      success: false,
+      error: 'Title is required'
+    });
+  }
+  
+  db.run(\`
+    INSERT INTO tasks (title, description, assignedTo) 
+    VALUES (?, ?, ?)
+  \`, [title, description || 'Status: Pending', assignedTo || 'Current User'], function(err) {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    // Get the inserted task
+    db.get("SELECT * FROM tasks WHERE id = ?", [this.lastID], (err, row) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.status(201).json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});
+
+// PUT update task
+app.put('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  const updates = req.body;
+  
+  // Build dynamic update query
+  const fields = Object.keys(updates).map(key => \`\${key} = ?\`).join(', ');
+  const values = Object.values(updates);
+  values.push(taskId);
+  
+  db.run(\`
+    UPDATE tasks 
+    SET \${fields}, updatedAt = CURRENT_TIMESTAMP 
+    WHERE id = ?
+  \`, values, function(err) {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    if (this.changes === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Task not found'
+      });
+    }
+    
+    // Get the updated task
+    db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});
+
+// DELETE task
+app.delete('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  
+  // Get task before deleting for confirmation
+  db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    if (!row) {
+      return res.status(404).json({
+        success: false,
+        error: 'Task not found'
+      });
+    }
+    
+    db.run("DELETE FROM tasks WHERE id = ?", [taskId], function(err) {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});`,
+          explanations: [
+            {
+              line: "db.all(\"SELECT * FROM tasks ORDER BY createdAt DESC\", (err, rows) => {",
+              explanation: "Query all tasks from the database, ordered by creation date (newest first).",
+              businessContext: "This provides a chronological view of tasks, helping users see recent activity first."
+            },
+            {
+              line: "db.run(`INSERT INTO tasks (title, description, assignedTo) VALUES (?, ?, ?)`, [title, description || 'Status: Pending', assignedTo || 'Current User'], function(err) {",
+              explanation: "Insert a new task into the database using parameterized queries to prevent SQL injection.",
+              businessContext: "Parameterized queries are essential for security - they prevent malicious users from damaging the database."
+            },
+            {
+              line: "db.get(\"SELECT * FROM tasks WHERE id = ?\", [this.lastID], (err, row) => {",
+              explanation: "Retrieve the newly inserted task using the auto-generated ID to return it to the client.",
+              businessContext: "This confirms the task was created successfully and provides the client with the complete task data including the database-generated ID."
+            },
+            {
+              line: "const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');",
+              explanation: "Build a dynamic UPDATE query that can handle partial updates to any task fields.",
+              businessContext: "This flexibility allows the API to update only specific fields rather than requiring all data, making it more efficient for frontend applications."
+            },
+            {
+              line: "if (this.changes === 0) {",
+              explanation: "Check if the UPDATE operation actually modified any rows - if not, the task ID doesn't exist.",
+              businessContext: "This provides proper error handling when users try to update non-existent tasks, improving the user experience."
+            },
+            {
+              line: "db.get(\"SELECT * FROM tasks WHERE id = ?\", [taskId], (err, row) => {",
+              explanation: "Retrieve the task before deleting it to return confirmation of what was removed.",
+              businessContext: "This provides an audit trail and confirmation to users about what was deleted, which is important for data governance."
+            }
+          ]
+        },
+        startingCode: `// Previous database setup code...
+
+// GET all tasks - UPDATE TO USE DATABASE
+app.get('/tasks', (req, res) => {
+  // Replace this with database query
+  res.json({
+    success: true,
+    data: [], // This should come from database
+    count: 0
+  });
+});
+
+// POST new task - UPDATE TO USE DATABASE  
+app.post('/tasks', (req, res) => {
+  const { title, description, assignedTo } = req.body;
+  
+  if (!title) {
+    return res.status(400).json({
+      success: false,
+      error: 'Title is required'
+    });
+  }
+  
+  // Replace this with database insert
+  res.status(201).json({
+    success: true,
+    data: { message: 'Should insert into database' }
+  });
+});
+
+// PUT update task - UPDATE TO USE DATABASE
+app.put('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  
+  // Replace this with database update
+  res.json({
+    success: true,
+    data: { message: 'Should update in database' }
+  });
+});
+
+// DELETE task - UPDATE TO USE DATABASE
+app.delete('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  
+  // Replace this with database delete
+  res.json({
+    success: true,
+    data: { message: 'Should delete from database' }
+  });
+});`,
+        targetCode: `// GET all tasks
+app.get('/tasks', (req, res) => {
+  db.all("SELECT * FROM tasks ORDER BY createdAt DESC", (err, rows) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: rows,
+      count: rows.length
+    });
+  });
+});
+
+// POST new task
+app.post('/tasks', (req, res) => {
+  const { title, description, assignedTo } = req.body;
+  
+  if (!title) {
+    return res.status(400).json({
+      success: false,
+      error: 'Title is required'
+    });
+  }
+  
+  db.run(\`
+    INSERT INTO tasks (title, description, assignedTo) 
+    VALUES (?, ?, ?)
+  \`, [title, description || 'Status: Pending', assignedTo || 'Current User'], function(err) {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    // Get the inserted task
+    db.get("SELECT * FROM tasks WHERE id = ?", [this.lastID], (err, row) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.status(201).json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});
+
+// PUT update task
+app.put('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  const updates = req.body;
+  
+  // Build dynamic update query
+  const fields = Object.keys(updates).map(key => \`\${key} = ?\`).join(', ');
+  const values = Object.values(updates);
+  values.push(taskId);
+  
+  db.run(\`
+    UPDATE tasks 
+    SET \${fields}, updatedAt = CURRENT_TIMESTAMP 
+    WHERE id = ?
+  \`, values, function(err) {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    if (this.changes === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Task not found'
+      });
+    }
+    
+    // Get the updated task
+    db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});
+
+// DELETE task
+app.delete('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  
+  // Get task before deleting for confirmation
+  db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database error'
+      });
+    }
+    
+    if (!row) {
+      return res.status(404).json({
+        success: false,
+        error: 'Task not found'
+      });
+    }
+    
+    db.run("DELETE FROM tasks WHERE id = ?", [taskId], function(err) {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: 'Database error'
+        });
+      }
+      
+      res.json({
+        success: true,
+        data: row
+      });
+    });
+  });
+});`,
+        hints: [
+          "Replace each endpoint one at a time - start with GET /tasks using db.all() to select all records",
+          "Use parameterized queries with ? placeholders to prevent SQL injection attacks",
+          "For GET requests, use db.all() to get multiple rows or db.get() to get a single row",
+          "For POST requests, use db.run() for INSERT statements and access this.lastID for the new record ID",
+          "Add proper error handling with try-catch blocks and return appropriate HTTP status codes",
+          "For PUT requests, build dynamic queries that only update the fields that were provided",
+          "Check this.changes after UPDATE/DELETE operations to verify rows were actually affected",
+          "For DELETE requests, retrieve the record first to return confirmation of what was deleted",
+          "Always return consistent JSON responses with success/error flags and appropriate data"
+        ],
+        explanation: {
+          whatIsHappening: "You've converted your entire API to use persistent database storage! Each endpoint now uses proper SQL queries with parameterized statements for security. The database handles all data operations while maintaining the same API interface that frontends expect.",
+          whyItMatters: "This completes the transition to enterprise-grade data management. The API now provides true persistence, concurrent access safety, and automatic audit trails. Error handling ensures reliable operation, and parameterized queries prevent security vulnerabilities.",
+          realWorldConnection: "This demonstrates how business requirements translate into technical implementation - 'data must persist' becomes database integration, 'audit trails' become timestamp columns, and 'system reliability' becomes proper error handling. Understanding database operations helps you write more precise requirements about data management and system behavior.",
+          keyTerms: {
+            "SQL queries": "Structured Query Language commands for database operations",
+            "Parameterized queries": "Using placeholders (?) to safely insert user data into SQL",
+            "Database transactions": "Operations that either complete fully or not at all",
+            "Error handling": "Graceful management of database and system failures"
+          }
+        }
+      }
+    }
+  ]
+
   const markStepCompleteLocal = (index: number) => {
     if (!completedSteps.includes(index)) {
       const newCompleted = [...completedSteps, index]
       setCompletedSteps(newCompleted)
       markStepComplete(steps[index].id)
     }
-  };
+  }
 
-  const allStepsComplete = completedSteps.length === steps.length;
+  const allStepsComplete = completedSteps.length === steps.length
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <TutorialBreadcrumb />
-      
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
@@ -583,8 +833,8 @@ describe('Task Creation', () => {
               Back to Chapter 4
             </Link>
             <div className="text-center">
-              <h1 className="text-xl font-bold text-gray-900">Chapter 5: Testing & QA</h1>
-              <p className="text-sm text-gray-600">Quality assurance practices</p>
+              <h1 className="text-xl font-bold text-gray-900">Chapter 5: Database Integration</h1>
+              <p className="text-sm text-gray-600">Adding persistent storage with SQLite</p>
             </div>
             <div className="text-sm text-gray-500">
               Step {currentStep + 1} of {steps.length}
@@ -657,42 +907,57 @@ describe('Task Creation', () => {
                 </div>
               </div>
 
-              <div className="tutorial-card">
-                {steps[currentStep].content}
-                
-                <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
-                  <button
-                    onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                    disabled={currentStep === 0}
-                    className={`flex items-center ${
-                      currentStep === 0 
-                        ? 'text-gray-400 cursor-not-allowed' 
-                        : 'text-tutorial-primary hover:text-blue-700'
-                    }`}
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Previous
-                  </button>
+              {steps[currentStep].type === 'explanation' ? (
+                <div className="tutorial-card">
+                  {steps[currentStep].content}
+                  
+                  <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
+                    <button
+                      onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                      disabled={currentStep === 0}
+                      className={`flex items-center ${
+                        currentStep === 0 
+                          ? 'text-gray-400 cursor-not-allowed' 
+                          : 'text-tutorial-primary hover:text-blue-700'
+                      }`}
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      Previous
+                    </button>
 
-                  <button
-                    onClick={() => {
-                      markStepCompleteLocal(currentStep)
+                    <button
+                      onClick={() => {
+                        markStepCompleteLocal(currentStep)
+                        if (currentStep < steps.length - 1) {
+                          setCurrentStep(currentStep + 1)
+                        }
+                      }}
+                      className="tutorial-button-primary"
+                    >
+                      {completedSteps.includes(currentStep) 
+                        ? currentStep === steps.length - 1 
+                          ? 'Complete Chapter' 
+                          : 'Next Step'
+                        : 'Mark Complete & Continue'
+                      }
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <CodeEditor
+                  {...steps[currentStep].exercise!}
+                  stepId={steps[currentStep].id}
+                  onComplete={() => {
+                    markStepCompleteLocal(currentStep)
+                    setTimeout(() => {
                       if (currentStep < steps.length - 1) {
                         setCurrentStep(currentStep + 1)
                       }
-                    }}
-                    className="tutorial-button-primary"
-                  >
-                    {completedSteps.includes(currentStep) 
-                      ? currentStep === steps.length - 1 
-                        ? 'Complete Chapter' 
-                        : 'Next Step'
-                      : 'Mark Complete & Continue'
-                    }
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </button>
-                </div>
-              </div>
+                    }, 2000)
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

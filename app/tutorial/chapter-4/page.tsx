@@ -82,13 +82,40 @@ export default function Chapter4() {
               <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
               BA Insight: System Architecture
             </div>
-            <p className="concept-text">
-              Understanding the difference between frontend and backend helps you write better requirements. When you specify "user data must persist between sessions" or "multiple users should access the same information," you're describing backend requirements. This separation helps teams understand what needs to be built where.
-            </p>
+            <div className="concept-text space-y-4">
+              <p>
+                Understanding the difference between frontend and backend is crucial for writing precise, implementable requirements that avoid costly misunderstandings during development.
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Frontend vs Backend Requirements - Practical Examples:</h4>
+                <div className="space-y-2 text-sm">
+                  <div><strong>❌ Vague:</strong> "Users should be able to save their work"</div>
+                  <div><strong>✅ Clear:</strong> "User task data must persist to the database (backend) and remain available when they return to the application (frontend displays saved data)"</div>
+                  
+                  <div className="mt-3"><strong>❌ Vague:</strong> "The system should be fast"</div>
+                  <div><strong>✅ Clear:</strong> "Task list must load from database within 2 seconds (backend performance) and display smoothly without page refresh (frontend responsiveness)"</div>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-amber-900 mb-2">Key Questions to Ask Development Teams:</h4>
+                <ul className="text-sm space-y-1 list-disc list-inside">
+                  <li><strong>Data Questions:</strong> "Where will this information be stored?" "How long should it persist?" "Who else needs access?"</li>
+                  <li><strong>Security Questions:</strong> "What user authentication is needed?" "Which data needs encryption?" "What access controls apply?"</li>
+                  <li><strong>Integration Questions:</strong> "Does this connect to existing systems?" "What external services are involved?" "How do we handle system failures?"</li>
+                  <li><strong>Performance Questions:</strong> "How many concurrent users?" "What's the acceptable response time?" "How will we handle peak loads?"</li>
+                </ul>
+              </div>
+
+              <p className="text-sm italic border-l-4 border-blue-500 pl-4">
+                <strong>Pro Tip for BAs:</strong> When stakeholders describe business needs, mentally categorize each requirement as "what users see/interact with" (frontend) vs "what the system needs to remember/calculate/secure" (backend). This helps you write specifications that developers can implement efficiently and reduces back-and-forth during sprint planning.
+              </p>
+            </div>
           </div>
 
           <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objectives</h3>
+            <h3 className="text-lg font-bold mb-3">Learning Objectives</h3>
             <ul className="space-y-2">
               <li>• Understand client-server architecture</li>
               <li>• Learn about APIs and data persistence</li>
@@ -123,7 +150,7 @@ export default function Chapter4() {
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <span className="text-2xl">🍽️</span>
+                    <span className="text-2xl font-bold">API</span>
                   </div>
                   <h4 className="font-medium">Waiter</h4>
                   <p className="text-sm text-gray-600">API (Takes orders, brings food)</p>
@@ -178,9 +205,60 @@ export default function Chapter4() {
               <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
               BA Insight: API Requirements
             </div>
-            <p className="concept-text">
-              When writing requirements, you're essentially defining what APIs need to exist. "Users should be able to create tasks" becomes "POST /tasks endpoint." "Users should view their task history" becomes "GET /tasks endpoint with filtering." Understanding APIs helps you write more precise technical requirements.
-            </p>
+            <div className="concept-text space-y-4">
+              <p>
+                Every functional requirement you write as a BA translates directly into API endpoints that developers must build. Understanding this connection helps you write requirements that are both business-focused and technically implementable.
+              </p>
+              
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Business Requirements → API Translation:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <div><strong>Business Need:</strong> "Staff need to create new silly walk assessments"</div>
+                    <div><strong>API Requirement:</strong> POST /assessments (create new assessment record)</div>
+                    <div><strong>BA Questions:</strong> What data fields are required? Who can create assessments? What validation rules apply?</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <div><strong>Business Need:</strong> "Managers need to view all pending applications"</div>
+                    <div><strong>API Requirement:</strong> GET /applications?status=pending (retrieve filtered data)</div>
+                    <div><strong>BA Questions:</strong> How should results be sorted? What filtering options are needed? How many results per page?</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-amber-500 pl-3">
+                    <div><strong>Business Need:</strong> "Update application status after review"</div>
+                    <div><strong>API Requirement:</strong> PUT /applications/:id (update existing record)</div>
+                    <div><strong>BA Questions:</strong> What status transitions are allowed? Who gets notified? What audit trail is needed?</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-purple-900 mb-2">API-Aware Requirements Template:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>User Story:</strong> As a [role], I want to [action] so that [benefit]</div>
+                  <div><strong>Data Input:</strong> What information does the user provide?</div>
+                  <div><strong>Data Output:</strong> What information does the system return?</div>
+                  <div><strong>Business Rules:</strong> What validation, authorization, or processing rules apply?</div>
+                  <div><strong>Error Scenarios:</strong> What happens when things go wrong?</div>
+                  <div><strong>Integration Impact:</strong> Does this affect other systems or notify other users?</div>
+                </div>
+              </div>
+
+              <div className="bg-red-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-red-900 mb-2">Common BA Mistakes to Avoid:</h4>
+                <ul className="text-sm space-y-1 list-disc list-inside">
+                  <li><strong>Missing Error Cases:</strong> "Users can search tasks" - but what if no results? Network error? Invalid search terms?</li>
+                  <li><strong>Unclear Data Relationships:</strong> "Users can assign tasks" - to whom? With what permissions? How are conflicts resolved?</li>
+                  <li><strong>Vague Performance Expectations:</strong> "Fast response" - define acceptable response times for different operations</li>
+                  <li><strong>Ignoring State Changes:</strong> "Users can update tasks" - what triggers notifications? How is history tracked?</li>
+                </ul>
+              </div>
+
+              <p className="text-sm italic border-l-4 border-green-500 pl-4">
+                <strong>Practical Exercise:</strong> For every user story you write, ask yourself: "What would the developer need to build in the API to make this work?" This mental model helps you catch missing requirements early and communicate more effectively with technical teams.
+              </p>
+            </div>
           </div>
         </div>
       )
@@ -284,7 +362,7 @@ export default function Chapter4() {
                   </ul>
                 </div>
                 <div className="border border-green-200 rounded p-3">
-                  <h5 className="font-medium text-green-900 mb-2">📋 Tasks</h5>
+                  <h5 className="font-medium text-green-900 mb-2">Tasks</h5>
                   <ul className="space-y-1 text-green-800">
                     <li>• id</li>
                     <li>• title</li>
@@ -314,9 +392,88 @@ export default function Chapter4() {
               <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
               BA Insight: Data Modeling
             </div>
-            <p className="concept-text">
-              When you write requirements about "storing user information" or "tracking task history," you're describing database needs. Understanding how data is structured helps you ask better questions: "What information do we need to store?" "How do different pieces of data relate?" "What reports will users need?"
-            </p>
+            <div className="concept-text space-y-4">
+              <p>
+                Every piece of information mentioned in your requirements needs to live somewhere in the database. Understanding data relationships helps you write complete requirements and identify gaps before development begins.
+              </p>
+              
+              <div className="bg-indigo-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-indigo-900 mb-2">Data-Driven Requirements Discovery:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-indigo-500 pl-3">
+                    <div><strong>Business Request:</strong> "We need to track which assessor reviewed each application"</div>
+                    <div><strong>Data Questions:</strong></div>
+                    <ul className="list-disc list-inside ml-4 space-y-1">
+                      <li>Who can be an assessor? (User roles/permissions)</li>
+                      <li>Can multiple assessors review one application? (One-to-many relationship)</li>
+                      <li>Do we track review dates, scores, comments? (Additional data fields)</li>
+                      <li>What if an assessor leaves the organization? (Data retention/archival)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-cyan-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-cyan-900 mb-2">Essential Data Relationship Questions:</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <strong>One-to-One:</strong>
+                    <ul className="list-disc list-inside ml-4">
+                      <li>Each user has one profile</li>
+                      <li>Each application has one status</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <strong>One-to-Many:</strong>
+                    <ul className="list-disc list-inside ml-4">
+                      <li>One user creates many tasks</li>
+                      <li>One department has many staff</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <strong>Many-to-Many:</strong>
+                    <ul className="list-disc list-inside ml-4">
+                      <li>Users can have multiple roles</li>
+                      <li>Tasks can have multiple tags</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <strong>Hierarchical:</strong>
+                    <ul className="list-disc list-inside ml-4">
+                      <li>Manager → Senior → Junior staff</li>
+                      <li>Department → Team → Individual</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-orange-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-orange-900 mb-2">Data Requirements Checklist:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>📊 Reporting Needs:</strong> "What reports will stakeholders need? Daily, weekly, annual? By whom, when, in what format?"</div>
+                  <div><strong>🔍 Search & Filtering:</strong> "How will users find information? What fields need to be searchable? What filters are essential?"</div>
+                  <div><strong>📈 Audit & History:</strong> "What changes need to be tracked? Who made changes when? What's the retention policy?"</div>
+                  <div><strong>🔐 Data Security:</strong> "What data is sensitive? Who can access what? How is personal data protected?"</div>
+                  <div><strong>📱 Data Integration:</strong> "Where does this data come from originally? What systems need to sync? How often?"</div>
+                  <div><strong>🚀 Performance Considerations:</strong> "How much data will we have? How fast must searches be? What are peak usage times?"</div>
+                </div>
+              </div>
+
+              <div className="bg-teal-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-teal-900 mb-2">Practical Data Modeling Exercise:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Step 1:</strong> List every noun mentioned in your requirements (users, tasks, departments, etc.)</div>
+                  <div><strong>Step 2:</strong> For each noun, ask "What specific information do we need to know about this?"</div>
+                  <div><strong>Step 3:</strong> Draw connections: "How do these things relate to each other?"</div>
+                  <div><strong>Step 4:</strong> Test with scenarios: "If John leaves the company, what happens to his tasks?"</div>
+                  <div><strong>Step 5:</strong> Consider edge cases: "What if someone has the same name? Changes departments? Works part-time?"</div>
+                </div>
+              </div>
+
+              <p className="text-sm italic border-l-4 border-indigo-500 pl-4">
+                <strong>BA Pro Tip:</strong> Before writing any functional requirement, sketch out the data model on paper. Ask yourself: "What information needs to be stored, retrieved, updated, or deleted to make this feature work?" This exercise often reveals missing requirements and prevents expensive database changes later in development.
+              </p>
+            </div>
           </div>
         </div>
       )
@@ -393,23 +550,70 @@ displayTasksFromAPI(apiData);`,
           explanations: [
             {
               line: "if (apiResponse.status !== 'success') {",
-              explanation: "Always check if the API call succeeded before processing data.",
-              businessContext: "Error handling is crucial - APIs can fail for many reasons (network issues, server problems, invalid requests)."
+              explanation: (
+                <div>
+                  <p className="mb-3">Breaking down this condition check:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                    <li><code>if</code> = Starts a conditional statement (like saying 'IF this is true, THEN do something')</li>
+                    <li><code>apiResponse.status</code> = Get the 'status' property from the apiResponse object</li>
+                    <li><code>!==</code> = 'Not equal to' comparison operator (checks if two things are different)</li>
+                    <li><code>'success'</code> = A text string we're comparing against</li>
+                    <li><code>{'{'}</code> = Opens a block of code that runs IF the condition is true</li>
+                  </ul>
+                  <p>So this reads: 'IF the status is NOT equal to success, THEN run the code inside the curly braces'</p>
+                </div>
+              ),
+              businessContext: "This is like checking if a delivery arrived successfully before opening the package. APIs can fail for many reasons (network issues, server problems, invalid requests), so we always check the status first. If something went wrong, we handle the error instead of trying to use broken data."
             },
             {
               line: "const tasks = apiResponse.data.tasks;",
-              explanation: "Extract the actual task data from the API response structure.",
-              businessContext: "API responses often have metadata (status, pagination) separate from the actual data."
+              explanation: (
+                <div>
+                  <p className="mb-3">Let's break this down step by step:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm">
+                    <li><code>const</code> = Creates a new variable (like a labeled box to store information)</li>
+                    <li><code>tasks</code> = The name we're giving to our variable (we could call it anything)</li>
+                    <li><code>=</code> = Assignment operator (means 'put the value on the right into the variable on the left')</li>
+                    <li><code>apiResponse.data.tasks</code> = Navigate through the response object: start with apiResponse, go into its data property, then get the tasks property</li>
+                    <li><code>;</code> = Semicolon ends the statement (like a period ends a sentence)</li>
+                  </ul>
+                </div>
+              ),
+              businessContext: "Think of apiResponse like a filing cabinet: apiResponse is the cabinet, .data is a drawer, and .tasks is a folder inside that drawer. We're making a copy of what's in that folder and giving it an easy name ('tasks') so we can work with it. APIs often wrap the actual data inside other information (like status codes, error messages, pagination), so we need to 'unwrap' it to get to what we really want."
             },
             {
               line: "taskElement.innerHTML = `<h3>${task.title}</h3>...`;",
-              explanation: "Transform API data into HTML that users can see and understand.",
-              businessContext: "This is where technical data becomes user-friendly information - crucial for good UX."
+              explanation: (
+                <div>
+                  <p className="mb-3">Building HTML from data:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                    <li><code>taskElement.innerHTML</code> = Access the 'inside content' of our HTML element (like the inside of a box)</li>
+                    <li><code>=</code> = Assignment (we're putting new content inside)</li>
+                    <li>Backticks (`) = Template literal - allows us to mix text with variables</li>
+                    <li><code>&lt;h3&gt;</code> = HTML heading tag (creates a medium-sized heading)</li>
+                    <li><code>${'{task.title}'}</code> = JavaScript variable insertion - takes the 'title' from our task data and puts it here</li>
+                    <li><code>&lt;/h3&gt;</code> = Closing tag for the heading</li>
+                  </ul>
+                  <p>This creates HTML like: <code>&lt;h3&gt;Review John's silly walk&lt;/h3&gt;</code></p>
+                </div>
+              ),
+              businessContext: "This is the magic moment where raw data becomes something users can actually see and understand! We're taking the technical task information from our database (like 'title: Review Johns silly walk') and turning it into formatted, readable HTML that appears on the webpage. Good BAs understand this transformation because it affects how users experience the system."
             },
             {
               line: "taskContainer.appendChild(taskElement);",
-              explanation: "Add the new task element to the page so users can see it.",
-              businessContext: "DOM manipulation is how dynamic web applications update content without page refreshes."
+              explanation: (
+                <div>
+                  <p className="mb-3">Adding our new element to the webpage:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                    <li><code>taskContainer</code> = The HTML element on our page where we want to put the task (like a specific container or box)</li>
+                    <li><code>.appendChild()</code> = A method (function) that adds a new child element inside a parent element</li>
+                    <li><code>taskElement</code> = The new HTML element we just created with our task information</li>
+                    <li><code>;</code> = End of statement</li>
+                  </ul>
+                  <p>This is like taking a completed task card and physically placing it in the 'task board' section of your webpage</p>
+                </div>
+              ),
+              businessContext: "This is how dynamic web applications work! Instead of having to refresh the entire page (like old websites), we dynamically add new content to specific sections. Users see the new task appear instantly without losing their place or having to wait for a page reload. This creates a smooth, app-like experience that users expect from modern systems."
             }
           ]
         },
@@ -473,11 +677,14 @@ const apiData = {
 // Process the API data
 displayTasksFromAPI(apiData);`,
         hints: [
-          "You're editing the script.js file - you can see it in the file tree",
-          "Copy the complete code from the code block above",
-          "This code processes JSON API data and creates HTML elements",
-          "Template literals (\`string\`) let you embed variables with \${variable}",
-          "The preview will show how API data becomes user-friendly content"
+          "Start by checking if the API response was successful using response.success before processing data",
+          "Use a forEach loop to iterate through each task in the response.data array",
+          "Create HTML elements dynamically using document.createElement('div') for each task",
+          "Use template literals (backticks ``) to build complex HTML strings with embedded JavaScript values",
+          "Extract individual properties from each task object using dot notation (task.title, task.description)",
+          "Convert the completed boolean to a readable status using a ternary operator (completed ? 'Complete' : 'Pending')",
+          "Format the creation date using new Date().toLocaleDateString() for better readability",
+          "Add the new task element to the DOM using appendChild() to make it visible on the page"
         ],
         explanation: {
           whatIsHappening: "You've added JavaScript that processes JSON API responses and displays them as HTML. This is the bridge between backend data and frontend display. The code checks for success, extracts task data, creates HTML elements for each task, and updates the page. This pattern is used in every modern web application that displays server data.",
@@ -749,11 +956,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });`,
         hints: [
-          "You're still editing script.js - add this code to complete the integration",
-          "The fetch() API is the modern way to make HTTP requests",
-          "async/await makes asynchronous code easier to read and write",
-          "Always handle both success and error cases in API calls",
-          "Loading indicators greatly improve user experience"
+          "Start by creating an async function called loadTasksFromAPI() to handle the API request",
+          "Use the fetch() API to make an HTTP GET request to 'http://localhost:3000/tasks'",
+          "Add try-catch error handling to manage both network errors and API errors gracefully",
+          "Check if response.ok is true before parsing JSON to ensure the request was successful",
+          "Parse the response using await response.json() to convert from JSON to JavaScript objects",
+          "Clear the existing task list before displaying new data to avoid duplicates",
+          "Reuse the displayTasksFromAPI() function you created earlier to render the tasks",
+          "Display user-friendly error messages in the task list when something goes wrong",
+          "Call loadTasksFromAPI() when the page loads and create a refresh button for manual updates"
         ],
         explanation: {
           whatIsHappening: "You've completed a full frontend-backend integration! This code makes real HTTP requests to your backend API, handles loading states, processes responses, and gracefully handles errors. It combines the API processing from Step 3 with actual network requests, error handling, and user feedback. This is exactly how modern web applications work.",

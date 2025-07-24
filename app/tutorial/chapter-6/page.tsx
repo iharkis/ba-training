@@ -3,9 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { ArrowLeft, ArrowRight, CheckCircle, Database, Lightbulb, Code, HardDrive, Shield } from 'lucide-react'
-import CodeEditor from '@/components/tutorial/CodeEditor'
-import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
+import { ArrowLeft, ArrowRight, CheckCircle, RefreshCw, Lightbulb, Code, Zap, Globe } from 'lucide-react'
 import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
 
 export default function Chapter6() {
@@ -29,55 +27,644 @@ export default function Chapter6() {
 
   const steps = [
     {
-      id: 'database-introduction',
-      title: 'Understanding Databases',
+      id: 'frontend-backend-integration',
+      title: 'Connecting Frontend to Backend',
       type: 'explanation',
       content: (
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">Chapter 6: Database Integration</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Chapter 6: Connecting Frontend to Backend</h2>
           <p className="text-lg text-gray-600">
-            Excellent! You've built a working API, but the data still disappears when the server restarts. Real applications need persistent, reliable data storage. Let's integrate a database.
+            Perfect! You now have a complete backend API with database storage. But your original frontend is still using localStorage. Let's replace localStorage with actual API calls to create a true client-server application.
           </p>
 
           <div className="explanation-box">
-            <div className="explanation-title">What is a Database?</div>
+            <div className="explanation-title">What We'll Build</div>
             <div className="explanation-text">
               <p className="mb-3">
-                A database is like a digital filing cabinet that stores, organizes, and retrieves information efficiently. Unlike files or arrays in memory, databases are designed for reliability, speed, and concurrent access by multiple users.
+                In this chapter, you'll make actual code changes to connect your frontend to the backend API. You'll see the complete data flow from button click to database storage.
               </p>
               <ul className="list-disc list-inside space-y-2">
-                <li><strong>Persistence:</strong> Data survives server restarts and system failures</li>
-                <li><strong>Concurrency:</strong> Multiple users can access data simultaneously</li>
-                <li><strong>ACID Properties:</strong> Atomicity, Consistency, Isolation, Durability</li>
-                <li><strong>Query Language:</strong> Structured ways to find and manipulate data</li>
+                <li><strong>Replace localStorage calls</strong> with HTTP API requests</li>
+                <li><strong>Add loading states</strong> to show users when requests are processing</li>
+                <li><strong>Handle errors gracefully</strong> when the network fails</li>
+                <li><strong>Show real-time updates</strong> from the shared database</li>
               </ul>
             </div>
           </div>
 
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h4 className="font-medium text-yellow-900 mb-3 text-lg flex items-center">
+              <RefreshCw className="w-5 h-5 mr-2" />
+              Real Development: Changing Requirements
+            </h4>
+            <p className="text-sm text-yellow-800 mb-3">
+              In real projects, requirements often change during development. The Ministry has just requested additional features:
+            </p>
+            <div className="bg-white p-4 rounded border-l-4 border-yellow-500">
+              <p className="text-sm text-yellow-700 mb-2">
+                <strong>New Requirement:</strong> "Users should see a loading indicator when tasks are being saved, and if the server is down, they should get a clear error message with a retry option."
+              </p>
+              <p className="text-xs text-yellow-600">
+                This is typical - stakeholders see the working system and realize they need better user feedback. As a BA, you'll need to understand how this impacts the technical implementation.
+              </p>
+            </div>
+          </div>
+
           <div className="ministry-header">
-            <h3 className="text-xl font-bold">Why the Ministry Needs a Database</h3>
+            <h3 className="text-xl font-bold">From Single-User to Multi-User</h3>
           </div>
           <div className="ministry-content">
             <p className="mb-4">
-              Government systems require enterprise-grade data management with audit trails, backup procedures, and regulatory compliance:
+              Here's what changes when you connect frontend to backend:
             </p>
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                <h4 className="font-medium text-red-900 mb-2">Current Issues</h4>
-                <ul className="text-sm text-red-800 space-y-1">
-                  <li>• Data lost on server restart</li>
-                  <li>• No data backup or recovery</li>
-                  <li>• No audit trail for changes</li>
-                  <li>• Cannot handle multiple users safely</li>
-                </ul>
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h4 className="font-medium text-blue-900 mb-2">Before: localStorage</h4>
+                <div className="bg-gray-800 text-white p-3 rounded text-sm font-mono">
+                  <div className="text-green-400">// Data stays on your computer</div>
+                  <div>localStorage.setItem('tasks', data)</div>
+                  <div>// Only you can see your tasks</div>
+                </div>
               </div>
               <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h4 className="font-medium text-green-900 mb-2">Database Benefits</h4>
-                <ul className="text-sm text-green-800 space-y-1">
-                  <li>• Permanent data storage</li>
-                  <li>• Automated backup and recovery</li>
-                  <li>• Transaction logging and audit trails</li>
-                  <li>• Safe concurrent access</li>
+                <h4 className="font-medium text-green-900 mb-2">After: API calls</h4>
+                <div className="bg-gray-800 text-white p-3 rounded text-sm font-mono">
+                  <div className="text-green-400">// Data saved to shared database</div>
+                  <div>fetch('/api/tasks', {'{method: "POST"}'}</div>
+                  <div className="text-green-400">// Everyone sees the same data</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: Integration Requirements
+            </div>
+            <div className="concept-text space-y-4">
+              <p>
+                Integration requirements are complex because they span multiple systems and involve numerous failure points. Understanding the complete technical flow helps you write requirements that address all the necessary scenarios for reliable system integration.
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Simple Requirement → Complex Implementation:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <div><strong>BA Writes:</strong> "Users should be able to collaborate on tasks"</div>
+                    <div><strong>Technical Reality:</strong> Frontend ↔ API ↔ Database integration with error handling</div>
+                    <div><strong>Hidden Complexity:</strong> Network failures, concurrent updates, data synchronization</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <div><strong>Better Requirement:</strong> "Multiple users can view and update shared tasks with real-time synchronization"</div>
+                    <div><strong>Includes:</strong> Loading states, error recovery, conflict resolution, offline handling</div>
+                    <div><strong>Acceptance Criteria:</strong> Specific scenarios for success, failure, and edge cases</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Integration Requirements Checklist:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Happy Path:</strong> What happens when everything works perfectly?</div>
+                  <div><strong>Error Scenarios:</strong> Network failures, server errors, invalid data, timeouts</div>
+                  <div><strong>Loading States:</strong> How does the UI behave during processing?</div>
+                  <div><strong>Data Consistency:</strong> How do you handle concurrent updates from multiple users?</div>
+                  <div><strong>Performance:</strong> Response time expectations, acceptable delays</div>
+                  <div><strong>Recovery:</strong> How does the system handle failures and retry operations?</div>
+                </div>
+              </div>
+
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-purple-900 mb-2">Real-World Integration Challenges:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Network Reliability:</strong> Internet connections fail, APIs go down, requests timeout</div>
+                  <div><strong>Data Conflicts:</strong> Two users edit the same record simultaneously</div>
+                  <div><strong>Security Concerns:</strong> Authentication, authorization, data encryption in transit</div>
+                  <div><strong>Scalability:</strong> System behavior under high load or rapid growth</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
+            <h3 className="text-lg font-bold mb-3">Chapter Objective</h3>
+            <p>
+              In this chapter, you'll make actual code changes to replace localStorage with API calls. You'll see the complete journey from button click to database storage, including error handling and loading states.
+            </p>
+          </div>
+
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
+            <h4 className="font-medium text-yellow-800 mb-2">Hands-On Integration</h4>
+            <p className="text-yellow-700 text-sm">
+              This chapter includes actual coding exercises. You'll modify real code to see how frontend-backend integration works in practice. Each exercise shows the before and after code with explanations.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'replace-load-tasks',
+      title: 'Exercise 1: Replace loadTasks() with GET /api/tasks',
+      type: 'coding',
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold text-gray-900">Exercise 1: Loading Tasks from the Database</h3>
+          
+          <div className="ministry-content">
+            <p className="mb-4">
+              Currently, your frontend loads tasks from localStorage when the page loads. Let's replace this with an API call to fetch tasks from the shared database.
+            </p>
+          </div>
+
+          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+            <h4 className="font-medium text-red-900 mb-3">❌ Before: localStorage (Single User)</h4>
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              <div className="text-green-400">// This code loads tasks from browser storage</div>
+              <div className="text-green-400">// Only YOU can see these tasks</div>
+              <br />
+              <div><span className="text-blue-400">const</span> <span className="text-yellow-400">loadTasks</span> = () {'=>'} {'{'}</div>
+              <div>  <span className="text-blue-400">const</span> <span className="text-yellow-400">saved</span> = <span className="text-purple-400">localStorage</span>.<span className="text-yellow-400">getItem</span>(<span className="text-green-300">'tasks'</span>)</div>
+              <div>  <span className="text-blue-400">if</span> (<span className="text-yellow-400">saved</span>) {'{'}</div>
+              <div>    <span className="text-blue-400">return</span> <span className="text-purple-400">JSON</span>.<span className="text-yellow-400">parse</span>(<span className="text-yellow-400">saved</span>)</div>
+              <div>  {'}'}</div>
+              <div>  <span className="text-blue-400">return</span> []</div>
+              <div>{'}'}</div>
+              <br />
+              <div className="text-green-400">// Called when page loads</div>
+              <div><span className="text-blue-400">const</span> <span className="text-yellow-400">tasks</span> = <span className="text-yellow-400">loadTasks</span>()</div>
+            </div>
+          </div>
+
+          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+            <h4 className="font-medium text-green-900 mb-3">✅ After: API Call (Multi-User)</h4>
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              <div className="text-green-400">// This code loads tasks from shared database</div>
+              <div className="text-green-400">// EVERYONE sees the same tasks</div>
+              <br />
+              <div><span className="text-blue-400">const</span> <span className="text-yellow-400">loadTasks</span> = <span className="text-blue-400">async</span> () {'=>'} {'{'}</div>
+              <div>  <span className="text-blue-400">try</span> {'{'}</div>
+              <div>    <span className="text-blue-400">const</span> <span className="text-yellow-400">response</span> = <span className="text-blue-400">await</span> <span className="text-yellow-400">fetch</span>(<span className="text-green-300">'/api/tasks'</span>)</div>
+              <div>    <span className="text-blue-400">if</span> (!<span className="text-yellow-400">response</span>.<span className="text-yellow-400">ok</span>) {'{'}</div>
+              <div>      <span className="text-blue-400">throw</span> <span className="text-blue-400">new</span> <span className="text-yellow-400">Error</span>(<span className="text-green-300">'Failed to load tasks'</span>)</div>
+              <div>    {'}'}</div>
+              <div>    <span className="text-blue-400">const</span> <span className="text-yellow-400">tasks</span> = <span className="text-blue-400">await</span> <span className="text-yellow-400">response</span>.<span className="text-yellow-400">json</span>()</div>
+              <div>    <span className="text-blue-400">return</span> <span className="text-yellow-400">tasks</span></div>
+              <div>  {'}'} <span className="text-blue-400">catch</span> (<span className="text-yellow-400">error</span>) {'{'}</div>
+              <div>    <span className="text-purple-400">console</span>.<span className="text-yellow-400">error</span>(<span className="text-green-300">'Error loading tasks:'</span>, <span className="text-yellow-400">error</span>)</div>
+              <div>    <span className="text-blue-400">return</span> [] <span className="text-green-400">// Return empty array if failed</span></div>
+              <div>  {'}'}</div>
+              <div>{'}'}</div>
+              <br />
+              <div className="text-green-400">// Called when page loads (now async)</div>
+              <div><span className="text-blue-400">const</span> <span className="text-yellow-400">tasks</span> = <span className="text-blue-400">await</span> <span className="text-yellow-400">loadTasks</span>()</div>
+            </div>
+          </div>
+
+          <div className="explanation-box">
+            <div className="explanation-title">What Changed?</div>
+            <div className="explanation-text">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-medium mb-2">Key Changes:</h5>
+                  <ul className="text-sm space-y-1">
+                    <li>• Function is now <code>async</code> (asynchronous)</li>
+                    <li>• Uses <code>fetch()</code> instead of <code>localStorage</code></li>
+                    <li>• Calls <code>GET /api/tasks</code> endpoint</li>
+                    <li>• Includes error handling with <code>try/catch</code></li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium mb-2">Business Impact:</h5>
+                  <ul className="text-sm space-y-1">
+                    <li>• All users see the same tasks</li>
+                    <li>• Tasks persist across devices</li>
+                    <li>• Real-time collaboration possible</li>
+                    <li>• Graceful handling of network issues</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <Code className="w-5 h-5 mr-2" />
+              Data Flow: Button Click to Database
+            </div>
+            <div className="concept-text">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h5 className="font-medium mb-2">Complete Data Journey:</h5>
+                <div className="text-sm space-y-2">
+                  <div>1. <strong>Page loads</strong> → <code>loadTasks()</code> called</div>
+                  <div>2. <strong>Browser</strong> → <code>GET /api/tasks</code> → <strong>Your Server</strong></div>
+                  <div>3. <strong>Server</strong> → <code>SELECT * FROM tasks</code> → <strong>Database</strong></div>
+                  <div>4. <strong>Database</strong> → Returns task data → <strong>Server</strong></div>
+                  <div>5. <strong>Server</strong> → Returns JSON → <strong>Browser</strong></div>
+                  <div>6. <strong>Browser</strong> → Displays tasks to user</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'replace-add-task',
+      title: 'Exercise 2: Replace addTask() with POST /api/tasks',
+      type: 'coding',
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold text-gray-900">Exercise 2: Adding Tasks to the Database</h3>
+          
+          <div className="ministry-content">
+            <p className="mb-4">
+              When a user clicks "Add Task," your frontend currently saves to localStorage. Let's replace this with an API call that saves to the shared database and shows loading states.
+            </p>
+          </div>
+
+          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+            <h4 className="font-medium text-red-900 mb-3">❌ Before: localStorage (Single User)</h4>
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              <div className="text-green-400">// This code saves tasks to browser storage</div>
+              <div className="text-green-400">// Only YOU can see these tasks</div>
+              <br />
+              <div><span className="text-blue-400">const</span> <span className="text-yellow-400">addTask</span> = (<span className="text-yellow-400">taskText</span>) {'=>'} {'{'}</div>
+              <div>  <span className="text-blue-400">const</span> <span className="text-yellow-400">newTask</span> = {'{'}</div>
+              <div>    <span className="text-yellow-400">id</span>: <span className="text-purple-400">Date</span>.<span className="text-yellow-400">now</span>(),</div>
+              <div>    <span className="text-yellow-400">text</span>: <span className="text-yellow-400">taskText</span>,</div>
+              <div>    <span className="text-yellow-400">completed</span>: <span className="text-blue-400">false</span></div>
+              <div>  {'}'}</div>
+              <div>  </div>
+              <div>  <span className="text-blue-400">const</span> <span className="text-yellow-400">tasks</span> = <span className="text-yellow-400">loadTasks</span>()</div>
+              <div>  <span className="text-yellow-400">tasks</span>.<span className="text-yellow-400">push</span>(<span className="text-yellow-400">newTask</span>)</div>
+              <div>  <span className="text-purple-400">localStorage</span>.<span className="text-yellow-400">setItem</span>(<span className="text-green-300">'tasks'</span>, <span className="text-purple-400">JSON</span>.<span className="text-yellow-400">stringify</span>(<span className="text-yellow-400">tasks</span>))</div>
+              <div>{'}'}</div>
+              <br />
+              <div className="text-green-400">// Called when button clicked</div>
+              <div><span className="text-yellow-400">addTask</span>(<span className="text-green-300">'Review planning application'</span>)</div>
+            </div>
+          </div>
+
+          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+            <h4 className="font-medium text-green-900 mb-3">✅ After: API Call with Loading States</h4>
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              <div className="text-green-400">// This code saves tasks to shared database</div>
+              <div className="text-green-400">// EVERYONE sees the same tasks</div>
+              <br />
+              <div><span className="text-blue-400">const</span> <span className="text-yellow-400">addTask</span> = <span className="text-blue-400">async</span> (<span className="text-yellow-400">taskText</span>) {'=>'} {'{'}</div>
+              <div>  <span className="text-green-400">// 1. Show loading state</span></div>
+              <div>  <span className="text-yellow-400">setIsLoading</span>(<span className="text-blue-400">true</span>)</div>
+              <div>  <span className="text-yellow-400">setError</span>(<span className="text-blue-400">null</span>)</div>
+              <div>  </div>
+              <div>  <span className="text-blue-400">try</span> {'{'}</div>
+              <div>    <span className="text-green-400">// 2. Prepare task data</span></div>
+              <div>    <span className="text-blue-400">const</span> <span className="text-yellow-400">newTask</span> = {'{'}</div>
+              <div>      <span className="text-yellow-400">text</span>: <span className="text-yellow-400">taskText</span>,</div>
+              <div>      <span className="text-yellow-400">completed</span>: <span className="text-blue-400">false</span></div>
+              <div>    {'}'}</div>
+              <div>    </div>
+              <div>    <span className="text-green-400">// 3. Send to database</span></div>
+              <div>    <span className="text-blue-400">const</span> <span className="text-yellow-400">response</span> = <span className="text-blue-400">await</span> <span className="text-yellow-400">fetch</span>(<span className="text-green-300">'/api/tasks'</span>, {'{'}</div>
+              <div>      <span className="text-yellow-400">method</span>: <span className="text-green-300">'POST'</span>,</div>
+              <div>      <span className="text-yellow-400">headers</span>: {'{'}</div>
+              <div>        <span className="text-green-300">'Content-Type'</span>: <span className="text-green-300">'application/json'</span></div>
+              <div>      {'}'},</div>
+              <div>      <span className="text-yellow-400">body</span>: <span className="text-purple-400">JSON</span>.<span className="text-yellow-400">stringify</span>(<span className="text-yellow-400">newTask</span>)</div>
+              <div>    {'}'})</div>
+              <div>    </div>
+              <div>    <span className="text-blue-400">if</span> (!<span className="text-yellow-400">response</span>.<span className="text-yellow-400">ok</span>) {'{'}</div>
+              <div>      <span className="text-blue-400">throw</span> <span className="text-blue-400">new</span> <span className="text-yellow-400">Error</span>(<span className="text-green-300">'Failed to add task'</span>)</div>
+              <div>    {'}'}</div>
+              <div>    </div>
+              <div>    <span className="text-green-400">// 4. Reload tasks to show updated list</span></div>
+              <div>    <span className="text-blue-400">await</span> <span className="text-yellow-400">loadTasks</span>()</div>
+              <div>    </div>
+              <div>  {'}'} <span className="text-blue-400">catch</span> (<span className="text-yellow-400">error</span>) {'{'}</div>
+              <div>    <span className="text-green-400">// 5. Show error to user</span></div>
+              <div>    <span className="text-yellow-400">setError</span>(<span className="text-green-300">'Failed to add task. Please try again.'</span>)</div>
+              <div>    <span className="text-purple-400">console</span>.<span className="text-yellow-400">error</span>(<span className="text-green-300">'Error adding task:'</span>, <span className="text-yellow-400">error</span>)</div>
+              <div>  {'}'} <span className="text-blue-400">finally</span> {'{'}</div>
+              <div>    <span className="text-green-400">// 6. Hide loading state</span></div>
+              <div>    <span className="text-yellow-400">setIsLoading</span>(<span className="text-blue-400">false</span>)</div>
+              <div>  {'}'}</div>
+              <div>{'}'}</div>
+            </div>
+          </div>
+
+          <div className="explanation-box">
+            <div className="explanation-title">What Changed?</div>
+            <div className="explanation-text">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-medium mb-2">Technical Changes:</h5>
+                  <ul className="text-sm space-y-1">
+                    <li>• Function is now <code>async</code></li>
+                    <li>• Uses <code>POST /api/tasks</code> instead of localStorage</li>
+                    <li>• Includes loading states (<code>setIsLoading</code>)</li>
+                    <li>• Proper error handling with user feedback</li>
+                    <li>• Refreshes task list after adding</li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium mb-2">User Experience:</h5>
+                  <ul className="text-sm space-y-1">
+                    <li>• Button shows "Adding..." while processing</li>
+                    <li>• Clear error messages if something fails</li>
+                    <li>• Task appears immediately for all users</li>
+                    <li>• Prevents duplicate submissions</li>
+                    <li>• Graceful recovery from network issues</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <Zap className="w-5 h-5 mr-2" />
+              Complete User Flow: Add Task
+            </div>
+            <div className="concept-text">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h5 className="font-medium mb-2">What happens when John Cleese adds a task:</h5>
+                <div className="text-sm space-y-2">
+                  <div>1. <strong>John clicks "Add Task"</strong> → Button shows "Adding..."</div>
+                  <div>2. <strong>Browser</strong> → <code>POST /api/tasks</code> → <strong>Server</strong></div>
+                  <div>3. <strong>Server</strong> → <code>INSERT INTO tasks</code> → <strong>Database</strong></div>
+                  <div>4. <strong>Database</strong> → Task saved with ID → <strong>Server</strong></div>
+                  <div>5. <strong>Server</strong> → Success response → <strong>Browser</strong></div>
+                  <div>6. <strong>Browser</strong> → Reloads task list → <strong>All users see new task</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <h4 className="font-medium text-yellow-800 mb-2">BA Requirements Connection</h4>
+            <p className="text-yellow-700 text-sm">
+              When you write "the system should provide immediate feedback when users add tasks," you're defining these loading states and error handling requirements. Understanding this technical implementation helps you write more specific acceptance criteria about user experience during API operations.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'replace-delete-task',
+      title: 'Exercise 3: Complete Integration with DELETE /api/tasks/:id',
+      type: 'coding',
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold text-gray-900">Exercise 3: Deleting Tasks and Error Handling</h3>
+          
+          <div className="ministry-content">
+            <p className="mb-4">
+              Let's complete the integration by replacing task deletion with an API call and adding comprehensive error handling that shows users exactly what's happening.
+            </p>
+          </div>
+
+          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+            <h4 className="font-medium text-red-900 mb-3">❌ Before: localStorage (Single User)</h4>
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              <div className="text-green-400">// This code removes tasks from browser storage</div>
+              <div className="text-green-400">// Only affects YOUR local copy</div>
+              <br />
+              <div><span className="text-blue-400">const</span> <span className="text-yellow-400">deleteTask</span> = (<span className="text-yellow-400">taskId</span>) {'=>'} {'{'}</div>
+              <div>  <span className="text-blue-400">const</span> <span className="text-yellow-400">tasks</span> = <span className="text-yellow-400">loadTasks</span>()</div>
+              <div>  <span className="text-blue-400">const</span> <span className="text-yellow-400">filtered</span> = <span className="text-yellow-400">tasks</span>.<span className="text-yellow-400">filter</span>(<span className="text-yellow-400">task</span> {'=>'} <span className="text-yellow-400">task</span>.<span className="text-yellow-400">id</span> !== <span className="text-yellow-400">taskId</span>)</div>
+              <div>  <span className="text-purple-400">localStorage</span>.<span className="text-yellow-400">setItem</span>(<span className="text-green-300">'tasks'</span>, <span className="text-purple-400">JSON</span>.<span className="text-yellow-400">stringify</span>(<span className="text-yellow-400">filtered</span>))</div>
+              <div>{'}'}</div>
+            </div>
+          </div>
+
+          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+            <h4 className="font-medium text-green-900 mb-3">✅ After: API Call with Complete Error Handling</h4>
+            <div className="bg-gray-800 text-white p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              <div className="text-green-400">// This code deletes tasks from shared database</div>
+              <div className="text-green-400">// Affects ALL users - they won't see the task anymore</div>
+              <br />
+              <div><span className="text-blue-400">const</span> <span className="text-yellow-400">deleteTask</span> = <span className="text-blue-400">async</span> (<span className="text-yellow-400">taskId</span>) {'=>'} {'{'}</div>
+              <div>  <span className="text-green-400">// 1. Show loading state</span></div>
+              <div>  <span className="text-yellow-400">setIsDeleting</span>(<span className="text-yellow-400">taskId</span>) <span className="text-green-400">// Show spinner on this specific task</span></div>
+              <div>  <span className="text-yellow-400">setError</span>(<span className="text-blue-400">null</span>)</div>
+              <div>  </div>
+              <div>  <span className="text-blue-400">try</span> {'{'}</div>
+              <div>    <span className="text-green-400">// 2. Send delete request</span></div>
+              <div>    <span className="text-blue-400">const</span> <span className="text-yellow-400">response</span> = <span className="text-blue-400">await</span> <span className="text-yellow-400">fetch</span>(<span className="text-green-300">`/api/tasks/${'{'}<span className="text-yellow-400">taskId</span>{'}'}`</span>, {'{'}</div>
+              <div>      <span className="text-yellow-400">method</span>: <span className="text-green-300">'DELETE'</span></div>
+              <div>    {'}'})</div>
+              <div>    </div>
+              <div>    <span className="text-green-400">// 3. Handle different types of errors</span></div>
+              <div>    <span className="text-blue-400">if</span> (<span className="text-yellow-400">response</span>.<span className="text-yellow-400">status</span> === <span className="text-purple-400">404</span>) {'{'}</div>
+              <div>      <span className="text-yellow-400">setError</span>(<span className="text-green-300">'Task not found - it may have been deleted by another user'</span>)</div>
+              <div>      <span className="text-blue-400">return</span></div>
+              <div>    {'}'}</div>
+              <div>    </div>
+              <div>    <span className="text-blue-400">if</span> (<span className="text-yellow-400">response</span>.<span className="text-yellow-400">status</span> === <span className="text-purple-400">403</span>) {'{'}</div>
+              <div>      <span className="text-yellow-400">setError</span>(<span className="text-green-300">'Permission denied - you cannot delete this task'</span>)</div>
+              <div>      <span className="text-blue-400">return</span></div>
+              <div>    {'}'}</div>
+              <div>    </div>
+              <div>    <span className="text-blue-400">if</span> (!<span className="text-yellow-400">response</span>.<span className="text-yellow-400">ok</span>) {'{'}</div>
+              <div>      <span className="text-blue-400">throw</span> <span className="text-blue-400">new</span> <span className="text-yellow-400">Error</span>(<span className="text-green-300">'Server error - please try again'</span>)</div>
+              <div>    {'}'}</div>
+              <div>    </div>
+              <div>    <span className="text-green-400">// 4. Success - reload tasks to show updated list</span></div>
+              <div>    <span className="text-blue-400">await</span> <span className="text-yellow-400">loadTasks</span>()</div>
+              <div>    <span className="text-yellow-400">setSuccessMessage</span>(<span className="text-green-300">'Task deleted successfully'</span>)</div>
+              <div>    </div>
+              <div>  {'}'} <span className="text-blue-400">catch</span> (<span className="text-yellow-400">error</span>) {'{'}</div>
+              <div>    <span className="text-green-400">// 5. Handle network errors</span></div>
+              <div>    <span className="text-blue-400">if</span> (<span className="text-yellow-400">error</span>.<span className="text-yellow-400">name</span> === <span className="text-green-300">'NetworkError'</span>) {'{'}</div>
+              <div>      <span className="text-yellow-400">setError</span>(<span className="text-green-300">'Network error - please check your connection'</span>)</div>
+              <div>    {'}'} <span className="text-blue-400">else</span> {'{'}</div>
+              <div>      <span className="text-yellow-400">setError</span>(<span className="text-green-300">'Failed to delete task. Please try again.'</span>)</div>
+              <div>    {'}'}</div>
+              <div>    <span className="text-purple-400">console</span>.<span className="text-yellow-400">error</span>(<span className="text-green-300">'Delete error:'</span>, <span className="text-yellow-400">error</span>)</div>
+              <div>    </div>
+              <div>  {'}'} <span className="text-blue-400">finally</span> {'{'}</div>
+              <div>    <span className="text-green-400">// 6. Hide loading state</span></div>
+              <div>    <span className="text-yellow-400">setIsDeleting</span>(<span className="text-blue-400">null</span>)</div>
+              <div>  {'}'}</div>
+              <div>{'}'}</div>
+            </div>
+          </div>
+
+          <div className="explanation-box">
+            <div className="explanation-title">Advanced Error Handling</div>
+            <div className="explanation-text">
+              <p className="mb-3">
+                Notice how the API version handles different types of errors with specific user messages:
+              </p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h5 className="font-medium mb-2">Error Types:</h5>
+                  <ul className="text-sm space-y-1">
+                    <li>• <strong>404:</strong> Task not found (deleted by another user)</li>
+                    <li>• <strong>403:</strong> Permission denied (insufficient access)</li>
+                    <li>• <strong>500:</strong> Server error (try again)</li>
+                    <li>• <strong>Network:</strong> Connection issues</li>
+                  </ul>
+                </div>
+                <div>
+                  <h5 className="font-medium mb-2">User Experience:</h5>
+                  <ul className="text-sm space-y-1">
+                    <li>• Specific error messages for each scenario</li>
+                    <li>• Loading spinner on the specific task</li>
+                    <li>• Success confirmation when completed</li>
+                    <li>• Automatic retry suggestions</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <h4 className="font-medium text-blue-900 mb-3">Complete Integration Summary</h4>
+            <p className="text-blue-800 mb-3">
+              You've now replaced all localStorage operations with API calls:
+            </p>
+            <div className="grid md:grid-cols-3 gap-4 text-sm">
+              <div className="bg-white p-3 rounded border">
+                <div className="font-medium text-blue-900">Load Tasks</div>
+                <div className="text-blue-700">GET /api/tasks</div>
+                <div className="text-gray-600">Fetch all tasks from database</div>
+              </div>
+              <div className="bg-white p-3 rounded border">
+                <div className="font-medium text-blue-900">Add Task</div>
+                <div className="text-blue-700">POST /api/tasks</div>
+                <div className="text-gray-600">Create new task in database</div>
+              </div>
+              <div className="bg-white p-3 rounded border">
+                <div className="font-medium text-blue-900">Delete Task</div>
+                <div className="text-blue-700">DELETE /api/tasks/:id</div>
+                <div className="text-gray-600">Remove task from database</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="concept-callout">
+            <div className="concept-title">
+              <Globe className="w-5 h-5 mr-2" />
+              Real-World Scenario: Multi-User Collaboration
+            </div>
+            <div className="concept-text">
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h5 className="font-medium mb-2">What happens in the real world:</h5>
+                <div className="text-sm space-y-2">
+                  <div>1. <strong>John Cleese</strong> creates task "Review planning application"</div>
+                  <div>2. <strong>Terry Jones</strong> sees the task immediately (shared database)</div>
+                  <div>3. <strong>Terry</strong> starts working on it (could add a "in progress" status)</div>
+                  <div>4. <strong>John</strong> refreshes and sees Terry's progress</div>
+                  <div>5. <strong>Both users</strong> have consistent, up-to-date information</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
+            <h4 className="text-lg font-bold mb-3">Chapter Complete!</h4>
+            <p className="mb-3">
+              You've successfully transformed your application from single-user localStorage to a multi-user system with:
+            </p>
+            <ul className="text-sm space-y-1">
+              <li>• <strong>Real API integration</strong> - GET, POST, DELETE operations</li>
+              <li>• <strong>Comprehensive error handling</strong> - Network, business logic, and user errors</li>
+              <li>• <strong>Loading states</strong> - Visual feedback during API operations</li>
+              <li>• <strong>Multi-user collaboration</strong> - Shared data across all users</li>
+              <li>• <strong>Enterprise architecture</strong> - Scalable client-server design</li>
+            </ul>
+            <p className="mt-4 text-sm opacity-90">
+              As a BA, you now understand exactly what happens when users interact with integrated systems. This knowledge helps you write precise requirements about API behavior, error handling, and user experience.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'iterative-development',
+      title: 'Step 1: Handling Changing Requirements',
+      type: 'explanation',
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold text-gray-900">Real Development: Requirements Evolution</h3>
+          
+          <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+            <h4 className="font-medium text-blue-900 mb-3 text-lg">Initial Requirements vs. Reality</h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded border-l-4 border-blue-500">
+                <h5 className="font-medium text-blue-800 mb-2">What We Started With:</h5>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• "Users should be able to create tasks"</li>
+                  <li>• "Tasks should be saved permanently"</li>
+                  <li>• "Multiple users should see the same data"</li>
+                  <li>• "Basic error handling"</li>
+                </ul>
+              </div>
+              <div className="bg-white p-4 rounded border-l-4 border-green-500">
+                <h5 className="font-medium text-green-800 mb-2">What Stakeholders Want Now:</h5>
+                <ul className="text-sm text-green-700 space-y-1">
+                  <li>• "Show loading indicators during saves"</li>
+                  <li>• "Clear error messages with retry options"</li>
+                  <li>• "Prevent duplicate submissions"</li>
+                  <li>• "Offline mode with sync when back online"</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
+            <h4 className="font-medium text-yellow-900 mb-3 text-lg flex items-center">
+              <RefreshCw className="w-5 h-5 mr-2" />
+              Why Requirements Change
+            </h4>
+            <div className="space-y-4">
+              <div>
+                <h5 className="font-medium text-yellow-800 mb-2">Common Reasons:</h5>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li>• <strong>User Testing:</strong> Users discover pain points when actually using the system</li>
+                  <li>• <strong>Technical Constraints:</strong> Implementation reveals limitations not considered initially</li>
+                  <li>• <strong>Business Environment:</strong> External factors change business priorities</li>
+                  <li>• <strong>Stakeholder Learning:</strong> Seeing the working system helps stakeholders understand what's possible</li>
+                </ul>
+              </div>
+              <div className="bg-white p-3 rounded border-l-4 border-yellow-500">
+                <p className="text-sm text-yellow-700">
+                  <strong>Ministry Example:</strong> After seeing the working task system, John Cleese realizes that when the network is slow, users might click "Add Task" multiple times, creating duplicate tasks. This wasn't in the original requirements because it only becomes apparent when the system is actually used.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
+            <h4 className="font-medium text-purple-900 mb-3 text-lg">Iterative Development Process</h4>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded">
+                <h5 className="font-medium text-purple-800 mb-2">Phase 1: Build Core Functionality</h5>
+                <p className="text-sm text-purple-700 mb-2">Focus on essential features that prove the concept works:</p>
+                <ul className="text-xs text-purple-600 space-y-1">
+                  <li>✓ Basic task creation and display</li>
+                  <li>✓ API connectivity</li>
+                  <li>✓ Database persistence</li>
+                </ul>
+              </div>
+              <div className="bg-white p-4 rounded">
+                <h5 className="font-medium text-purple-800 mb-2">Phase 2: User Feedback & Refinement</h5>
+                <p className="text-sm text-purple-700 mb-2">Stakeholders use the system and identify improvements:</p>
+                <ul className="text-xs text-purple-600 space-y-1">
+                  <li>"I clicked add task but nothing happened - turns out it was just slow"</li>
+                  <li>"When the server is down, I get a confusing error message"</li>
+                  <li>"I accidentally created the same task twice"</li>
+                </ul>
+              </div>
+              <div className="bg-white p-4 rounded">
+                <h5 className="font-medium text-purple-800 mb-2">Phase 3: Enhanced Implementation</h5>
+                <p className="text-sm text-purple-700 mb-2">Address the feedback with better user experience:</p>
+                <ul className="text-xs text-purple-600 space-y-1">
+                  <li>Add loading indicators and disable buttons during operations</li>
+                  <li>Implement user-friendly error messages with retry options</li>
+                  <li>Prevent duplicate submissions with request debouncing</li>
                 </ul>
               </div>
             </div>
@@ -85,663 +672,82 @@ export default function Chapter6() {
 
           <div className="concept-callout">
             <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
-              BA Insight: Data Architecture
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
+              BA Insight: Managing Integration Changes
             </div>
-            <p className="concept-text">
-              When you write requirements about "data retention," "audit trails," or "system reliability," you're defining database needs. Understanding concepts like transactions, schemas, and queries helps you write more precise data requirements and have informed discussions about system architecture and compliance needs.
-            </p>
+            <div className="concept-text space-y-4">
+              <p>
+                Integration projects generate more change requests than any other type of development because users don't understand the full implications until they see the working system. Proactive change management is essential for project success.
+              </p>
+              
+              <div className="bg-amber-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-amber-900 mb-2">Common Integration Change Requests:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-amber-500 pl-3">
+                    <div><strong>After Demo:</strong> "Can we show who's currently working on each task?"</div>
+                    <div><strong>Impact:</strong> Requires user activity tracking, real-time updates, additional database fields</div>
+                    <div><strong>BA Response:</strong> Scope vs nice-to-have analysis, cost/benefit assessment</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-red-500 pl-3">
+                    <div><strong>User Feedback:</strong> "The system feels slow when multiple people are working"</div>
+                    <div><strong>Impact:</strong> Performance optimization, caching, infrastructure scaling</div>
+                    <div><strong>BA Response:</strong> Define performance requirements, establish SLAs</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Proactive Change Management Strategy:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Early Prototyping:</strong> Build minimal working integrations to surface issues early</div>
+                  <div><strong>User Journey Mapping:</strong> Walk through complete scenarios to identify gaps</div>
+                  <div><strong>Performance Baseline:</strong> Establish clear expectations for response times and reliability</div>
+                  <div><strong>Escalation Procedures:</strong> Define how to handle conflicts between business needs and technical constraints</div>
+                  <div><strong>Change Impact Assessment:</strong> Standard framework for evaluating modification requests</div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">BA Tools for Managing Integration Changes:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Change Log:</strong> Track all modifications with business justification and technical impact</div>
+                  <div><strong>Stakeholder Matrix:</strong> Who needs to approve different types of changes?</div>
+                  <div><strong>Cost Estimation:</strong> Work with development team to quantify change requests</div>
+                  <div><strong>Priority Framework:</strong> Critical vs nice-to-have vs future enhancement categorization</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objective</h3>
-            <p>
-              In this chapter, you'll integrate SQLite database with your API, learn about database schemas, and understand how enterprise data management works. You'll see how business requirements translate into database design decisions.
-            </p>
+          <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+            <h4 className="font-medium text-green-900 mb-3 text-lg">Writing Requirements for Change</h4>
+            <div className="space-y-3">
+              <div>
+                <h5 className="font-medium text-green-800 mb-2">Instead of:</h5>
+                <div className="bg-white p-3 rounded border-l-4 border-red-500">
+                  <p className="text-sm text-red-700">"Users should be able to create tasks"</p>
+                </div>
+              </div>
+              <div>
+                <h5 className="font-medium text-green-800 mb-2">Write:</h5>
+                <div className="bg-white p-3 rounded border-l-4 border-green-500">
+                  <p className="text-sm text-green-700 mb-2">
+                    "When a user submits a new task, the system should:
+                  </p>
+                  <ul className="text-xs text-green-600 space-y-1">
+                    <li>• Show a loading indicator while the request is processing</li>
+                    <li>• Disable the submit button to prevent duplicate submissions</li>
+                    <li>• Display a success message when the task is created</li>
+                    <li>• Show a user-friendly error message with retry option if the request fails</li>
+                    <li>• Validate input before sending to prevent unnecessary server calls"</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )
-    },
-    {
-      id: 'setup-database',
-      title: 'Step 1: Setting Up SQLite Database',
-      type: 'coding',
-      exercise: {
-        title: 'Add Database Configuration',
-        description: 'We\'ll add SQLite database integration to our API server, replacing the in-memory array with persistent storage.',
-        instructions: [
-          'Install and configure SQLite database package',
-          'Create a database initialization function',
-          'Set up the tasks table with appropriate columns',
-          'Add database connection to the server startup'
-        ],
-        language: 'typescript' as const,
-        codeBlock: {
-          code: `const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
-// Database setup
-const dbPath = path.join(__dirname, 'ministry_tasks.db');
-const db = new sqlite3.Database(dbPath);
-
-// Initialize database
-function initializeDatabase() {
-  return new Promise((resolve, reject) => {
-    db.serialize(() => {
-      // Create tasks table
-      db.run(\`
-        CREATE TABLE IF NOT EXISTS tasks (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT NOT NULL,
-          description TEXT,
-          assignedTo TEXT,
-          completed BOOLEAN DEFAULT 0,
-          createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-          updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-      \`, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          // Insert sample data if table is empty
-          db.get("SELECT COUNT(*) as count FROM tasks", (err, row) => {
-            if (err) {
-              reject(err);
-            } else if (row.count === 0) {
-              db.run(\`
-                INSERT INTO tasks (title, description, assignedTo) 
-                VALUES (?, ?, ?)
-              \`, [
-                "Evaluate Mr. Smith's Silly Walk Application",
-                "Review submitted video and assess walk silliness level.",
-                "John Cleese"
-              ], (err) => {
-                if (err) reject(err);
-                else resolve();
-              });
-            } else {
-              resolve();
-            }
-          });
-        }
-      });
-    });
-  });
-}`,
-          explanations: [
-            {
-              line: "const sqlite3 = require('sqlite3').verbose();",
-              explanation: "Import SQLite database library for Node.js with verbose error reporting enabled.",
-              businessContext: "SQLite is perfect for learning and small applications - it's a file-based database that doesn't require a separate server."
-            },
-            {
-              line: "const db = new sqlite3.Database(dbPath);",
-              explanation: "Create a database connection to a file called 'ministry_tasks.db' in the current directory.",
-              businessContext: "This creates a persistent database file that will survive server restarts, solving the data loss problem."
-            },
-            {
-              line: "CREATE TABLE IF NOT EXISTS tasks (...)",
-              explanation: "Define the structure of the tasks table with columns for all our task properties.",
-              businessContext: "This creates the data schema - the blueprint for how task information is organized and stored."
-            },
-            {
-              line: "id INTEGER PRIMARY KEY AUTOINCREMENT",
-              explanation: "Create an auto-incrementing ID column that uniquely identifies each task.",
-              businessContext: "Every task gets a unique identifier automatically, enabling precise tracking and updates."
-            },
-            {
-              line: "createdAt DATETIME DEFAULT CURRENT_TIMESTAMP",
-              explanation: "Automatically record when each task was created, providing an audit trail.",
-              businessContext: "This implements the requirement for 'audit trails' - tracking when tasks were added to the system."
-            }
-          ]
-        },
-        startingCode: `const express = require('express');
-const cors = require('cors');
-// Step 1: Add database imports here
-// const sqlite3 = require('sqlite3').verbose();
-// const path = require('path');
-
-const app = express();
-const PORT = 3000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Step 1: Add database setup here
-// const dbPath = path.join(__dirname, 'ministry_tasks.db');
-// const db = new sqlite3.Database(dbPath);
-
-// In-memory task storage (to be replaced)
-let tasks = [
-  {
-    id: 1,
-    title: "Evaluate Mr. Smith's Silly Walk Application",
-    description: "Review submitted video and assess walk silliness level.",
-    assignedTo: "John Cleese",
-    completed: false
-  }
-];
-
-// Step 1: Add database initialization function here
-
-// Routes (to be updated in next steps)
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Ministry of Silly Walks Task Management API',
-    version: '1.0.0 - Now with Database!',
-    database: 'SQLite'
-  });
-});
-
-// Start server
-// Step 1: Add database initialization before starting server
-app.listen(PORT, () => {
-  console.log(\`Server running on http://localhost:\${PORT}\`);
-});`,
-        targetCode: `const express = require('express');
-const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
-const app = express();
-const PORT = 3000;
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Database setup
-const dbPath = path.join(__dirname, 'ministry_tasks.db');
-const db = new sqlite3.Database(dbPath);
-
-// Initialize database
-function initializeDatabase() {
-  return new Promise((resolve, reject) => {
-    db.serialize(() => {
-      // Create tasks table
-      db.run(\`
-        CREATE TABLE IF NOT EXISTS tasks (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT NOT NULL,
-          description TEXT,
-          assignedTo TEXT,
-          completed BOOLEAN DEFAULT 0,
-          createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-          updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-      \`, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          // Insert sample data if table is empty
-          db.get("SELECT COUNT(*) as count FROM tasks", (err, row) => {
-            if (err) {
-              reject(err);
-            } else if (row.count === 0) {
-              db.run(\`
-                INSERT INTO tasks (title, description, assignedTo) 
-                VALUES (?, ?, ?)
-              \`, [
-                "Evaluate Mr. Smith's Silly Walk Application",
-                "Review submitted video and assess walk silliness level.",
-                "John Cleese"
-              ], (err) => {
-                if (err) reject(err);
-                else resolve();
-              });
-            } else {
-              resolve();
-            }
-          });
-        }
-      });
-    });
-  });
-}
-
-// Routes
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Ministry of Silly Walks Task Management API',
-    version: '1.0.0 - Now with Database!',
-    database: 'SQLite'
-  });
-});
-
-// Start server with database initialization
-async function startServer() {
-  try {
-    await initializeDatabase();
-    console.log('Database initialized successfully');
-    
-    app.listen(PORT, () => {
-      console.log(\`Server running on http://localhost:\${PORT}\`);
-      console.log('Database file: ministry_tasks.db');
-    });
-  } catch (error) {
-    console.error('Failed to initialize database:', error);
-    process.exit(1);
-  }
-}
-
-startServer();`,
-        hints: [
-          "Add the SQLite imports at the top after the existing imports",
-          "Create the database connection using the file path",
-          "The initializeDatabase function should create the table and add sample data",
-          "Use async/await pattern to ensure database is ready before starting server",
-          "The table schema should include id, title, description, assignedTo, completed, and timestamp columns"
-        ],
-        explanation: {
-          whatIsHappening: "You've replaced the temporary in-memory array with a persistent SQLite database! The server now creates a database file, defines a proper table schema with audit timestamps, and initializes sample data. The database connection is established before the server starts accepting requests.",
-          whyItMatters: "This solves the fundamental problem of data persistence. Tasks now survive server restarts, and the audit trail timestamps meet compliance requirements. The database schema enforces data consistency and provides a foundation for more advanced features like user management and reporting.",
-          realWorldConnection: "This mirrors how real enterprise applications handle data - with persistent storage, proper schemas, and initialization procedures. When you write requirements about 'data retention' or 'audit compliance,' this is the type of infrastructure that enables those capabilities. Understanding database integration helps you write more informed requirements about data management and system reliability.",
-          keyTerms: {
-            "Database schema": "The structure and organization of data tables and columns",
-            "Primary key": "A unique identifier for each row in a database table",
-            "AUTOINCREMENT": "Automatically generates unique sequential numbers for new records",
-            "Audit trail": "Automatic recording of when data was created or modified"
-          }
-        }
-      }
-    },
-    {
-      id: 'convert-api-endpoints',
-      title: 'Step 2: Converting API to Use Database',
-      type: 'coding',
-      exercise: {
-        title: 'Update CRUD Endpoints for Database',
-        description: 'Now let\'s update all our API endpoints to use the database instead of the in-memory array.',
-        instructions: [
-          'Replace the GET /tasks route with database query functionality',
-          'Replace the POST /tasks route with database insert functionality', 
-          'Replace the PUT /tasks/:id route with database update functionality',
-          'Replace the DELETE /tasks/:id route with database delete functionality',
-          'Copy each route from the code block and replace the corresponding route in your editor'
-        ],
-        language: 'typescript' as const,
-        codeBlock: {
-          code: `// GET all tasks
-app.get('/tasks', (req, res) => {
-  db.all("SELECT * FROM tasks ORDER BY createdAt DESC", (err, rows) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Database error'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: rows,
-      count: rows.length
-    });
-  });
-});
-
-// POST new task
-app.post('/tasks', (req, res) => {
-  const { title, description, assignedTo } = req.body;
-  
-  if (!title) {
-    return res.status(400).json({
-      success: false,
-      error: 'Title is required'
-    });
-  }
-  
-  db.run(\`
-    INSERT INTO tasks (title, description, assignedTo) 
-    VALUES (?, ?, ?)
-  \`, [title, description || 'Status: Pending', assignedTo || 'Current User'], function(err) {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Database error'
-      });
-    }
-    
-    // Get the inserted task
-    db.get("SELECT * FROM tasks WHERE id = ?", [this.lastID], (err, row) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          error: 'Database error'
-        });
-      }
-      
-      res.status(201).json({
-        success: true,
-        data: row
-      });
-    });
-  });
-});
-
-// PUT update task
-app.put('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  const updates = req.body;
-  
-  // Build dynamic update query
-  const fields = Object.keys(updates).map(key => \`\${key} = ?\`).join(', ');
-  const values = Object.values(updates);
-  values.push(taskId);
-  
-  db.run(\`
-    UPDATE tasks 
-    SET \${fields}, updatedAt = CURRENT_TIMESTAMP 
-    WHERE id = ?
-  \`, values, function(err) {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Database error'
-      });
-    }
-    
-    if (this.changes === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Task not found'
-      });
-    }
-    
-    // Get the updated task
-    db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          error: 'Database error'
-        });
-      }
-      
-      res.json({
-        success: true,
-        data: row
-      });
-    });
-  });
-});
-
-// DELETE task
-app.delete('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  
-  // Get task before deleting for confirmation
-  db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Database error'
-      });
-    }
-    
-    if (!row) {
-      return res.status(404).json({
-        success: false,
-        error: 'Task not found'
-      });
-    }
-    
-    db.run("DELETE FROM tasks WHERE id = ?", [taskId], function(err) {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          error: 'Database error'
-        });
-      }
-      
-      res.json({
-        success: true,
-        data: row
-      });
-    });
-  });
-});`,
-          explanations: [
-            {
-              line: "db.all(\"SELECT * FROM tasks ORDER BY createdAt DESC\", (err, rows) => {",
-              explanation: "Query all tasks from the database, ordered by creation date (newest first).",
-              businessContext: "This provides a chronological view of tasks, helping users see recent activity first."
-            },
-            {
-              line: "db.run(`INSERT INTO tasks (title, description, assignedTo) VALUES (?, ?, ?)`, [title, description || 'Status: Pending', assignedTo || 'Current User'], function(err) {",
-              explanation: "Insert a new task into the database using parameterized queries to prevent SQL injection.",
-              businessContext: "Parameterized queries are essential for security - they prevent malicious users from damaging the database."
-            },
-            {
-              line: "db.get(\"SELECT * FROM tasks WHERE id = ?\", [this.lastID], (err, row) => {",
-              explanation: "Retrieve the newly inserted task using the auto-generated ID to return it to the client.",
-              businessContext: "This confirms the task was created successfully and provides the client with the complete task data including the database-generated ID."
-            },
-            {
-              line: "const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');",
-              explanation: "Build a dynamic UPDATE query that can handle partial updates to any task fields.",
-              businessContext: "This flexibility allows the API to update only specific fields rather than requiring all data, making it more efficient for frontend applications."
-            },
-            {
-              line: "if (this.changes === 0) {",
-              explanation: "Check if the UPDATE operation actually modified any rows - if not, the task ID doesn't exist.",
-              businessContext: "This provides proper error handling when users try to update non-existent tasks, improving the user experience."
-            },
-            {
-              line: "db.get(\"SELECT * FROM tasks WHERE id = ?\", [taskId], (err, row) => {",
-              explanation: "Retrieve the task before deleting it to return confirmation of what was removed.",
-              businessContext: "This provides an audit trail and confirmation to users about what was deleted, which is important for data governance."
-            }
-          ]
-        },
-        startingCode: `// Previous database setup code...
-
-// GET all tasks - UPDATE TO USE DATABASE
-app.get('/tasks', (req, res) => {
-  // Replace this with database query
-  res.json({
-    success: true,
-    data: [], // This should come from database
-    count: 0
-  });
-});
-
-// POST new task - UPDATE TO USE DATABASE  
-app.post('/tasks', (req, res) => {
-  const { title, description, assignedTo } = req.body;
-  
-  if (!title) {
-    return res.status(400).json({
-      success: false,
-      error: 'Title is required'
-    });
-  }
-  
-  // Replace this with database insert
-  res.status(201).json({
-    success: true,
-    data: { message: 'Should insert into database' }
-  });
-});
-
-// PUT update task - UPDATE TO USE DATABASE
-app.put('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  
-  // Replace this with database update
-  res.json({
-    success: true,
-    data: { message: 'Should update in database' }
-  });
-});
-
-// DELETE task - UPDATE TO USE DATABASE
-app.delete('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  
-  // Replace this with database delete
-  res.json({
-    success: true,
-    data: { message: 'Should delete from database' }
-  });
-});`,
-        targetCode: `// GET all tasks
-app.get('/tasks', (req, res) => {
-  db.all("SELECT * FROM tasks ORDER BY createdAt DESC", (err, rows) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Database error'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: rows,
-      count: rows.length
-    });
-  });
-});
-
-// POST new task
-app.post('/tasks', (req, res) => {
-  const { title, description, assignedTo } = req.body;
-  
-  if (!title) {
-    return res.status(400).json({
-      success: false,
-      error: 'Title is required'
-    });
-  }
-  
-  db.run(\`
-    INSERT INTO tasks (title, description, assignedTo) 
-    VALUES (?, ?, ?)
-  \`, [title, description || 'Status: Pending', assignedTo || 'Current User'], function(err) {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Database error'
-      });
-    }
-    
-    // Get the inserted task
-    db.get("SELECT * FROM tasks WHERE id = ?", [this.lastID], (err, row) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          error: 'Database error'
-        });
-      }
-      
-      res.status(201).json({
-        success: true,
-        data: row
-      });
-    });
-  });
-});
-
-// PUT update task
-app.put('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  const updates = req.body;
-  
-  // Build dynamic update query
-  const fields = Object.keys(updates).map(key => \`\${key} = ?\`).join(', ');
-  const values = Object.values(updates);
-  values.push(taskId);
-  
-  db.run(\`
-    UPDATE tasks 
-    SET \${fields}, updatedAt = CURRENT_TIMESTAMP 
-    WHERE id = ?
-  \`, values, function(err) {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Database error'
-      });
-    }
-    
-    if (this.changes === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Task not found'
-      });
-    }
-    
-    // Get the updated task
-    db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          error: 'Database error'
-        });
-      }
-      
-      res.json({
-        success: true,
-        data: row
-      });
-    });
-  });
-});
-
-// DELETE task
-app.delete('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id);
-  
-  // Get task before deleting for confirmation
-  db.get("SELECT * FROM tasks WHERE id = ?", [taskId], (err, row) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        error: 'Database error'
-      });
-    }
-    
-    if (!row) {
-      return res.status(404).json({
-        success: false,
-        error: 'Task not found'
-      });
-    }
-    
-    db.run("DELETE FROM tasks WHERE id = ?", [taskId], function(err) {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          error: 'Database error'
-        });
-      }
-      
-      res.json({
-        success: true,
-        data: row
-      });
-    });
-  });
-});`,
-        hints: [
-          "Use db.all() for SELECT queries that return multiple rows",
-          "Use db.run() for INSERT, UPDATE, and DELETE operations",
-          "Use db.get() for SELECT queries that return a single row",
-          "Always handle database errors with proper HTTP status codes",
-          "Use parameterized queries (?) to prevent SQL injection"
-        ],
-        explanation: {
-          whatIsHappening: "You've converted your entire API to use persistent database storage! Each endpoint now uses proper SQL queries with parameterized statements for security. The database handles all data operations while maintaining the same API interface that frontends expect.",
-          whyItMatters: "This completes the transition to enterprise-grade data management. The API now provides true persistence, concurrent access safety, and automatic audit trails. Error handling ensures reliable operation, and parameterized queries prevent security vulnerabilities.",
-          realWorldConnection: "This demonstrates how business requirements translate into technical implementation - 'data must persist' becomes database integration, 'audit trails' become timestamp columns, and 'system reliability' becomes proper error handling. Understanding database operations helps you write more precise requirements about data management and system behavior.",
-          keyTerms: {
-            "SQL queries": "Structured Query Language commands for database operations",
-            "Parameterized queries": "Using placeholders (?) to safely insert user data into SQL",
-            "Database transactions": "Operations that either complete fully or not at all",
-            "Error handling": "Graceful management of database and system failures"
-          }
-        }
-      }
     }
   ]
 
@@ -765,8 +771,8 @@ app.delete('/tasks/:id', (req, res) => {
               Back to Chapter 5
             </Link>
             <div className="text-center">
-              <h1 className="text-xl font-bold text-gray-900">Chapter 6: Database Integration</h1>
-              <p className="text-sm text-gray-600">Adding persistent storage with SQLite</p>
+              <h1 className="text-xl font-bold text-gray-900">Chapter 6: Connecting Frontend to Backend</h1>
+              <p className="text-sm text-gray-600">Creating integrated client-server architecture</p>
             </div>
             <div className="text-sm text-gray-500">
               Step {currentStep + 1} of {steps.length}
@@ -839,57 +845,42 @@ app.delete('/tasks/:id', (req, res) => {
                 </div>
               </div>
 
-              {steps[currentStep].type === 'explanation' ? (
-                <div className="tutorial-card">
-                  {steps[currentStep].content}
-                  
-                  <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
-                    <button
-                      onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                      disabled={currentStep === 0}
-                      className={`flex items-center ${
-                        currentStep === 0 
-                          ? 'text-gray-400 cursor-not-allowed' 
-                          : 'text-tutorial-primary hover:text-blue-700'
-                      }`}
-                    >
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Previous
-                    </button>
+              <div className="tutorial-card">
+                {steps[currentStep].content}
+                
+                <div className="flex items-center justify-between pt-6 border-t border-gray-200 mt-8">
+                  <button
+                    onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                    disabled={currentStep === 0}
+                    className={`flex items-center ${
+                      currentStep === 0 
+                        ? 'text-gray-400 cursor-not-allowed' 
+                        : 'text-tutorial-primary hover:text-blue-700'
+                    }`}
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Previous
+                  </button>
 
-                    <button
-                      onClick={() => {
-                        markStepCompleteLocal(currentStep)
-                        if (currentStep < steps.length - 1) {
-                          setCurrentStep(currentStep + 1)
-                        }
-                      }}
-                      className="tutorial-button-primary"
-                    >
-                      {completedSteps.includes(currentStep) 
-                        ? currentStep === steps.length - 1 
-                          ? 'Complete Chapter' 
-                          : 'Next Step'
-                        : 'Add Database!'
-                      }
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <CodeEditor
-                  {...steps[currentStep].exercise!}
-                  stepId={steps[currentStep].id}
-                  onComplete={() => {
-                    markStepCompleteLocal(currentStep)
-                    setTimeout(() => {
+                  <button
+                    onClick={() => {
+                      markStepCompleteLocal(currentStep)
                       if (currentStep < steps.length - 1) {
                         setCurrentStep(currentStep + 1)
                       }
-                    }, 2000)
-                  }}
-                />
-              )}
+                    }}
+                    className="tutorial-button-primary"
+                  >
+                    {completedSteps.includes(currentStep) 
+                      ? currentStep === steps.length - 1 
+                        ? 'Complete Chapter' 
+                        : 'Next Step'
+                      : 'Continue Learning'
+                    }
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

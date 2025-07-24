@@ -21,10 +21,9 @@ export default function Chapter1() {
     return params.toString() ? `${path}?${params.toString()}` : path
   }
 
-  // Helper function to change step and scroll to top
+  // Helper function to change step
   const changeStep = (newStep: number) => {
     setCurrentStep(newStep)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   // Load progress on mount
@@ -67,62 +66,136 @@ export default function Chapter1() {
             </div>
           </div>
 
-          <div className="ministry-header">
-            <h3 className="text-xl font-bold">Ministry of Silly Walks - Technical Requirements</h3>
-          </div>
-          <div className="ministry-content">
-            <p className="mb-4">
-              Based on our requirements gathering, we need to build:
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">What We're Building Together</h3>
+            <p className="mb-4 text-gray-700">
+              Remember John Cleese's user story: <em>"As a Senior Civil Servant, I want a simple task management system so my team can track silly walk evaluations efficiently."</em> Let's see how that translates into a real system:
             </p>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-medium text-blue-900 mb-2">Frontend</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• Task creation form</li>
-                  <li>• Task list display</li>
-                  <li>• Status updates</li>
-                  <li>• GOV.UK styling</li>
-                </ul>
+            
+            <div className="bg-blue-50 p-6 rounded-lg mb-6">
+              <h4 className="font-medium text-blue-900 mb-3">Our Goal: A Complete Task Management System</h4>
+              <p className="text-blue-800 text-sm">
+                By the end of this tutorial, you'll have built a fully functional web application that John Cleese and his team can actually use to manage their work. No more sticky notes or Excel spreadsheets!
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-gray-900 mb-2">User Interface (Frontend)</h4>
+                    <p className="text-sm text-gray-600 mb-3">What John Cleese and his team will see and interact with:</p>
+                    <ul className="text-sm text-gray-700 space-y-1">
+                      <li>• A form where Michael Palin can quickly add new walk evaluation tasks</li>
+                      <li>• A clear list showing all current tasks and their status</li>
+                      <li>• Professional GOV.UK styling that looks credible and official</li>
+                      <li>• Easy ways to update task progress and completion</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <h4 className="font-medium text-green-900 mb-2">Backend</h4>
-                <ul className="text-sm text-green-800 space-y-1">
-                  <li>• API endpoints</li>
-                  <li>• Business logic</li>
-                  <li>• Data validation</li>
-                  <li>• Security</li>
-                </ul>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-gray-900 mb-2">Backend Logic (Server)</h4>
+                    <p className="text-sm text-gray-600 mb-3">The behind-the-scenes intelligence that makes everything work:</p>
+                    <ul className="text-sm text-gray-700 space-y-1">
+                      <li>• API endpoints that handle requests (like "create new task" or "show all tasks")</li>
+                      <li>• Business rules (ensuring only valid tasks are accepted)</li>
+                      <li>• Security measures to protect Ministry data</li>
+                      <li>• Error handling for when things go wrong</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-              <div className="bg-yellow-50 p-4 rounded-lg">
-                <h4 className="font-medium text-yellow-900 mb-2">Database</h4>
-                <ul className="text-sm text-yellow-800 space-y-1">
-                  <li>• Task storage</li>
-                  <li>• User information</li>
-                  <li>• Status tracking</li>
-                  <li>• Data relationships</li>
-                </ul>
+
+              <div className="bg-white border border-gray-200 rounded-lg p-5">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-gray-900 mb-2">Data Storage (Database)</h4>
+                    <p className="text-sm text-gray-600 mb-3">Permanent, organized storage for all Ministry information:</p>
+                    <ul className="text-sm text-gray-700 space-y-1">
+                      <li>• All task details stored safely (no more lost paperwork!)</li>
+                      <li>• User information and access controls</li>
+                      <li>• Historical data for reporting and audits</li>
+                      <li>• Relationships between tasks, users, and projects</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="concept-callout">
             <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
               BA Insight: Requirements to Architecture
             </div>
-            <p className="concept-text">
-              Notice how our user stories directly influence this technical structure? When John Cleese said 
-              "I want to see all my tasks in one place," that becomes our task list display. When Terry Jones 
-              needed to "update task status," that becomes our status update functionality. This is how 
-              requirements become code!
-            </p>
+            <div className="concept-text space-y-4">
+              <p>
+                Understanding how business requirements translate into technical architecture is fundamental to writing implementable requirements. Every user story creates ripple effects across the entire system stack.
+              </p>
+              
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Requirements → Architecture Translation:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <div><strong>User Story:</strong> "I want to see all my tasks in one place"</div>
+                    <div><strong>Frontend Impact:</strong> Task list component, filtering UI, responsive layout</div>
+                    <div><strong>Backend Impact:</strong> GET /tasks API endpoint, query optimization, pagination</div>
+                    <div><strong>Database Impact:</strong> Tasks table design, indexing strategy, user relationships</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <div><strong>User Story:</strong> "I need to update task status quickly"</div>
+                    <div><strong>Frontend Impact:</strong> Status dropdown, real-time updates, error handling</div>
+                    <div><strong>Backend Impact:</strong> PUT /tasks/:id endpoint, validation rules, notifications</div>
+                    <div><strong>Database Impact:</strong> Status field constraints, audit logging, triggers</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-purple-900 mb-2">Architecture-Aware Requirements Checklist:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>User Interface:</strong> What does the user see and interact with?</div>
+                  <div><strong>Business Logic:</strong> What rules and processes must the system enforce?</div>
+                  <div><strong>Data Management:</strong> What information needs to be stored and retrieved?</div>
+                  <div><strong>Integration:</strong> How does this connect with other systems or users?</div>
+                  <div><strong>Performance:</strong> How fast must this operation complete?</div>
+                  <div><strong>Security:</strong> Who can access this and under what conditions?</div>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-amber-900 mb-2">Pro Tips for BAs:</h4>
+                <ul className="text-sm space-y-1">
+                  <li>• Always ask "What happens when..." to uncover edge cases</li>
+                  <li>• Map each requirement to frontend, backend, and database impacts</li>
+                  <li>• Consider the full user journey, not just individual features</li>
+                  <li>• Document integration points and dependencies early</li>
+                  <li>• Validate requirements with both business and technical stakeholders</li>
+                </ul>
+              </div>
+            </div>
           </div>
 
           <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objective</h3>
-            <p>
+            <h3 className="text-lg font-bold mb-3 text-white">Learning Objective</h3>
+            <p className="text-white">
               In this chapter, you'll build the basic HTML structure for our task manager. You'll understand 
               how web pages are constructed and how HTML elements correspond to the features users need.
+            </p>
+          </div>
+
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
+            <h4 className="font-medium text-yellow-900 mb-2">From Vision to Code</h4>
+            <p className="text-yellow-800 text-sm">
+              Now that we understand <em>what</em> we're building (a complete task management system) and <em>why</em> (to solve John Cleese's team challenges), let's see <em>how</em> we translate this vision into actual code. We'll start with HTML - the foundation layer that creates the structure users will see and interact with.
             </p>
           </div>
         </div>
@@ -163,18 +236,18 @@ export default function Chapter1() {
           </div>
           
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-900 mb-2">The &lt;head&gt; Section</h4>
-              <ul className="text-sm text-blue-800 space-y-1">
+            <div>
+              <h4 className="font-medium text-gray-900 mb-2">The &lt;head&gt; Section</h4>
+              <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Contains information about the page</li>
                 <li>• Not visible to users</li>
                 <li>• Includes the page title (shows in browser tab)</li>
                 <li>• Sets up mobile compatibility</li>
               </ul>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <h4 className="font-medium text-green-900 mb-2">The &lt;body&gt; Section</h4>
-              <ul className="text-sm text-green-800 space-y-1">
+            <div>
+              <h4 className="font-medium text-gray-900 mb-2">The &lt;body&gt; Section</h4>
+              <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Contains all visible content</li>
                 <li>• This is where we'll build our task manager</li>
                 <li>• Users see everything in here</li>
@@ -185,23 +258,53 @@ export default function Chapter1() {
           
           <div className="concept-callout">
             <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
               BA Insight: Requirements to HTML Structure
             </div>
-            <div className="concept-text">
-              <p className="mb-3">When you write requirements like:</p>
-              <ul className="text-sm space-y-1 mb-3">
-                <li>• "The system should display clearly in browser tabs" → &lt;title&gt; tag</li>
-                <li>• "The application must work on mobile devices" → viewport meta tag</li>
-                <li>• "Support international character sets" → UTF-8 encoding</li>
-              </ul>
-              <p>These business requirements translate directly into HTML structure decisions!</p>
+            <div className="concept-text space-y-4">
+              <p>
+                Non-functional requirements often seem abstract, but they translate directly into specific HTML decisions. Understanding this connection helps you write more precise technical requirements.
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Business Requirements → HTML Implementation:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <div><strong>Requirement:</strong> "The system should display clearly in browser tabs"</div>
+                    <div><strong>HTML Solution:</strong> &lt;title&gt; tags with descriptive, consistent naming</div>
+                    <div><strong>BA Questions:</strong> What naming convention? How does title change with context?</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <div><strong>Requirement:</strong> "The application must work on mobile devices"</div>
+                    <div><strong>HTML Solution:</strong> &lt;meta name="viewport"&gt; for responsive design</div>
+                    <div><strong>BA Questions:</strong> What screen sizes? Portrait/landscape? Touch interactions?</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-purple-500 pl-3">
+                    <div><strong>Requirement:</strong> "Support international character sets"</div>
+                    <div><strong>HTML Solution:</strong> &lt;meta charset="UTF-8"&gt; encoding</div>
+                    <div><strong>BA Questions:</strong> Which languages? Right-to-left text? Date/number formats?</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">HTML Requirements Template:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Page Structure:</strong> What sections and hierarchy does the page need?</div>
+                  <div><strong>Content Types:</strong> Forms, lists, media, navigation, etc.</div>
+                  <div><strong>Accessibility:</strong> Screen reader support, keyboard navigation, contrast</div>
+                  <div><strong>SEO Requirements:</strong> Meta descriptions, structured data, headings</div>
+                  <div><strong>Performance:</strong> Loading priorities, image optimization, caching</div>
+                </div>
+              </div>
             </div>
           </div>
           
-          <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h4 className="text-lg font-bold mb-3">🎯 What's Next</h4>
-            <p>
+          <div className="border border-gray-200 p-6 rounded-lg bg-gray-50">
+            <h4 className="text-lg font-semibold text-gray-900 mb-3">What's Next</h4>
+            <p className="text-gray-700">
               Now that you understand the foundation, we'll start adding visible content inside the &lt;body&gt; section. 
               Every piece of content we add will be between &lt;body&gt; and &lt;/body&gt; tags.
             </p>
@@ -227,18 +330,49 @@ export default function Chapter1() {
           explanations: [
             {
               line: "<h1>",
-              explanation: "This is an opening H1 tag - it tells the browser 'the next text is the main heading'",
-              businessContext: "H1 tags create the largest, most prominent text on the page - perfect for the main system title that users need to see immediately."
+              explanation: (
+                <div>
+                  <p className="mb-3">This is an HTML opening tag:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                    <li><code>&lt;</code> = Starts an HTML tag (like opening a label)</li>
+                    <li><code>h1</code> = The tag name (stands for 'heading level 1' - the biggest heading)</li>
+                    <li><code>&gt;</code> = Ends the opening tag</li>
+                  </ul>
+                  <p>This tells the browser: 'Everything after this should be displayed as the main heading until you see the closing tag'</p>
+                </div>
+              ),
+              businessContext: "H1 tags create the largest, most prominent text on the page - perfect for the main system title that users need to see immediately. Search engines and screen readers also look for H1 tags to understand what the page is about, making this important for accessibility and SEO."
             },
             {
               line: "Ministry of Silly Walks",
-              explanation: "This is the actual text that users will see displayed as the heading.",
-              businessContext: "Clear system identification helps users know they're in the right place - essential for user confidence and navigation."
+              explanation: (
+                <div>
+                  <p className="mb-3">This is the content between the HTML tags:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                    <li>This is plain text (no special characters or symbols)</li>
+                    <li>Whatever text you put here is what users will actually see on the webpage</li>
+                    <li>The browser will display this text using the formatting rules for H1 tags (large, bold, prominent)</li>
+                  </ul>
+                  <p>Think of HTML tags like formatting instructions, and this text is what gets formatted</p>
+                </div>
+              ),
+              businessContext: "Clear system identification helps users know they're in the right place - essential for user confidence and navigation. When users land on your page, the first thing they see should immediately tell them what system they're using. This prevents confusion and reduces support requests."
             },
             {
               line: "</h1>",
-              explanation: "This closes the H1 tag - it tells the browser 'the main heading ends here'",
-              businessContext: "HTML tags work in pairs: an opening tag starts something, a closing tag ends it. This ensures the heading applies only to the text we want."
+              explanation: (
+                <div>
+                  <p className="mb-3">This is the closing HTML tag:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                    <li><code>&lt;</code> = Starts the tag (same as opening)</li>
+                    <li><code>/</code> = Forward slash indicates this is a closing tag (like pressing 'end formatting' in Word)</li>
+                    <li><code>h1</code> = Must match exactly with the opening tag name</li>
+                    <li><code>&gt;</code> = Ends the tag</li>
+                  </ul>
+                  <p>This tells the browser: 'Stop applying H1 formatting here - the heading is finished'</p>
+                </div>
+              ),
+              businessContext: "HTML tags work in pairs - like parentheses in writing or quotation marks. The opening tag starts the formatting, the closing tag stops it. This precision ensures the heading style applies only to the text we want, and anything after this tag will use normal formatting. Without closing tags, formatting would 'leak' to other parts of the page."
             }
           ]
         },
@@ -255,6 +389,13 @@ export default function Chapter1() {
     
 </body>
 </html>`,
+        hints: [
+          "HTML tags come in pairs: <h1> opens, </h1> closes - like quotation marks",
+          "Can't find where to add the code? Look for the comment <!-- Step 1: Add a header here -->",
+          "Typing tip: Make sure to include the angle brackets < > around the tag name",
+          "Not sure what h1 means? It stands for 'heading level 1' - the biggest heading",
+          "Still having trouble? Try typing exactly: <h1>Ministry of Silly Walks</h1>"
+        ],
         targetCode: `<!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -266,13 +407,6 @@ export default function Chapter1() {
     <h1>Ministry of Silly Walks</h1>
 </body>
 </html>`,
-        hints: [
-          "Look for the comment that says '<!-- Step 1: Add a header here -->'",
-          "Replace that entire line with: <h1>Ministry of Silly Walks</h1>",
-          "The <h1> tag creates a large heading - perfect for the main title of our page",
-          "Make sure to type it exactly as shown, including the angle brackets < >",
-          "HTML tags always come in pairs: <h1> opens and </h1> closes"
-        ],
         explanation: {
           whatIsHappening: "Congratulations! You just wrote your first HTML code. The <h1> tag tells the web browser 'this is the most important heading on the page.' When users visit our Ministry website, they'll see 'Ministry of Silly Walks' displayed as a large, bold title at the top of the page.",
           whyItMatters: "This simple heading directly addresses one of our user requirements: users need to know what system they're using. When John Cleese opens this page, he immediately knows he's in the right place. Clear headings are also crucial for users with visual impairments who use screen readers.",
@@ -304,8 +438,18 @@ export default function Chapter1() {
           explanations: [
             {
               line: "<p>",
-              explanation: "This is a paragraph tag - it tells the browser to display the text as a normal paragraph.",
-              businessContext: "Paragraphs create readable text blocks that are smaller than headings - perfect for descriptions and explanatory text."
+              explanation: (
+                <div>
+                  <p className="mb-3">This is an HTML paragraph opening tag:</p>
+                  <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                    <li><code>&lt;</code> = Starts an HTML tag</li>
+                    <li><code>p</code> = Tag name (stands for 'paragraph')</li>
+                    <li><code>&gt;</code> = Ends the opening tag</li>
+                  </ul>
+                  <p>This tells the browser: 'The text that follows should be displayed as a normal paragraph with standard text size and spacing'</p>
+                </div>
+              ),
+              businessContext: "Paragraphs create readable text blocks that are smaller than headings - perfect for descriptions and explanatory text. They automatically add appropriate spacing above and below the text, making content easier to read and scan."
             },
             {
               line: "Task Management System",
@@ -345,13 +489,6 @@ export default function Chapter1() {
     <p>Task Management System</p>
 </body>
 </html>`,
-        hints: [
-          "Look for the comment '<!-- Step 2: Add a subtitle here -->'",
-          "Replace it with: <p>Task Management System</p>",
-          "The <p> tag is used for paragraphs - perfect for our subtitle",
-          "This will appear smaller than the <h1> heading, which is exactly what we want",
-          "Remember: <p> opens the paragraph, </p> closes it"
-        ],
         explanation: {
           whatIsHappening: "You've added a paragraph element (<p>) below your heading. The browser will display this as normal-sized text under the large title. This creates a clear hierarchy: big title first, then explanatory text underneath.",
           whyItMatters: "This subtitle answers the question 'What does this system do?' that users might have after seeing the Ministry name. It's like having a tagline that immediately explains the purpose. This addresses our user requirement for clear system identification.",
@@ -443,11 +580,11 @@ export default function Chapter1() {
 </body>
 </html>`,
         hints: [
-          "First find the comment '<!-- Step 3: Add section heading here -->' and replace it with <h2>Add New Task</h2>",
-          "Then find '<!-- Step 4: Add an input box here -->' and replace it with the input field",
-          "The <h2> tag creates a section heading - smaller than <h1> but bigger than regular text",
-          "The <input> tag creates a text box where users can type",
-          "Notice that <input> doesn't need a closing tag - it's self-contained!"
+          "Two steps in one exercise! First find the comment <!-- Step 3... --> and replace it with the h2 heading",
+          "Then find the comment <!-- Step 4... --> and replace it with the input tag",
+          "Remember HTML structure: <h2>Text goes here</h2> for headings",
+          "Input tags are self-closing - they don't need a separate closing tag",
+          "Can't see your changes? Make sure to replace the entire comment line, not add to it"
         ],
         explanation: {
           whatIsHappening: "You've created a proper task input section! The <h2> heading organizes the page into clear sections, while the input field provides a text box where users can type. The 'placeholder' text appears as light gray text inside the box to guide users. When they click in the box and start typing, their text replaces the placeholder.",
@@ -558,12 +695,11 @@ export default function Chapter1() {
 </body>
 </html>`,
         hints: [
-          "Find the comment '<!-- Step 5: Add current tasks section here -->'",
-          "Start with <h2>Current Tasks</h2> to create a clear section heading",
-          "Add a <div> to contain the task information",
-          "Add an <h3> heading for the task title: 'Evaluate Mr. Smith's Silly Walk Application'",
-          "Add <p> paragraphs for the description and assignment",
-          "Don't forget to close the </div> at the end!"
+          "This is a bigger chunk of code - copy the entire block from the code panel exactly as shown",
+          "Look for the comment <!-- Step 5: Add current tasks section here --> and replace the entire comment line",
+          "Notice the structure: h2 for section heading, div to group the task, h3 for task title, p for details",
+          "The <div> tag works like a container - it groups related information together",
+          "Don't forget the closing </div> tag at the end - every opening tag needs a closing tag!"
         ],
         explanation: {
           whatIsHappening: "You've created a complete task viewing section! The <h2> heading clearly labels this section, while the <div> acts like a container that groups all the information about one task together. The <h3> creates a medium-sized heading for the task title, and the <p> elements show the description and who it's assigned to.",

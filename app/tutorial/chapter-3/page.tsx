@@ -23,10 +23,9 @@ export default function Chapter3() {
     return params.toString() ? `${path}?${params.toString()}` : path
   }
 
-  // Helper function to change step and scroll to top
+  // Helper function to change step
   const changeStep = (newStep: number) => {
     setCurrentStep(newStep)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const steps = [
@@ -65,19 +64,19 @@ export default function Chapter3() {
             <p className="mb-4">
               The Ministry staff need to actually use this system for their daily work. Static displays aren't enough - they need to:
             </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <h4 className="font-medium text-blue-900 mb-2">Current User Stories</h4>
-                <ul className="text-sm text-blue-800 space-y-1">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Current User Stories</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
                   <li>• "I want to add new silly walk evaluations"</li>
                   <li>• "I want to mark tasks as complete when done"</li>
                   <li>• "I want to see my task count update in real-time"</li>
                   <li>• "I want to delete tasks that are cancelled"</li>
                 </ul>
               </div>
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h4 className="font-medium text-green-900 mb-2">Technical Implementation</h4>
-                <ul className="text-sm text-green-800 space-y-1">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Technical Implementation</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
                   <li>• Click handlers for buttons</li>
                   <li>• DOM manipulation to add/remove tasks</li>
                   <li>• Form validation and submission</li>
@@ -89,18 +88,59 @@ export default function Chapter3() {
 
           <div className="concept-callout">
             <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
               BA Insight: Business Logic vs UI Logic
             </div>
-            <p className="concept-text">
-              JavaScript handles both user interface logic ("what happens when I click this button") and business logic ("validate that the walk application is complete before saving"). Understanding this distinction helps you write better requirements that separate what the user sees from what the system needs to enforce.
-            </p>
+            <div className="concept-text space-y-4">
+              <p>
+                JavaScript handles both user interface interactions and business rule enforcement. Understanding this distinction is crucial for writing requirements that properly separate presentation concerns from business logic, leading to more maintainable and testable applications.
+              </p>
+              
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">UI Logic vs Business Logic Examples:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <div><strong>UI Logic:</strong> "When user clicks 'Add Task', show loading spinner and disable button"</div>
+                    <div><strong>Implementation:</strong> DOM manipulation, event handlers, visual feedback</div>
+                    <div><strong>Testing:</strong> Visual regression tests, user interaction tests</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <div><strong>Business Logic:</strong> "Task title must be 3-100 characters, assigned to valid user"</div>
+                    <div><strong>Implementation:</strong> Validation functions, data processing, rule enforcement</div>
+                    <div><strong>Testing:</strong> Unit tests, business rule validation tests</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Requirements Writing Framework:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>User Interaction:</strong> What triggers the action? (clicks, form submission, page load)</div>
+                  <div><strong>Visual Feedback:</strong> How does the UI respond immediately? (loading states, animations)</div>
+                  <div><strong>Business Rules:</strong> What validation or processing must occur? (required fields, calculations)</div>
+                  <div><strong>Data Operations:</strong> What information is created, updated, or retrieved?</div>
+                  <div><strong>Error Handling:</strong> What happens when validation fails or operations error?</div>
+                  <div><strong>Success State:</strong> How does the UI update after successful completion?</div>
+                </div>
+              </div>
+
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-purple-900 mb-2">Separation of Concerns in Requirements:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Presentation Layer:</strong> How information is displayed and styled</div>
+                  <div><strong>Interaction Layer:</strong> How users interact with the interface</div>
+                  <div><strong>Logic Layer:</strong> How business rules are applied and enforced</div>
+                  <div><strong>Data Layer:</strong> How information is stored and retrieved</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <JavaScriptDiagram />
 
           <div className="bg-tutorial-primary text-white p-6 rounded-lg">
-            <h3 className="text-lg font-bold mb-3">🎯 Learning Objective</h3>
+            <h3 className="text-lg font-bold mb-3">Learning Objective</h3>
             <p>
               In this chapter, you'll add JavaScript to make your task manager functional. You'll learn how user interactions become working software features, and how business rules get implemented in code.
             </p>
@@ -116,9 +156,9 @@ export default function Chapter3() {
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-gray-900">Step 1: Review the Complete HTML Structure</h2>
           
-          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400 mb-4">
-            <p className="text-blue-900 font-medium mb-2">What's happening in this step:</p>
-            <ul className="text-blue-800 space-y-1 text-sm">
+          <div className="border-l-4 border-blue-500 pl-4 mb-4">
+            <p className="text-gray-900 font-medium mb-2">What's happening in this step:</p>
+            <ul className="text-gray-700 space-y-1 text-sm">
               <li>• <strong>Your previous work:</strong> You built the basic HTML structure and added CSS styling in Chapters 1 & 2</li>
               <li>• <strong>What we've added:</strong> The missing interactive elements needed for JavaScript functionality</li>
               <li>• <strong>New elements include:</strong> A clickable button, proper IDs for JavaScript targeting, and a script tag</li>
@@ -132,7 +172,7 @@ export default function Chapter3() {
 
           <SyntaxHighlighter
             language="html"
-            title="Complete HTML Structure with Priority and Due Date"
+            title="Complete HTML Structure with Priority and Due Date Features"
             code={` 1  <!DOCTYPE html>
  2  <html lang="en-GB">
  3  <head>
@@ -178,38 +218,184 @@ export default function Chapter3() {
 43  </html>`}
           />
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-900 mb-2">Enhanced Form Elements for Complete Task Management</h4>
-              <ul className="text-sm text-blue-800 space-y-1">
-                <li>• <strong>Line 14:</strong> <code>id="taskInput"</code> - Task description input with required validation</li>
-                <li>• <strong>Lines 16-21:</strong> <code>id="prioritySelect"</code> - Dropdown for Low/Medium/High/Critical priority selection</li>
-                <li>• <strong>Line 23:</strong> <code>id="dueDateInput"</code> - Date picker for due date selection</li>
-                <li>• <strong>Line 24:</strong> <code>id="addTaskBtn"</code> - Button that triggers task creation with all fields</li>
-                <li>• <strong>Line 28:</strong> <code>id="taskList"</code> - Container where new tasks with priority and dates appear</li>
-                <li>• <strong>Line 40:</strong> JavaScript file loads after all HTML elements are ready</li>
-              </ul>
-            </div>
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <h4 className="font-medium text-green-900 mb-2">User Story Implementation</h4>
-              <ul className="text-sm text-green-800 space-y-1">
-                <li>• <strong>Priority Selection:</strong> Implements "I can prioritise my daily work effectively" user story</li>
-                <li>• <strong>Due Date Tracking:</strong> Enables deadline management and workload planning</li>
-                <li>• <strong>Form Validation:</strong> Ensures required fields are completed before task creation</li>
-                <li>• <strong>Visual Priority Badges:</strong> Makes task importance immediately visible to evaluators</li>
-                <li>• <strong>Structured Data:</strong> Creates consistent task format for easy filtering and sorting</li>
-              </ul>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+            <h4 className="font-medium text-gray-900 mb-4">What's New in Our Enhanced HTML?</h4>
+            <p className="text-gray-700 mb-4">
+              Our HTML now includes advanced form elements that make this a proper task management system. Think of these as "connection points" that JavaScript uses to create rich, interactive experiences:
+            </p>
+            
+            <div className="space-y-6">
+              <div className="bg-white border border-gray-200 rounded p-5">
+                <h5 className="font-medium text-gray-900 mb-4 flex items-center">
+                  Interactive Form Elements - HTML Deep Dive
+                </h5>
+                <div className="space-y-6">
+                  
+                  <div className="border-l-4 border-green-500 pl-4 bg-green-50 p-4 rounded-r">
+                    <div className="flex items-center justify-between mb-2">
+                      <h6 className="font-medium text-gray-900">Task Description Input</h6>
+                      <code className="text-xs bg-gray-800 text-white px-2 py-1 rounded">id="taskInput"</code>
+                    </div>
+                    <div className="bg-gray-800 text-white p-3 rounded text-sm font-mono mb-3">
+                      &lt;input type="text" id="taskInput" placeholder="Enter task description" required&gt;
+                    </div>
+                    <div className="text-sm space-y-2">
+                      <p><strong>What it does:</strong> Creates a single-line text input field where users can type task descriptions</p>
+                      <p><strong>HTML breakdown:</strong></p>
+                      <ul className="text-xs space-y-1 ml-4">
+                        <li>• <code>type="text"</code> - Specifies this accepts any text input (letters, numbers, symbols)</li>
+                        <li>• <code>placeholder="..."</code> - Shows gray hint text before user starts typing</li>
+                        <li>• <code>required</code> - Browser won't submit form if this field is empty</li>
+                        <li>• <code>id="taskInput"</code> - Unique identifier so JavaScript can find this specific element</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="border-l-4 border-blue-500 pl-4 bg-blue-50 p-4 rounded-r">
+                    <div className="flex items-center justify-between mb-2">
+                      <h6 className="font-medium text-gray-900">Priority Selector Dropdown</h6>
+                      <code className="text-xs bg-gray-800 text-white px-2 py-1 rounded">id="prioritySelect"</code>
+                    </div>
+                    <div className="bg-gray-800 text-white p-3 rounded text-sm font-mono mb-3">
+                      &lt;select id="prioritySelect" required&gt;<br/>
+                      &nbsp;&nbsp;&lt;option value="Low"&gt;Low Priority&lt;/option&gt;<br/>
+                      &nbsp;&nbsp;&lt;option value="Medium" selected&gt;Medium Priority&lt;/option&gt;<br/>
+                      &nbsp;&nbsp;&lt;option value="High"&gt;High Priority&lt;/option&gt;<br/>
+                      &nbsp;&nbsp;&lt;option value="Critical"&gt;Critical Priority&lt;/option&gt;<br/>
+                      &lt;/select&gt;
+                    </div>
+                    <div className="text-sm space-y-2">
+                      <p><strong>What it does:</strong> Creates a dropdown menu where users can choose from predefined priority levels</p>
+                      <p><strong>HTML breakdown:</strong></p>
+                      <ul className="text-xs space-y-1 ml-4">
+                        <li>• <code>&lt;select&gt;</code> - Container that creates the dropdown functionality</li>
+                        <li>• <code>&lt;option&gt;</code> - Each choice available in the dropdown</li>
+                        <li>• <code>value="Medium"</code> - The data sent to JavaScript when this option is selected</li>
+                        <li>• <code>selected</code> - Makes "Medium Priority" the default choice when page loads</li>
+                        <li>• <code>required</code> - Forces user to make a selection (though one is pre-selected)</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="border-l-4 border-purple-500 pl-4 bg-purple-50 p-4 rounded-r">
+                    <div className="flex items-center justify-between mb-2">
+                      <h6 className="font-medium text-gray-900">Due Date Picker</h6>
+                      <code className="text-xs bg-gray-800 text-white px-2 py-1 rounded">id="dueDateInput"</code>
+                    </div>
+                    <div className="bg-gray-800 text-white p-3 rounded text-sm font-mono mb-3">
+                      &lt;input type="date" id="dueDateInput" required&gt;
+                    </div>
+                    <div className="text-sm space-y-2">
+                      <p><strong>What it does:</strong> Creates a date picker that opens a calendar widget when clicked</p>
+                      <p><strong>HTML breakdown:</strong></p>
+                      <ul className="text-xs space-y-1 ml-4">
+                        <li>• <code>type="date"</code> - Special input type that creates calendar functionality</li>
+                        <li>• Browser automatically shows a calendar popup when user clicks the field</li>
+                        <li>• Validates that user enters a properly formatted date (YYYY-MM-DD)</li>
+                        <li>• <code>required</code> - User must pick a date before form can be submitted</li>
+                        <li>• Returns date in format "2025-07-25" that JavaScript can easily work with</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="border-l-4 border-orange-500 pl-4 bg-orange-50 p-4 rounded-r">
+                    <div className="flex items-center justify-between mb-2">
+                      <h6 className="font-medium text-gray-900">Form Submit Button</h6>
+                      <code className="text-xs bg-gray-800 text-white px-2 py-1 rounded">id="addTaskBtn"</code>
+                    </div>
+                    <div className="bg-gray-800 text-white p-3 rounded text-sm font-mono mb-3">
+                      &lt;button id="addTaskBtn"&gt;Add Task&lt;/button&gt;
+                    </div>
+                    <div className="text-sm space-y-2">
+                      <p><strong>What it does:</strong> Creates a clickable button that triggers JavaScript to process all form data</p>
+                      <p><strong>HTML breakdown:</strong></p>
+                      <ul className="text-xs space-y-1 ml-4">
+                        <li>• <code>&lt;button&gt;</code> - Creates an interactive element users can click</li>
+                        <li>• "Add Task" is the visible text displayed on the button</li>
+                        <li>• <code>id="addTaskBtn"</code> - JavaScript uses this to "listen" for click events</li>
+                        <li>• When clicked, triggers the JavaScript function that creates new tasks</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              
+              <div className="bg-white border border-gray-200 rounded p-4">
+                <h5 className="font-medium text-gray-900 mb-3">Why This Solves Real Problems</h5>
+                <div className="space-y-3 text-sm text-gray-700">
+                  <div>
+                    <p className="font-medium text-gray-900">Priority Management</p>
+                    <p className="text-xs">John Cleese can now see which silly walk evaluations are urgent vs. routine</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Deadline Tracking</p>
+                    <p className="text-xs">No more missed deadlines for walk approval submissions</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Structured Data</p>
+                    <p className="text-xs">Every task has consistent information for easy filtering and reporting</p>
+                  </div>
+                  <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                    <p className="text-xs"><strong>Real-world impact:</strong> Instead of sticky notes that get lost, the Ministry now has a proper digital system with priority levels and deadlines - just like John Cleese requested in his user story!</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="concept-callout">
             <div className="concept-title">
-              <Lightbulb className="w-5 h-5 mr-2" />
+              <div className="w-5 h-5 bg-tutorial-primary rounded mr-2"></div>
               BA Insight: HTML Foundation for Interactive Features
             </div>
-            <p className="concept-text">
-              Notice how the HTML structure directly supports the user stories we defined earlier. The input field and button enable "adding new tasks," while the task list container with proper IDs allows JavaScript to dynamically add new tasks. This is how requirements translate into technical implementation - the HTML provides the foundation that JavaScript can build upon.
-            </p>
+            <div className="concept-text space-y-4">
+              <p>
+                Interactive requirements depend entirely on proper HTML structure. Every dynamic feature you specify must have HTML elements that JavaScript can target and manipulate. Understanding this dependency helps you write more complete functional requirements.
+              </p>
+              
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">User Story → HTML → JavaScript Chain:</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="border-l-4 border-green-500 pl-3">
+                    <div><strong>User Story:</strong> "I want to add new tasks quickly"</div>
+                    <div><strong>HTML Requirement:</strong> Input field with unique ID, submit button</div>
+                    <div><strong>JavaScript Requirement:</strong> Event listener, validation, DOM manipulation</div>
+                    <div><strong>BA Question:</strong> What data validation is required? What happens on success/failure?</div>
+                  </div>
+                  
+                  <div className="border-l-4 border-blue-500 pl-3">
+                    <div><strong>User Story:</strong> "I need to see all my tasks in one place"</div>
+                    <div><strong>HTML Requirement:</strong> Container element with proper semantic structure</div>
+                    <div><strong>JavaScript Requirement:</strong> Dynamic content generation, data binding</div>
+                    <div><strong>BA Question:</strong> How should tasks be sorted? What information is displayed?</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Interactive Requirements Checklist:</h4>
+                <div className="text-sm space-y-2">
+                  <div><strong>Triggering Elements:</strong> What buttons, links, or form fields initiate actions?</div>
+                  <div><strong>Target Elements:</strong> What parts of the page will be updated or modified?</div>
+                  <div><strong>Data Sources:</strong> Where does the information come from? (user input, APIs, storage)</div>
+                  <div><strong>User Feedback:</strong> How does the user know the action succeeded or failed?</div>
+                  <div><strong>State Management:</strong> What information needs to persist between interactions?</div>
+                  <div><strong>Validation Rules:</strong> What business rules must be enforced before processing?</div>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 p-4 rounded-lg">
+                <h4 className="font-semibold text-amber-900 mb-2">Common Interactive Requirement Gaps:</h4>
+                <ul className="text-sm space-y-1">
+                  <li>• Not specifying what happens during loading/processing states</li>
+                  <li>• Missing error handling and recovery scenarios</li>
+                  <li>• Unclear data validation rules and error messages</li>
+                  <li>• Not defining keyboard accessibility and navigation</li>
+                  <li>• Missing specifications for real-time updates and notifications</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       )
@@ -311,42 +497,42 @@ function getPriorityColor(priority) {
           explanations: [
             {
               line: "document.getElementById('addTaskBtn').addEventListener('click', function() {",
-              explanation: "This finds the Add Task button and listens for when someone clicks it.",
+              explanation: "Breaking down this event listener setup:<ul><li>'document' = The entire web page (HTML document)</li><li>'getElementById()' = Method to find a specific HTML element by its ID</li><li>'addTaskBtn' = The ID of our button from the HTML</li><li>'addEventListener()' = Method that waits for user interactions</li><li>'click' = The type of interaction we're waiting for</li><li>'function()' = The code that runs when the click happens</li><li>This connects user actions to code responses</li></ul>",
               businessContext: "Event listeners are how web applications respond to user actions - essential for interactive systems."
             },
             {
               line: "const input = document.getElementById('taskInput');",
-              explanation: "This gets the input field where users type their task description.",
+              explanation: "Understanding variable creation and DOM access:<ul><li>'const' = Creates a new variable (a named container for data)</li><li>'input' = The name we're giving to our variable</li><li>'=' = Assignment operator (puts the value on the right into the variable on the left)</li><li>'document.getElementById()' = Finds the HTML element with ID 'taskInput'</li><li>This creates a reference to the input field so we can work with it</li><li>Variables let us store and reuse values throughout our code</li></ul>",
               businessContext: "Accessing form inputs is fundamental to collecting user data in web applications."
             },
             {
               line: "const prioritySelect = document.getElementById('prioritySelect');",
-              explanation: "This gets the priority dropdown so we can read which priority the user selected.",
+              explanation: "Creating another variable for form data access:<ul><li>'const prioritySelect' = Creates a variable named 'prioritySelect'</li><li>'getElementById('prioritySelect')' = Finds the dropdown menu in the HTML</li><li>This follows the same pattern as the input field variable</li><li>Each form element needs its own variable to access its data</li><li>Dropdown menus (select elements) contain the user's choice</li><li>We'll use this variable later to get the selected priority level</li></ul>",
               businessContext: "Priority selection enables users to communicate urgency and helps with workload management."
             },
             {
               line: "const dueDateInput = document.getElementById('dueDateInput');",
-              explanation: "This gets the due date input field to capture when the task needs to be completed.",
+              explanation: "Creating a third variable for date input:<ul><li>'const dueDateInput' = Variable to store reference to the date picker</li><li>'getElementById('dueDateInput')' = Finds the date input field in HTML</li><li>This completes our collection of form element references</li><li>Date inputs are special HTML elements that show a calendar picker</li><li>We need all three variables (text, priority, date) to create complete tasks</li><li>This pattern of getting elements first is common in JavaScript</li></ul>",
               businessContext: "Due date tracking is essential for deadline management and project planning."
             },
             {
               line: "if (!dueDate) { alert('Please select a due date'); return; }",
-              explanation: "This validates that the user selected a due date before creating the task.",
+              explanation: "Understanding conditional logic and validation:<ul><li>'if' = JavaScript keyword that creates a conditional check</li><li>'!dueDate' = Checks if dueDate is empty or null (! means 'not' or 'opposite of')</li><li>'alert()' = Shows a pop-up message to the user</li><li>'return' = Stops the function from continuing (exits early)</li><li>This prevents task creation if no due date was selected</li><li>If statements let programs make decisions based on data</li><li>Validation protects against incomplete or invalid data</li></ul>",
               businessContext: "Date validation ensures all tasks have deadlines, which is crucial for project management and accountability."
             },
             {
               line: "const priorityColor = getPriorityColor(priority);",
-              explanation: "This calls a helper function to determine which CSS class should be used for the priority badge color.",
+              explanation: "Understanding function calls and return values:<ul><li>'const priorityColor' = Creates a new variable to store the result</li><li>'getPriorityColor()' = Calls a function (a reusable piece of code)</li><li>'priority' = The parameter we're passing to the function (the priority level)</li><li>Functions take input (priority) and return output (CSS class name)</li><li>This function converts 'High' to 'priority-high' for CSS styling</li><li>Functions help organize code and avoid repetition</li><li>The returned value gets stored in the priorityColor variable</li></ul>",
               businessContext: "Visual priority indicators help users quickly identify urgent tasks, improving workflow efficiency."
             },
             {
               line: "const formattedDate = new Date(dueDate).toLocaleDateString('en-UK');",
-              explanation: "This formats the due date into a readable UK date format (DD/MM/YYYY).",
+              explanation: "Understanding date processing and formatting:<ul><li>'const formattedDate' = Variable to store the formatted date</li><li>'new Date()' = Creates a JavaScript Date object from the input date</li><li>'dueDate' = The raw date value from the date picker</li><li>'.toLocaleDateString()' = Method that formats dates for display</li><li>'en-UK' = Parameter specifying UK date format (DD/MM/YYYY)</li><li>This converts '2025-07-25' to '25/07/2025' for better readability</li><li>Date objects have many built-in methods for formatting and calculations</li></ul>",
               businessContext: "Proper date formatting ensures consistency and clarity in user interfaces, especially important for government systems."
             },
             {
               line: "taskList.appendChild(newTask);",
-              explanation: "This adds the complete task card to the task list with all the priority and date information.",
+              explanation: "Understanding DOM manipulation and element insertion:<ul><li>'taskList' = The variable holding reference to the task container</li><li>'.appendChild()' = Method that adds a child element inside a parent</li><li>'newTask' = The complete task card element we created</li><li>This physically adds the new task to the visible page</li><li>The browser immediately shows the new task in the list</li><li>DOM manipulation changes the page structure in real-time</li><li>This is how JavaScript makes web pages dynamic and interactive</li></ul>",
               businessContext: "Dynamic content updates provide immediate feedback and keep the interface current with user actions."
             }
           ]
@@ -357,11 +543,9 @@ function getPriorityColor(priority) {
 // Add your JavaScript code here to handle priority and due dates`,
         targetCode: `// Ministry of Silly Walks - Task Manager JavaScript
 
-// Enhanced HTML structure includes:
+// HTML structure includes:
 // - Task description input (id="taskInput")
-// - Priority dropdown (id="prioritySelect") 
-// - Due date picker (id="dueDateInput")
-// - Add task button (id="addTaskBtn")
+// - Add task button (id="addTaskBtn")  
 // - Task list container (id="taskList")
 
 document.getElementById('addTaskBtn').addEventListener('click', function() {
@@ -418,11 +602,15 @@ function getPriorityColor(priority) {
     }
 }`,
         hints: [
-          "Add your JavaScript code below the comment in the script.js file",
-          "Replace it with the JavaScript code from the code block above",
-          "The HTML and CSS files are read-only - you can view them but only edit JavaScript",
-          "Make sure to include the complete event listener function",
-          "After adding the code, test it by typing in the input field and clicking 'Add Task' in the preview"
+          "Start by adding an event listener to the 'addTaskBtn' button that responds to 'click' events",
+          "Use document.getElementById() to get references to all form elements (taskInput, prioritySelect, dueDateInput)",
+          "Extract values from each form element using .value property and .trim() for the text input",
+          "Add validation to ensure the task description is not empty and a due date is selected",
+          "Create a new task element using document.createElement() and set its innerHTML with template literals",
+          "Use the getPriorityColor() function to get the appropriate CSS class for the priority badge",
+          "Format the date using new Date().toLocaleDateString('en-UK') for proper UK date display",
+          "Add the new task to the task list using appendChild() method",
+          "Clear the form by resetting all input values to their defaults"
         ],
         explanation: {
           whatIsHappening: "You've added JavaScript functionality while working with read-only HTML and CSS files! The existing interface structure from Chapters 1 & 2 now has interactive behavior. The JavaScript listens for button clicks, validates user input, creates new task elements, and updates the page dynamically. You're working purely in the JavaScript layer while the HTML and CSS remain untouched.",
@@ -520,7 +708,7 @@ function getPriorityColor(priority) {
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800 font-medium mb-2">Chapter 3 Complete!</p>
                   <p className="text-xs text-green-700 mb-3">
-                    You've built a working task management system! 🎉
+                    You've built a working task management system!
                   </p>
                   <div className="text-xs text-green-700 mb-3">
                     <p className="font-medium mb-1">What you've learned:</p>
