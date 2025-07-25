@@ -146,69 +146,22 @@ export default function DemoApp() {
   // Demo showing HTML structure from Chapter 1
   const Chapter1Demo = () => (
     <div className="space-y-6">
-      <div className="bg-white border border-gray-300 rounded p-6">
-        <h1 style={{ color: '#003d7a', marginBottom: '10px', fontSize: '32px', fontWeight: 'bold' }}>
-          Ministry of Silly Walks
-        </h1>
-        <p style={{ color: '#6b7280', marginBottom: '30px' }}>
-          Task Management System
-        </p>
+      <div>
+        <h1>Ministry of Silly Walks</h1>
+        <p>Task Management System</p>
         
-        <h2 style={{ 
-          color: '#4b5563', 
-          borderBottom: '2px solid #e5e7eb', 
-          paddingBottom: '5px', 
-          marginBottom: '15px',
-          fontSize: '24px',
-          fontWeight: 'bold'
-        }}>
-          Add New Task
-        </h2>
-        <input 
-          type="text" 
-          placeholder="Enter task description"
-          style={{
-            width: '100%',
-            padding: '10px',
-            border: '1px solid #d1d5db',
-            borderRadius: '4px',
-            fontSize: '16px',
-            marginBottom: '20px'
-          }}
-          disabled
-        />
+        <h2>Add New Task</h2>
+        <input type="text" placeholder="Enter task description" />
         
-        <h2 style={{ 
-          color: '#4b5563', 
-          borderBottom: '2px solid #e5e7eb', 
-          paddingBottom: '5px', 
-          marginBottom: '15px',
-          fontSize: '24px',
-          fontWeight: 'bold'
-        }}>
-          Current Tasks
-        </h2>
-        <div style={{
-          backgroundColor: 'white',
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          padding: '15px',
-          marginBottom: '15px',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-        }}>
-          <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>
-            Evaluate Mr. Smith's Silly Walk Application
-          </h3>
-          <p style={{ marginBottom: '5px', color: '#6b7280' }}>
-            Review submitted video and assess walk silliness level.
-          </p>
-          <p style={{ color: '#6b7280', fontSize: '14px' }}>
-            Assigned to: John Cleese
-          </p>
+        <h2>Current Tasks</h2>
+        <div>
+          <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+          <p>Review submitted video and assess walk silliness level.</p>
+          <p>Assigned to: John Cleese</p>
         </div>
       </div>
       <div className="text-sm text-gray-600 bg-blue-50 p-4 rounded">
-        <strong>Chapter 1 Learning:</strong> This shows the basic HTML structure you built - headings, paragraphs, input field, and task display with semantic markup.
+        <strong>Chapter 1 Learning:</strong> This shows the basic HTML structure you built - headings, paragraphs, input field, and task display with semantic markup. No CSS styling applied - just raw HTML elements with default browser styling.
       </div>
     </div>
   )
@@ -216,72 +169,28 @@ export default function DemoApp() {
   // Demo showing styled version from Chapter 2
   const Chapter2Demo = () => (
     <div className="space-y-6">
-      <div style={{
-        fontFamily: 'Arial, sans-serif',
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '20px',
-        backgroundColor: '#f8f9fa'
-      }}>
-        <h1 style={{ color: '#003d7a', marginBottom: '10px', fontSize: '32px', fontWeight: 'bold' }}>
-          Ministry of Silly Walks
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <h1 className="text-3xl font-bold text-gov-blue mb-6">
+          Ministry of Silly Walks - Basic Task Manager
         </h1>
-        <p style={{ color: '#6b7280', marginBottom: '30px' }}>
-          Task Management System
-        </p>
         
-        <h2 style={{ 
-          color: '#4b5563', 
-          borderBottom: '2px solid #e5e7eb', 
-          paddingBottom: '5px', 
-          marginBottom: '15px',
-          fontSize: '24px',
-          fontWeight: 'bold'
-        }}>
-          Add New Task
-        </h2>
-        <input 
-          type="text" 
-          placeholder="Enter task description"
-          style={{
-            width: '100%',
-            padding: '10px',
-            border: '1px solid #d1d5db',
-            borderRadius: '4px',
-            fontSize: '16px',
-            marginBottom: '20px',
-            boxSizing: 'border-box'
-          }}
-          disabled
-        />
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-3">Add New Task</h2>
+          <input 
+            type="text" 
+            placeholder="Enter task description"
+            className="w-full p-3 border border-gray-300 rounded-md"
+            disabled
+          />
+        </div>
         
-        <h2 style={{ 
-          color: '#4b5563', 
-          borderBottom: '2px solid #e5e7eb', 
-          paddingBottom: '5px', 
-          marginBottom: '15px',
-          fontSize: '24px',
-          fontWeight: 'bold'
-        }}>
-          Current Tasks
-        </h2>
-        <div style={{
-          backgroundColor: 'white',
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          padding: '15px',
-          marginBottom: '15px',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-        }}>
-          <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>
-            Evaluate Mr. Smith's Silly Walk Application
-          </h3>
-          <p style={{ marginBottom: '5px', color: '#6b7280' }}>
-            Review submitted video and assess walk silliness level.
-          </p>
-          <p style={{ color: '#6b7280', fontSize: '14px' }}>
-            Assigned to: John Cleese
-          </p>
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Current Tasks</h2>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900">Evaluate Mr. Smith's Silly Walk Application</h3>
+            <p className="text-gray-600 text-sm mt-1">Review submitted video and assess walk silliness level.</p>
+            <p className="text-gray-600 text-sm">Assigned to: John Cleese</p>
+          </div>
         </div>
       </div>
       <div className="text-sm text-gray-600 bg-blue-50 p-4 rounded">
@@ -317,43 +226,27 @@ export default function DemoApp() {
         </h1>
         <p className="text-gray-600 mb-6">Complete System with Database, API, and Advanced Features</p>
         
-        {/* Advanced Task Creation Form */}
-        <div className="bg-gray-50 p-6 rounded-lg mb-6">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Globe className="w-5 h-5 mr-2" />
-            Add New Task (with API Integration)
-          </h2>
-          
+        {/* Task Creation Form - Same as Chapter 3 */}
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Task Title</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Task Description</label>
               <input 
                 type="text" 
                 placeholder="Enter task description"
                 value={newTaskText}
                 onChange={(e) => setNewTaskText(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onKeyPress={handleKeyPress}
+                className="w-full p-3 border border-gray-300 rounded-md"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
-              <select 
-                value={newTaskAssignee}
-                onChange={(e) => setNewTaskAssignee(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="John Cleese">John Cleese</option>
-                <option value="Michael Palin">Michael Palin</option>
-                <option value="Terry Gilliam">Terry Gilliam</option>
-                <option value="Current User">Current User</option>
-              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
               <select 
                 value={newTaskPriority}
                 onChange={(e) => setNewTaskPriority(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-gray-300 rounded-md"
               >
                 <option value="low">Low Priority</option>
                 <option value="medium">Medium Priority</option>
@@ -366,126 +259,31 @@ export default function DemoApp() {
                 type="date" 
                 value={newTaskDueDate}
                 onChange={(e) => setNewTaskDueDate(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full p-3 border border-gray-300 rounded-md"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-              <select 
-                value={newTaskCategory}
-                onChange={(e) => setNewTaskCategory(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="General">General</option>
-                <option value="Applications">Applications</option>
-                <option value="Training">Training</option>
-                <option value="Administrative">Administrative</option>
-              </select>
-            </div>
           </div>
-          
           <button 
             onClick={addTask}
             disabled={isLoading}
-            className="bg-gov-blue text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            className="bg-gov-blue text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? (
-              <>
-                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                Creating Task...
-              </>
-            ) : (
-              <>
-                <Database className="w-4 h-4 mr-2" />
-                Create Task (API Call)
-              </>
-            )}
+            {isLoading ? 'Creating Task...' : 'Add Task'}
           </button>
         </div>
         
-        {/* Advanced Task List with Full CRUD */}
+        {/* Task List - Same as Chapter 3 */}
         <div>
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Database className="w-5 h-5 mr-2" />
-            Current Tasks ({tasks.length}) - Database Synchronized
-          </h2>
-          
-          <div className="space-y-4">
+          <h2 className="text-xl font-semibold mb-4">Current Tasks</h2>
+          <div className="space-y-3">
             {tasks.map(task => (
-              <div key={task.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                {editingTask === task.id ? (
-                  // Edit Mode
-                  <TaskEditForm 
-                    task={task} 
-                    onSave={(updatedTask) => saveTaskEdit(task.id, updatedTask)}
-                    onCancel={() => setEditingTask(null)}
-                    isLoading={isLoading}
-                  />
-                ) : (
-                  // View Mode
-                  <div>
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-lg font-semibold text-gray-900">{task.title}</h3>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => setEditingTask(task.id)}
-                          className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                          title="Edit Task"
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => deleteTask(task.id)}
-                          className="p-1 text-gray-500 hover:text-red-600 transition-colors"
-                          title="Delete Task"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="grid md:grid-cols-2 gap-4 mb-3">
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">Priority:</span>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
-                            {task.priority?.toUpperCase()}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">Status:</span>
-                          <select
-                            value={task.status}
-                            onChange={(e) => updateTaskStatus(task.id, e.target.value)}
-                            className={`text-xs px-2 py-1 rounded-full font-medium border-0 ${getStatusColor(task.status)}`}
-                          >
-                            <option value="pending">Pending</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                          </select>
-                        </div>
-                        <div className="flex items-center space-x-2 text-sm text-gray-600">
-                          <Clock className="w-4 h-4" />
-                          <span>Due: {task.dueDate || 'No due date'}</span>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="text-sm text-gray-600">
-                          <span className="font-medium">Assigned to:</span> {task.assignedTo}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          <span className="font-medium">Category:</span> {task.category}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          Created: {new Date(task.createdAt).toLocaleDateString()}
-                          {task.updatedAt !== task.createdAt && (
-                            <> • Updated: {new Date(task.updatedAt).toLocaleDateString()}</>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+              <div key={task.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <h3 className="font-semibold text-gray-900">{task.title}</h3>
+                <div className="grid md:grid-cols-2 gap-2 mt-2 text-sm text-gray-600">
+                  <p>Status: {task.status}</p>
+                  <p>Priority: {task.priority}</p>
+                  <p>Due: {task.dueDate || 'No due date'}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -493,7 +291,7 @@ export default function DemoApp() {
       </div>
       
       <div className="text-sm text-gray-600 bg-green-50 p-4 rounded">
-        <strong>Complete System Features (Chapters 4-9):</strong> This demonstrates the full enterprise system with API integration (Chapter 6), database persistence (Chapter 5), CRUD operations, advanced form fields, status management, priority levels, audit trails, loading states, error handling, real-time updates, testing strategies (Chapter 7), and performance optimization (Chapter 8). All features from the complete tutorial!
+        <strong>Complete System Features (Chapters 4-9):</strong> Same frontend interface as Chapter 3, but now powered by a complete backend system with database persistence (Chapter 5), RESTful API endpoints (Chapter 6), comprehensive testing (Chapter 7), performance optimization (Chapter 8), and production deployment (Chapter 9). The user interface remained the same while the underlying architecture became enterprise-grade!
       </div>
     </div>
   )
@@ -587,27 +385,51 @@ export default function DemoApp() {
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg border border-gray-200">
         <h1 className="text-3xl font-bold text-gov-blue mb-6">
-          Ministry of Silly Walks - Basic Task Manager
+          Ministry of Silly Walks - Interactive Task Manager
         </h1>
         
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-3">Add New Task</h2>
-          <div className="flex space-x-2">
-            <input 
-              type="text" 
-              placeholder="Enter task description"
-              value={newTaskText}
-              onChange={(e) => setNewTaskText(e.target.value)}
-              onKeyPress={handleKeyPress}
-              className="flex-1 p-3 border border-gray-300 rounded-md"
-            />
-            <button 
-              onClick={addTask}
-              className="bg-gov-blue text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Add Task
-            </button>
+          <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
+          <div className="grid md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Task Description</label>
+              <input 
+                type="text" 
+                placeholder="Enter task description"
+                value={newTaskText}
+                onChange={(e) => setNewTaskText(e.target.value)}
+                onKeyPress={handleKeyPress}
+                className="w-full p-3 border border-gray-300 rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+              <select 
+                value={newTaskPriority}
+                onChange={(e) => setNewTaskPriority(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-md"
+              >
+                <option value="low">Low Priority</option>
+                <option value="medium">Medium Priority</option>
+                <option value="high">High Priority</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+              <input 
+                type="date" 
+                value={newTaskDueDate}
+                onChange={(e) => setNewTaskDueDate(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-md"
+              />
+            </div>
           </div>
+          <button 
+            onClick={addTask}
+            className="bg-gov-blue text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Add Task
+          </button>
         </div>
         
         <div>
@@ -616,8 +438,11 @@ export default function DemoApp() {
             {tasks.slice(0, 3).map(task => (
               <div key={task.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900">{task.title}</h3>
-                <p className="text-gray-600 text-sm mt-1">Status: {task.status}</p>
-                <p className="text-gray-600 text-sm">Assigned to: {task.assignedTo}</p>
+                <div className="grid md:grid-cols-2 gap-2 mt-2 text-sm text-gray-600">
+                  <p>Status: {task.status}</p>
+                  <p>Priority: {task.priority}</p>
+                  <p>Due: {task.dueDate || 'No due date'}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -625,7 +450,7 @@ export default function DemoApp() {
       </div>
       
       <div className="text-sm text-gray-600 bg-blue-50 p-4 rounded">
-        <strong>Chapter 3 Learning:</strong> Basic JavaScript interactivity - click events, DOM manipulation, input validation, and dynamic task creation.
+        <strong>Chapter 3 Learning:</strong> JavaScript interactivity - form handling, input validation, dynamic task creation with multiple fields, DOM manipulation, and event handling.
       </div>
     </div>
   )
@@ -813,27 +638,54 @@ div {
             <div className="space-y-4">
               <h4 className="font-medium text-gray-800">JavaScript Interactivity (Chapter 3)</h4>
               <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-{`// Ministry of Silly Walks - Task Manager JavaScript
+{`// Ministry of Silly Walks - Task Manager JavaScript with Enhanced Form Handling
 
 document.getElementById('addTaskBtn').addEventListener('click', function() {
-    const input = document.getElementById('taskInput');
-    const taskText = input.value.trim();
+    // Get form field values
+    const taskInput = document.getElementById('taskInput');
+    const prioritySelect = document.getElementById('prioritySelect');
+    const dueDateInput = document.getElementById('dueDateInput');
     
+    const taskText = taskInput.value.trim();
+    const priority = prioritySelect.value;
+    const dueDate = dueDateInput.value;
+    
+    // Input validation
     if (taskText === '') {
         alert('Please enter a task description');
         return;
     }
     
+    // Create new task element
     const taskList = document.getElementById('taskList');
     const newTask = document.createElement('div');
+    newTask.className = 'task-card';
+    
     newTask.innerHTML = \`
         <h3>\${taskText}</h3>
-        <p>Status: Pending</p>
-        <p>Assigned to: Current User</p>
+        <div class="task-details">
+            <p>Status: Pending</p>
+            <p>Priority: \${priority}</p>
+            <p>Due: \${dueDate || 'No due date'}</p>
+        </div>
     \`;
     
+    // Add to task list
     taskList.appendChild(newTask);
-    input.value = '';
+    
+    // Clear form fields
+    taskInput.value = '';
+    prioritySelect.value = 'medium';
+    dueDateInput.value = '';
+    
+    console.log('Task created:', { taskText, priority, dueDate });
+});
+
+// Add Enter key support for task input
+document.getElementById('taskInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        document.getElementById('addTaskBtn').click();
+    }
 });`}
               </pre>
             </div>
