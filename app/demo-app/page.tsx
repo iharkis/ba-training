@@ -493,7 +493,7 @@ export default function DemoApp() {
       </div>
       
       <div className="text-sm text-gray-600 bg-green-50 p-4 rounded">
-        <strong>Complete System Features (Chapters 4-9):</strong> This demonstrates the full enterprise system with API integration, database persistence, CRUD operations, advanced form fields, status management, priority levels, audit trails, loading states, error handling, and real-time updates. All features from the complete tutorial!
+        <strong>Complete System Features (Chapters 4-9):</strong> This demonstrates the full enterprise system with API integration (Chapter 6), database persistence (Chapter 5), CRUD operations, advanced form fields, status management, priority levels, audit trails, loading states, error handling, real-time updates, testing strategies (Chapter 7), and performance optimization (Chapter 8). All features from the complete tutorial!
       </div>
     </div>
   )
@@ -880,7 +880,7 @@ const createTask = async (taskData) => {
               </div>
 
               <div className="space-y-4">
-                <h5 className="text-sm font-semibold text-gray-700">Backend API (Express.js)</h5>
+                <h5 className="text-sm font-semibold text-gray-700">Backend API (Express.js) - Chapters 4 & 6</h5>
                 <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
 {`// RESTful API with Database Integration
 app.post('/api/tasks', async (req, res) => {
@@ -923,7 +923,7 @@ app.post('/api/tasks', async (req, res) => {
               </div>
 
               <div className="space-y-4">
-                <h5 className="text-sm font-semibold text-gray-700">Database Schema (SQLite)</h5>
+                <h5 className="text-sm font-semibold text-gray-700">Database Schema (SQLite) - Chapter 5</h5>
                 <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
 {`-- Complete task management database schema
 CREATE TABLE tasks (
@@ -939,18 +939,58 @@ CREATE TABLE tasks (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for performance
+-- Indexes for performance (Chapter 8)
 CREATE INDEX idx_tasks_status ON tasks(status);
 CREATE INDEX idx_tasks_assigned_to ON tasks(assigned_to);
 CREATE INDEX idx_tasks_priority ON tasks(priority);
 CREATE INDEX idx_tasks_due_date ON tasks(due_date);
 
--- Audit trail trigger
+-- Audit trail trigger (Government compliance requirement)
 CREATE TRIGGER update_tasks_timestamp 
     AFTER UPDATE ON tasks
 BEGIN
     UPDATE tasks SET updated_at = datetime('now') WHERE id = NEW.id;
 END;`}
+                </pre>
+              </div>
+
+              <div className="space-y-4">
+                <h5 className="text-sm font-semibold text-gray-700">Testing Strategy (Chapter 7)</h5>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+{`// Unit Testing Example
+describe('Task Management', () => {
+  test('should create new task with valid data', async () => {
+    const taskData = {
+      title: 'Evaluate silly walk application',
+      assignedTo: 'John Cleese',
+      priority: 'high',
+      dueDate: '2024-08-15'
+    };
+    
+    const result = await createTask(taskData);
+    expect(result.status).toBe('success');
+    expect(result.data.title).toBe(taskData.title);
+  });
+  
+  test('should reject task creation with missing title', async () => {
+    const invalidData = { assignedTo: 'John Cleese' };
+    
+    await expect(createTask(invalidData))
+      .rejects.toThrow('Title is required');
+  });
+});
+
+// API Integration Testing
+describe('API Endpoints', () => {
+  test('POST /api/tasks returns 201 with valid data', async () => {
+    const response = await request(app)
+      .post('/api/tasks')
+      .send({ title: 'Test Task', assignedTo: 'Test User' })
+      .expect(201);
+      
+    expect(response.body.status).toBe('success');
+  });
+});`}
                 </pre>
               </div>
             </div>
@@ -1051,7 +1091,7 @@ END;`}
             You've progressed from basic HTML to a full-stack application with database integration, API design, and professional-grade features!
           </p>
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4 text-green-800">
-            <strong>🎉 Congratulations!</strong> You now understand how web applications work from the ground up and can collaborate effectively with development teams using your newfound technical knowledge.
+            <strong>🎉 Congratulations!</strong> You now understand how web applications work from the ground up and can collaborate effectively with development teams. You can write technical requirements, understand implementation challenges, estimate complexity, and facilitate better project delivery using your newfound technical knowledge.
           </div>
           <div className="space-x-4">
             <Link href="/tutorial/chapter-9" className="text-blue-600 hover:text-blue-800 underline">
