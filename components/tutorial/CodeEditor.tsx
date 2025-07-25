@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react'
-import { CheckCircle, AlertCircle, Lightbulb, Eye, Code, Maximize2, Minimize2, X, Copy, Check, Sun, Moon } from 'lucide-react'
+import { CheckCircle, AlertCircle, Lightbulb, Eye, Code, Maximize2, Minimize2, X, Copy, Check, Sun, Moon, Loader2 } from 'lucide-react'
 import { saveCodeProgress, getCodeProgress } from '@/lib/progress'
 import InlineCodeHint from './InlineCodeHint'
 import FileTreeViewer from './FileTreeViewer'
@@ -217,6 +217,8 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
     setIsDarkMode = () => {}
   } = props
 
+  const [isContinueLoading, setIsContinueLoading] = useState(false)
+
   return (
     <div className="space-y-6">
       {/* Simplified toolbar - only essential actions */}
@@ -232,20 +234,35 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
             </button>
           ) : (
             <button
-              onClick={() => {
+              onClick={async () => {
+                if (isContinueLoading) return // Prevent double-clicks
+                
+                setIsContinueLoading(true)
                 setValidationMessage('')
                 setValidationStatus(null)
-                onComplete?.()
+                
+                // Add a small delay to show loading state, then call onComplete
+                setTimeout(() => {
+                  onComplete?.()
+                  setIsContinueLoading(false)
+                }, 150) // Short delay to show feedback
               }}
-              className="tutorial-button-primary bg-tutorial-success hover:bg-green-600"
+              disabled={isContinueLoading}
+              className={`tutorial-button-primary bg-tutorial-success hover:bg-green-600 transition-all duration-200 ${
+                isContinueLoading ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
             >
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Continue
+              {isContinueLoading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <CheckCircle className="w-4 h-4 mr-2" />
+              )}
+              {isContinueLoading ? 'Loading...' : 'Continue'}
             </button>
           )}
           
           {/* Hints available but not prominent */}
-          {!showHints && hints.length > 0 && (
+          {!showHints && hints && hints.length > 0 && (
             <button
               onClick={() => setShowHints(true)}
               className="text-sm text-gray-500 hover:text-tutorial-primary transition-colors"
@@ -654,13 +671,112 @@ export default function CodeEditor({
       setFileContents(prev => {
         const newMap = new Map(prev)
         if (latestHtmlContent) {
-          newMap.set('silly-walks-task-manager/index.html', latestHtmlContent)
+          // For Chapter 3+, ensure we use the enhanced HTML structure regardless of saved content
+          // Check if the saved content has the advanced structure, if not, use the Chapter 3 template
+          if (latestHtmlContent.includes('addTaskBtn') && latestHtmlContent.includes('prioritySelect')) {
+            newMap.set('silly-walks-task-manager/index.html', latestHtmlContent)
+          } else {
+            // Use Chapter 3+ template with enhanced structure
+            const enhancedHtml = `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministry of Silly Walks - Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Ministry of Silly Walks</h1>
+    <p>Task Management System</p>
+    
+    <h2>Add New Task</h2>
+    <div class="task-form">
+        <input type="text" id="taskInput" placeholder="Enter task description" required>
+        
+        <select id="prioritySelect" required>
+            <option value="Low">Low Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="High">High Priority</option>
+            <option value="Critical">Critical Priority</option>
+        </select>
+        
+        <input type="date" id="dueDateInput" required>
+        <button id="addTaskBtn">Add Task</button>
+    </div>
+    
+    <h2>Current Tasks</h2>
+    <div id="taskList">
+        <div class="task-card">
+            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+            <div class="task-meta">
+                <span class="priority-badge priority-high">High Priority</span>
+                <span class="due-date">Due: 25/07/2025</span>
+            </div>
+            <p>Status: Pending</p>
+            <p>Assigned to: John Cleese</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>`
+            newMap.set('silly-walks-task-manager/index.html', enhancedHtml)
+          }
+        } else {
+          // No saved HTML content, use Chapter 3+ template
+          const enhancedHtml = `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministry of Silly Walks - Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Ministry of Silly Walks</h1>
+    <p>Task Management System</p>
+    
+    <h2>Add New Task</h2>
+    <div class="task-form">
+        <input type="text" id="taskInput" placeholder="Enter task description" required>
+        
+        <select id="prioritySelect" required>
+            <option value="Low">Low Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="High">High Priority</option>
+            <option value="Critical">Critical Priority</option>
+        </select>
+        
+        <input type="date" id="dueDateInput" required>
+        <button id="addTaskBtn">Add Task</button>
+    </div>
+    
+    <h2>Current Tasks</h2>
+    <div id="taskList">
+        <div class="task-card">
+            <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+            <div class="task-meta">
+                <span class="priority-badge priority-high">High Priority</span>
+                <span class="due-date">Due: 25/07/2025</span>
+            </div>
+            <p>Status: Pending</p>
+            <p>Assigned to: John Cleese</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>`
+          newMap.set('silly-walks-task-manager/index.html', enhancedHtml)
         }
         if (latestCssContent) {
-          newMap.set('silly-walks-task-manager/styles.css', latestCssContent)
-        } else {
-          // If no CSS found from Chapter 2, provide a basic working stylesheet
-          const fallbackCssContent = `/* Ministry of Silly Walks - Task Manager Styles */
+          // For Chapter 3+, ensure we use enhanced CSS with form styling
+          // Check if the saved CSS has the advanced styling, if not, use the Chapter 3 enhanced version
+          if (latestCssContent.includes('.task-form') && latestCssContent.includes('.priority-badge')) {
+            newMap.set('silly-walks-task-manager/styles.css', latestCssContent)
+          } else {
+            // Use Chapter 3+ enhanced CSS template
+            const enhancedCss = `/* Ministry of Silly Walks - Task Manager Styles */
 
 body {
     font-family: Arial, sans-serif;
@@ -681,39 +797,200 @@ h2 {
     padding-bottom: 5px;
 }
 
-input {
-    width: 100%;
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input, select, button {
     padding: 10px;
     border: 1px solid #d1d5db;
     border-radius: 4px;
     font-size: 16px;
-    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="date"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+select {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
 }
 
 button {
     background-color: #003d7a;
     color: white;
-    padding: 10px 20px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 20px;
+    font-weight: bold;
 }
 
 button:hover {
     background-color: #002a5c;
 }
 
-#taskList > div {
-    background: white;
+.task-card {
+    background-color: white;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 15px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.task-meta {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.priority-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.priority-critical { 
+    background-color: #fee2e2; 
+    color: #991b1b; 
+}
+
+.priority-high { 
+    background-color: #fef3c7; 
+    color: #92400e; 
+}
+
+.priority-medium { 
+    background-color: #dbeafe; 
+    color: #1e40af; 
+}
+
+.priority-low { 
+    background-color: #f0fdf4; 
+    color: #166534; 
+}
+
+.due-date {
+    color: #6b7280;
+    font-weight: 500;
 }`
-          newMap.set('silly-walks-task-manager/styles.css', fallbackCssContent)
+            newMap.set('silly-walks-task-manager/styles.css', enhancedCss)
+          }
+        } else {
+          // If no CSS found from Chapter 2, use Chapter 3+ enhanced CSS template
+          const enhancedCss = `/* Ministry of Silly Walks - Task Manager Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #003d7a;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+}
+
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input, select, button {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[type="text"], input[type="date"] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+select {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+button {
+    background-color: #003d7a;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #002a5c;
+}
+
+.task-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.task-meta {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.priority-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.priority-critical { 
+    background-color: #fee2e2; 
+    color: #991b1b; 
+}
+
+.priority-high { 
+    background-color: #fef3c7; 
+    color: #92400e; 
+}
+
+.priority-medium { 
+    background-color: #dbeafe; 
+    color: #1e40af; 
+}
+
+.priority-low { 
+    background-color: #f0fdf4; 
+    color: #166534; 
+}
+
+.due-date {
+    color: #6b7280;
+    font-weight: 500;
+}`
+          newMap.set('silly-walks-task-manager/styles.css', enhancedCss)
         }
         return newMap
       })
@@ -1180,9 +1457,36 @@ button:hover {
       htmlContent = fileContents.get('silly-walks-task-manager/index.html')
     }
     
-    // If no saved HTML content, create a complete fallback with typical Chapter 1 completion content
+    // If no saved HTML content, create a complete fallback based on chapter progression
     if (!htmlContent || htmlContent.length < 50) {
-      htmlContent = `<!DOCTYPE html>
+      // Use simple HTML for Chapter 2, advanced HTML for Chapter 3+
+      if (currentChapter <= 2) {
+        // Simple Chapter 2 HTML structure
+        htmlContent = `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministry of Silly Walks - Task Manager</title>
+</head>
+<body>
+    <h1>Ministry of Silly Walks</h1>
+    <p>Task Management System</p>
+    
+    <h2>Add New Task</h2>
+    <input type="text" placeholder="Enter task description">
+    
+    <h2>Current Tasks</h2>
+    <div>
+        <h3>Evaluate Mr. Smith's Silly Walk Application</h3>
+        <p>Review submitted video and assess walk silliness level.</p>
+        <p>Assigned to: John Cleese</p>
+    </div>
+</body>
+</html>`
+      } else {
+        // Advanced Chapter 3+ HTML structure
+        htmlContent = `<!DOCTYPE html>
 <html lang="en-GB">
 <head>
     <meta charset="UTF-8">
@@ -1222,6 +1526,7 @@ button:hover {
     </div>
 </body>
 </html>`
+      }
     }
 
     // Get CSS content - prioritize current editor content if editing CSS, otherwise use saved content
@@ -1322,49 +1627,6 @@ button:hover {
               </div>
             )}
 
-            {/* Hints Display */}
-            {showHints && hints && hints.length > 0 && (
-              <div className="mb-6">
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium text-amber-900 flex items-center text-lg">
-                      💭 Let's figure this out together
-                    </h4>
-                    <button
-                      onClick={() => setShowHints(false)}
-                      className="text-sm text-yellow-600 hover:text-yellow-800 font-medium px-2 py-1 rounded"
-                    >
-                      I'm good now
-                    </button>
-                  </div>
-                  <div className="space-y-3">
-                    {hints.slice(0, currentHint + 1).map((hint, index) => (
-                      <div key={index} className="text-sm text-yellow-800 bg-yellow-100 p-3 rounded">
-                        <div className="font-medium mb-1">Hint {index + 1}:</div>
-                        <div>{hint}</div>
-                      </div>
-                    ))}
-                  </div>
-                  {currentHint < hints.length - 1 && (
-                    <div className="mt-4 text-center">
-                      <button
-                        onClick={() => setCurrentHint(currentHint + 1)}
-                        className="text-sm text-yellow-700 hover:text-yellow-900 font-medium px-3 py-1 rounded border border-yellow-300 bg-yellow-100 hover:bg-yellow-200"
-                      >
-                        Show Next Hint ({currentHint + 2} of {hints.length})
-                      </button>
-                    </div>
-                  )}
-                  {currentHint === hints.length - 1 && (
-                    <div className="mt-4 text-center">
-                      <p className="text-sm text-yellow-700 font-medium">
-                        That's all the hints! You've got this!
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
 
             {/* Code Block with Explanation */}
             {codeBlock && (
@@ -1407,6 +1669,50 @@ button:hover {
               </div>
             )}
           </div>
+
+          {/* Hints Display - positioned after buttons but before code editor */}
+          {showHints && hints && hints.length > 0 && (
+            <div className="mb-6">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-amber-900 flex items-center text-lg">
+                    💭 Let's figure this out together
+                  </h4>
+                  <button
+                    onClick={() => setShowHints(false)}
+                    className="text-sm text-yellow-600 hover:text-yellow-800 font-medium px-2 py-1 rounded"
+                  >
+                    I'm good now
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  {hints.slice(0, currentHint + 1).map((hint, index) => (
+                    <div key={index} className="text-sm text-yellow-800 bg-yellow-100 p-3 rounded">
+                      <div className="font-medium mb-1">Hint {index + 1}:</div>
+                      <div>{hint}</div>
+                    </div>
+                  ))}
+                </div>
+                {hints && currentHint < hints.length - 1 && (
+                  <div className="mt-4 text-center">
+                    <button
+                      onClick={() => setCurrentHint(currentHint + 1)}
+                      className="text-sm text-yellow-700 hover:text-yellow-900 font-medium px-3 py-1 rounded border border-yellow-300 bg-yellow-100 hover:bg-yellow-200"
+                    >
+                      Show Next Hint ({currentHint + 2} of {hints?.length || 0})
+                    </button>
+                  </div>
+                )}
+                {hints && currentHint === hints.length - 1 && (
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-yellow-700 font-medium">
+                      That's all the hints! You've got this!
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <CodeInterface
             code={code}

@@ -247,8 +247,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Chapter 5: Add backend structure
-  if (chapter >= 5) {
+  // Chapter 4: Add backend structure
+  if (chapter >= 4) {
     projectRoot.children?.push({
       name: 'backend',
       type: 'folder',
@@ -361,8 +361,8 @@ app.listen(PORT, () => {
     })
   }
 
-  // Chapter 6: Add database
-  if (chapter >= 6) {
+  // Chapter 5: Add database
+  if (chapter >= 5) {
     const backendFolder = projectRoot.children?.find(f => f.name === 'backend')
     if (backendFolder?.children) {
       backendFolder.children.push({
@@ -540,7 +540,7 @@ const buildProjectStructureFromUserFiles = (fileContents: Map<string, string>, c
   if (chapter >= 3) addFileToStructure('script.js', 'javascript')
 
   // Add backend structure for later chapters
-  if (chapter >= 5) {
+  if (chapter >= 4) {
     const templateStructure = getProjectStructureForChapter(chapter)
     const templateRoot = templateStructure[0]
     const backendFolder = templateRoot.children?.find(f => f.name === 'backend')

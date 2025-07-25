@@ -641,7 +641,7 @@ export default function DemoApp() {
               <p className="text-blue-100 mt-1">Your Learning Journey - Code You Actually Built</p>
             </div>
             <Link 
-              href="/tutorial/chapter-10" 
+              href="/tutorial/chapter-9" 
               className="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded text-sm transition-colors flex items-center"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

@@ -53,7 +53,7 @@ export default function HomePage() {
               {completedSteps > 0 ? 'Continue Tutorial' : 'Start Tutorial'}
             </Link>
             <Link href="/demo-app" className="tutorial-button-secondary px-6 py-3">
-              🚀 Try Demo App
+              Try Demo App
             </Link>
           </div>
           

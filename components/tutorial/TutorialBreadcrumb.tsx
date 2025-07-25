@@ -34,38 +34,33 @@ const TUTORIAL_STRUCTURE = {
     chapter: 4
   },
   '/tutorial/chapter-5': { 
-    title: 'Chapter 5: Building the Backend', 
-    description: 'Creating server endpoints for multi-user functionality',
+    title: 'Chapter 5: Database Integration', 
+    description: 'Adding persistent storage with SQLite',
     chapter: 5
   },
   '/tutorial/chapter-6': { 
-    title: 'Chapter 6: Database Integration', 
-    description: 'Adding persistent storage with SQLite',
+    title: 'Chapter 6: Connecting Frontend to Backend', 
+    description: 'Creating integrated client-server architecture',
     chapter: 6
   },
   '/tutorial/chapter-7': { 
-    title: 'Chapter 7: Connecting Frontend to Backend', 
-    description: 'Creating integrated client-server architecture',
+    title: 'Chapter 7: Testing and Debugging', 
+    description: 'Ensuring quality and reliability',
     chapter: 7
   },
   '/tutorial/chapter-8': { 
-    title: 'Chapter 8: Testing and Debugging', 
-    description: 'Ensuring quality and reliability',
+    title: 'Chapter 8: Performance Considerations', 
+    description: 'Optimizing for speed and scalability',
     chapter: 8
   },
   '/tutorial/chapter-9': { 
-    title: 'Chapter 9: Performance Considerations', 
-    description: 'Optimizing for speed and scalability',
-    chapter: 9
-  },
-  '/tutorial/chapter-10': { 
-    title: 'Chapter 10: Real Projects & Working with Dev Teams', 
+    title: 'Chapter 9: Real Projects & Working with Dev Teams', 
     description: 'Applying your knowledge in the real world',
-    chapter: 10
+    chapter: 9
   }
 }
 
-const TOTAL_CHAPTERS = 10
+const TOTAL_CHAPTERS = 9
 
 interface TutorialBreadcrumbProps {
   showChapterNavigation?: boolean
