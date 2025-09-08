@@ -16,7 +16,7 @@ interface CodeEditorProps {
   title: string
   description: string
   instructions?: string[]  // Step-by-step instructions
-  language: 'html' | 'css' | 'typescript' | 'json'
+  language: 'html' | 'css' | 'typescript' | 'javascript' | 'json'
   startingCode: string
   targetCode: string
   hints: string[]
@@ -364,7 +364,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
                   const isCurrentExerciseFile = (
                     (filePath.includes('index.html') && language === 'html') ||
                     (filePath.includes('styles.css') && language === 'css') ||
-                    (filePath.includes('script.js') && language === 'typescript')
+                    (filePath.includes('script.js') && (language === 'typescript' || language === 'javascript'))
                   )
                   
                   // Always save current content before switching
@@ -375,7 +375,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
                     updatedFileContents.set('silly-walks-task-manager/index.html', code)
                   } else if (!selectedFileName && language === 'css') {
                     updatedFileContents.set('silly-walks-task-manager/styles.css', code)
-                  } else if (!selectedFileName && language === 'typescript') {
+                  } else if (!selectedFileName && (language === 'typescript' || language === 'javascript')) {
                     updatedFileContents.set('silly-walks-task-manager/script.js', code)
                   } else if (selectedFileName) {
                     // Save currently selected file
@@ -448,7 +448,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
                 ) : (
                   language === 'html' ? 'index.html' :
                   language === 'css' ? 'styles.css' :
-                  language === 'typescript' ? 'script.js' :
+                  (language === 'typescript' || language === 'javascript') ? 'script.js' :
                   language === 'javascript' ? 'script.js' :
                   language === 'json' ? 'package.json' :
                   `${language} file`
@@ -500,7 +500,7 @@ const CodeInterface: React.FC<CodeInterfaceProps> = (props) => {
               Live Website Preview
             </div>
             <div className="p-4 h-full">
-              {(language === 'html' || language === 'css'  || language === 'typescript') ? (
+              {(language === 'html' || language === 'css'  || language === 'typescript' || language === 'javascript') ? (
                 <iframe
                   key="preview-iframe"
                   srcDoc={iframeSrcDoc}
@@ -1079,7 +1079,7 @@ button:hover {
       }
       
       // For CSS and JavaScript, check for more substantial changes
-      if (language === 'css' || language === 'typescript') {
+      if (language === 'css' || language === 'typescript' || language === 'javascript') {
         // Check if they've added meaningful content beyond just copying
         const codeLines = code.split('\n').filter(line => line.trim().length > 0)
         const startingLines = startingCode.split('\n').filter(line => line.trim().length > 0)
@@ -1151,7 +1151,7 @@ button:hover {
       // Also save exercise content to the corresponding file for later retrieval
       const exerciseFile = language === 'html' ? 'silly-walks-task-manager/index.html' :
                          language === 'css' ? 'silly-walks-task-manager/styles.css' :
-                         language === 'typescript' ? 'silly-walks-task-manager/script.js' :
+                         (language === 'typescript' || language === 'javascript') ? 'silly-walks-task-manager/script.js' :
                          'silly-walks-task-manager/script.js'
       setFileContents(prev => {
         const newMap = new Map(prev)
@@ -1541,7 +1541,7 @@ button:hover {
     
     // Get JavaScript content - prioritize current editor content if editing JS, otherwise use saved content
     let jsContent
-    if (language === 'typescript' || (selectedFileName && selectedFileName.includes('script.js'))) {
+    if ((language === 'typescript' || language === 'javascript') || (selectedFileName && selectedFileName.includes('script.js'))) {
       // User is editing JS file directly - use current editor content
       jsContent = code
     } else {
