@@ -7,13 +7,15 @@ import { ArrowLeft, ArrowRight, CheckCircle, Users, FileText, Lightbulb, Target 
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import ExpandableSection from '@/components/tutorial/ExpandableSection'
 import ProgressiveReveal from '@/components/tutorial/ProgressiveReveal'
-import { getProgress, markSectionComplete, isSectionComplete } from '@/lib/progress'
+import { getProgress, markSectionComplete, isSectionComplete, hasUserName, saveUserName, personalizeText } from '@/lib/progress'
+import UserNameModal from '@/components/UserNameModal'
 
 export default function TutorialIntroduction() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [currentSection, setCurrentSection] = useState(0)
   const [completedSections, setCompletedSections] = useState<number[]>([])
+  const [showNameModal, setShowNameModal] = useState(false)
 
   // Helper function to preserve URL parameters
   const getUrlWithParams = (path: string) => {
@@ -21,14 +23,24 @@ export default function TutorialIntroduction() {
     return params.toString() ? `${path}?${params.toString()}` : path
   }
 
-  // Load progress on mount
+  // Load progress on mount and check for user name
   useEffect(() => {
     const progress = getProgress()
     const completed = sections
       .map((section, index) => isSectionComplete(section.id) ? index : -1)
       .filter(index => index !== -1)
     setCompletedSections(completed)
+    
+    // Show name modal if user hasn't provided name yet
+    if (!hasUserName()) {
+      setShowNameModal(true)
+    }
   }, [])
+
+  const handleNameSubmit = (name: string) => {
+    saveUserName(name)
+    setShowNameModal(false)
+  }
 
   const sections = [
     {
@@ -39,8 +51,7 @@ export default function TutorialIntroduction() {
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-gray-900">What You'll Learn</h2>
           <p className="text-gray-600 mb-6">
-            By the end of this tutorial, you'll understand how business requirements become working software 
-            and how to better collaborate with development teams.
+            {personalizeText("OK {name}, let's start by understanding what you'll gain from this tutorial. By the end, you'll understand how business requirements become working software and how to better collaborate with development teams.")}
           </p>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -586,6 +597,12 @@ export default function TutorialIntroduction() {
           </div>
         </div>
       </div>
+      
+      {/* User Name Modal */}
+      <UserNameModal 
+        isOpen={showNameModal} 
+        onSubmit={handleNameSubmit} 
+      />
     </div>
   )
 }

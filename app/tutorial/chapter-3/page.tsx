@@ -9,7 +9,7 @@ import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
 import CodeExplanationModal from '@/components/tutorial/CodeExplanationModal'
 import JavaScriptDiagram from '@/components/tutorial/JavaScriptDiagram'
 import SyntaxHighlighter from '@/components/tutorial/SyntaxHighlighter'
-import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
+import { getProgress, markStepComplete, isStepComplete, personalizeText } from '@/lib/progress'
 
 export default function Chapter3() {
   const searchParams = useSearchParams()
@@ -37,7 +37,7 @@ export default function Chapter3() {
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-gray-900">Chapter 3: Adding Interactivity with JavaScript</h2>
           <p className="text-lg text-gray-600">
-            Excellent! Your task manager now looks professional with CSS. But it's still static - you can't actually add tasks or interact with it. Let's fix that with JavaScript.
+            {personalizeText("Excellent work, {name}! Your task manager now looks professional with CSS. But it's still static - you can't actually add tasks or interact with it. Let's fix that with JavaScript.")}
           </p>
 
           <div className="explanation-box">
@@ -706,9 +706,9 @@ function getPriorityColor(priority) {
               
               {allStepsComplete && (
                 <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800 font-medium mb-2">Chapter 3 Complete!</p>
+                  <p className="text-sm text-green-800 font-medium mb-2">{personalizeText("Chapter 3 Complete, {name}!")}</p>
                   <p className="text-xs text-green-700 mb-3">
-                    You've built a working task management system!
+                    {personalizeText("Great job {name} - you've built a working task management system!")}
                   </p>
                   <div className="text-xs text-green-700 mb-3">
                     <p className="font-medium mb-1">What you've learned:</p>

@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowRight, CheckCircle, BookOpen, Lightbulb, Target, Code }
 import CodeEditor from '@/components/tutorial/CodeEditor'
 import BeginnerGuide from '@/components/tutorial/BeginnerGuide'
 import TutorialBreadcrumb from '@/components/tutorial/TutorialBreadcrumb'
-import { getProgress, markStepComplete, isStepComplete } from '@/lib/progress'
+import { getProgress, markStepComplete, isStepComplete, personalizeText } from '@/lib/progress'
 
 export default function Chapter1() {
   const searchParams = useSearchParams()
@@ -44,8 +44,7 @@ export default function Chapter1() {
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-gray-900">Chapter 1: Building the Foundation</h2>
           <p className="text-lg text-gray-600">
-            Welcome to your first hands-on development experience! We're going to build the Ministry of Silly Walks 
-            task manager step by step, starting with the basic structure.
+            {personalizeText("OK {name}, let's start building! Welcome to your first hands-on development experience. We're going to build the Ministry of Silly Walks task manager step by step, starting with the basic structure.")}
           </p>
 
           <div className="explanation-box">

@@ -9,6 +9,7 @@ interface TutorialProgress {
 }
 
 const PROGRESS_KEY = 'ba-tutorial-progress'
+const USER_NAME_KEY = 'ba-tutorial-user-name'
 
 export function getProgress(): TutorialProgress {
   if (typeof window === 'undefined') return { completedSections: {}, completedSteps: {}, currentCode: {} }
@@ -96,4 +97,38 @@ export function importProgress(jsonString: string): boolean {
     console.error('Failed to import progress:', error)
     return false
   }
+}
+
+// User name management
+export function saveUserName(name: string) {
+  if (typeof window === 'undefined') return
+  
+  try {
+    localStorage.setItem(USER_NAME_KEY, name)
+  } catch (error) {
+    console.warn('Failed to save user name to localStorage:', error)
+  }
+}
+
+export function getUserName(): string | null {
+  if (typeof window === 'undefined') return null
+  
+  try {
+    return localStorage.getItem(USER_NAME_KEY)
+  } catch (error) {
+    console.warn('Failed to load user name from localStorage:', error)
+    return null
+  }
+}
+
+export function hasUserName(): boolean {
+  return getUserName() !== null
+}
+
+// Personalization utility
+export function personalizeText(text: string): string {
+  const name = getUserName()
+  if (!name) return text
+  
+  return text.replace(/\{name\}/gi, name)
 }
