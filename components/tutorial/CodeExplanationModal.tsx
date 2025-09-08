@@ -93,7 +93,7 @@ export default function CodeExplanationModal({
                       <Lightbulb className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-blue-900 font-medium mb-2">What this does:</p>
-                        <div className="text-blue-800 text-sm mb-3" dangerouslySetInnerHTML={{__html: item.explanation.replace(/<code>/g, '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">').replace(/\u2022/g, '•')}} />
+                        <div className="text-blue-800 text-sm mb-3" dangerouslySetInnerHTML={{__html: item.explanation.replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">$1</code>').replace(/\u2022/g, '•')}} />
                         
                         {item.businessContext && (
                           <div className="bg-green-50 border border-green-200 rounded p-3">
