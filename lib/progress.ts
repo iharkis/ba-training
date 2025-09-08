@@ -41,6 +41,9 @@ export function markSectionComplete(sectionId: string) {
   progress.completedSections[sectionId] = true
   progress.lastVisited = new Date().toISOString()
   saveProgress(progress)
+  
+  // Also track on server
+  trackProgressOnServer(sectionId)
 }
 
 export function markStepComplete(stepId: string) {
@@ -48,6 +51,20 @@ export function markStepComplete(stepId: string) {
   progress.completedSteps[stepId] = true
   progress.lastVisited = new Date().toISOString()
   saveProgress(progress)
+  
+  // Also track on server - try to extract chapter from stepId
+  const chapterId = extractChapterFromStepId(stepId)
+  trackProgressOnServer(stepId, chapterId)
+}
+
+// Helper function to extract chapter from stepId
+function extractChapterFromStepId(stepId: string): string | undefined {
+  // Look for patterns like "chapter-1-step-name" or just return the chapter if we can determine it
+  if (stepId.includes('chapter-')) {
+    const match = stepId.match(/chapter-(\d+)/)
+    return match ? `chapter-${match[1]}` : undefined
+  }
+  return undefined
 }
 
 export function saveCodeProgress(stepId: string, code: string) {
@@ -131,4 +148,28 @@ export function personalizeText(text: string): string {
   if (!name) return text
   
   return text.replace(/\{name\}/gi, name)
+}
+
+// Server tracking (graceful fallback if it fails)
+async function trackProgressOnServer(stepId: string, chapterId?: string) {
+  const name = getUserName()
+  if (!name) return // No tracking if no name provided
+
+  try {
+    await fetch('/api/progress/track', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        stepId,
+        chapterId,
+        timestamp: new Date().toISOString()
+      })
+    })
+  } catch (error) {
+    // Silently fail - localStorage tracking still works
+    console.warn('Failed to track progress on server:', error)
+  }
 }
