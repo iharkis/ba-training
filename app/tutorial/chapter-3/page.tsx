@@ -537,7 +537,7 @@ function getPriorityColor(priority) {
             }
           ]
         },
-        language: 'typescript' as const,
+        language: 'javascript' as const,
         startingCode: `// Ministry of Silly Walks - Task Manager JavaScript
 
 // Add your JavaScript code here to handle priority and due dates`,
