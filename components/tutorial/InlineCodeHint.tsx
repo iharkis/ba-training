@@ -52,7 +52,7 @@ export default function InlineCodeHint({
                 {/* Explanation */}
                 <div className="p-3">
                   <p className="text-blue-900 font-medium text-sm mb-2">What this does:</p>
-                  <p className="text-blue-800 text-sm mb-3">{item.explanation}</p>
+                  <div className="text-blue-800 text-sm mb-3" dangerouslySetInnerHTML={{__html: item.explanation}} />
                   
                   {item.businessContext && (
                     <div className="bg-green-50 border border-green-200 rounded p-2">
@@ -93,7 +93,7 @@ export default function InlineCodeHint({
                 </>
               ) : (
                 <>
-                  This {language === 'typescript' ? 'TypeScript' : 'JavaScript'} code transforms your static webpage into an interactive application. 
+                  This JavaScript code transforms your static webpage into an interactive application. 
                   When you write requirements like "users complete tasks in ≤3 clicks" or "validate input with clear error messages," 
                   this is the type of code that developers write to make those requirements work.
                 </>
