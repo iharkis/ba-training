@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Users, Calendar, TrendingUp, Clock } from 'lucide-react'
+import { Users, Calendar, TrendingUp, Clock, ChevronDown, ChevronRight } from 'lucide-react'
 
 interface UserData {
   id: string
@@ -10,8 +10,10 @@ interface UserData {
   lastChapter: string
   lastActivity: string
   stepsCompleted: number
-  chaptersStarted: number
+  chaptersStartedCount: number
   firstChapterStart: string
+  stepDetails: { stepId: string; timestamp: string }[]
+  chaptersStarted: { [chapterId: string]: string }
 }
 
 interface ProgressData {
@@ -28,6 +30,7 @@ export default function AdminDashboard() {
   const [data, setData] = useState<ProgressData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [expandedUsers, setExpandedUsers] = useState<Set<string>>(new Set())
 
   // Simple password check (in production, use proper authentication)
   const handleLogin = (e: React.FormEvent) => {
@@ -73,6 +76,16 @@ export default function AdminDashboard() {
     // Assuming roughly 20 steps total across all chapters
     const totalSteps = 20
     return Math.min((stepsCompleted / totalSteps) * 100, 100)
+  }
+
+  const toggleUserExpanded = (userId: string) => {
+    const newExpanded = new Set(expandedUsers)
+    if (newExpanded.has(userId)) {
+      newExpanded.delete(userId)
+    } else {
+      newExpanded.add(userId)
+    }
+    setExpandedUsers(newExpanded)
   }
 
   if (!isAuthenticated) {
@@ -209,49 +222,40 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* User Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">User Progress</h2>
-              </div>
+            {/* User Accordion */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">User Progress Details</h2>
               
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Last Step
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Current Chapter
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Progress
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Last Activity
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {data.users.map((user) => (
-                      <tr key={user.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                          <div className="text-sm text-gray-500">{user.stepsCompleted} steps completed</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{user.lastStep}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+              {data.users.map((user) => (
+                <div key={user.id} className="bg-white rounded-lg shadow overflow-hidden">
+                  {/* Accordion Header */}
+                  <button
+                    onClick={() => toggleUserExpanded(user.id)}
+                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        {expandedUsers.has(user.id) ? (
+                          <ChevronDown className="w-5 h-5 text-gray-500" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5 text-gray-500" />
+                        )}
+                        <div className="text-left">
+                          <h3 className="text-lg font-medium text-gray-900">{user.name}</h3>
+                          <p className="text-sm text-gray-500">{user.stepsCompleted} steps completed</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-6">
+                        <div className="text-center">
+                          <p className="text-xs text-gray-500">Current Chapter</p>
                           <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                             {user.lastChapter}
                           </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        </div>
+                        
+                        <div className="text-center">
+                          <p className="text-xs text-gray-500">Progress</p>
                           <div className="flex items-center">
                             <div className="w-16 bg-gray-200 rounded-full h-2">
                               <div
@@ -263,15 +267,65 @@ export default function AdminDashboard() {
                               {Math.round(getProgressPercentage(user.stepsCompleted))}%
                             </span>
                           </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {formatDate(user.lastActivity)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </div>
+                        
+                        <div className="text-center">
+                          <p className="text-xs text-gray-500">Last Activity</p>
+                          <p className="text-sm text-gray-900">{formatDate(user.lastActivity)}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Accordion Content */}
+                  {expandedUsers.has(user.id) && (
+                    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {/* Step Timeline */}
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-3">Step Timeline</h4>
+                          <div className="space-y-2 max-h-64 overflow-y-auto">
+                            {user.stepDetails.map((step, index) => (
+                              <div key={`${step.stepId}-${index}`} className="flex items-center justify-between p-2 bg-white rounded border">
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900">{step.stepId}</p>
+                                </div>
+                                <div>
+                                  <p className="text-xs text-gray-500">{formatDate(step.timestamp)}</p>
+                                </div>
+                              </div>
+                            ))}
+                            {user.stepDetails.length === 0 && (
+                              <p className="text-sm text-gray-500 italic">No steps completed yet</p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Chapter Progress */}
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-3">Chapter Progress</h4>
+                          <div className="space-y-2">
+                            {Object.entries(user.chaptersStarted).map(([chapterId, timestamp]) => (
+                              <div key={chapterId} className="flex items-center justify-between p-2 bg-white rounded border">
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900">{chapterId}</p>
+                                  <p className="text-xs text-gray-500">Started</p>
+                                </div>
+                                <div>
+                                  <p className="text-xs text-gray-500">{formatDate(timestamp)}</p>
+                                </div>
+                              </div>
+                            ))}
+                            {Object.keys(user.chaptersStarted).length === 0 && (
+                              <p className="text-sm text-gray-500 italic">No chapters started yet</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
               
               {data.users.length === 0 && (
                 <div className="px-6 py-12 text-center">

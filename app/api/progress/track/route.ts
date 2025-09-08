@@ -8,6 +8,7 @@ interface UserActivity {
   lastChapter: string
   lastActivity: string
   stepsCompleted: string[]
+  stepTimestamps: { [stepId: string]: string }
   chaptersStarted: { [chapterId: string]: string }
 }
 
@@ -88,6 +89,7 @@ export async function POST(request: NextRequest) {
         lastChapter: chapterId || 'unknown',
         lastActivity: timestamp,
         stepsCompleted: [],
+        stepTimestamps: {},
         chaptersStarted: {}
       }
       data.analytics.totalUsers = Object.keys(data.users).length
@@ -113,6 +115,9 @@ export async function POST(request: NextRequest) {
       user.stepsCompleted.push(stepId)
     }
 
+    // Always update the timestamp for this step (in case they repeat it)
+    user.stepTimestamps[stepId] = timestamp
+
     // Update analytics
     data.analytics.lastUpdated = new Date().toISOString()
 
@@ -136,16 +141,25 @@ export async function GET(request: NextRequest) {
     const data = await loadProgressData()
     
     // Transform data for admin view
-    const users = Object.entries(data.users).map(([userId, user]) => ({
-      id: userId,
-      name: user.name,
-      lastStep: user.lastStep,
-      lastChapter: user.lastChapter,
-      lastActivity: user.lastActivity,
-      stepsCompleted: user.stepsCompleted.length,
-      chaptersStarted: Object.keys(user.chaptersStarted).length,
-      firstChapterStart: Object.values(user.chaptersStarted)[0] || user.lastActivity
-    }))
+    const users = Object.entries(data.users).map(([userId, user]) => {
+      // Sort steps by timestamp (most recent first)
+      const stepDetails = Object.entries(user.stepTimestamps)
+        .map(([stepId, timestamp]) => ({ stepId, timestamp }))
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+
+      return {
+        id: userId,
+        name: user.name,
+        lastStep: user.lastStep,
+        lastChapter: user.lastChapter,
+        lastActivity: user.lastActivity,
+        stepsCompleted: user.stepsCompleted.length,
+        chaptersStartedCount: Object.keys(user.chaptersStarted).length,
+        firstChapterStart: Object.values(user.chaptersStarted)[0] || user.lastActivity,
+        stepDetails,
+        chaptersStarted: user.chaptersStarted
+      }
+    })
 
     // Sort by last activity (most recent first)
     users.sort((a, b) => new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime())
