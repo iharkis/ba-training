@@ -243,10 +243,10 @@ export default function Chapter3() {
                       <p><strong>What it does:</strong> Creates a single-line text input field where users can type task descriptions</p>
                       <p><strong>HTML breakdown:</strong></p>
                       <ul className="text-xs space-y-1 ml-4">
-                        <li>• <code>type="text"</code> - Specifies this accepts any text input (letters, numbers, symbols)</li>
-                        <li>• <code>placeholder="..."</code> - Shows gray hint text before user starts typing</li>
-                        <li>• <code>required</code> - Browser won't submit form if this field is empty</li>
-                        <li>• <code>id="taskInput"</code> - Unique identifier so JavaScript can find this specific element</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">type="text"</code> - Specifies this accepts any text input (letters, numbers, symbols)</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">placeholder="..."</code> - Shows gray hint text before user starts typing</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">required</code> - Browser won't submit form if this field is empty</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">id="taskInput"</code> - Unique identifier so JavaScript can find this specific element</li>
                       </ul>
                     </div>
                   </div>
@@ -268,11 +268,11 @@ export default function Chapter3() {
                       <p><strong>What it does:</strong> Creates a dropdown menu where users can choose from predefined priority levels</p>
                       <p><strong>HTML breakdown:</strong></p>
                       <ul className="text-xs space-y-1 ml-4">
-                        <li>• <code>&lt;select&gt;</code> - Container that creates the dropdown functionality</li>
-                        <li>• <code>&lt;option&gt;</code> - Each choice available in the dropdown</li>
-                        <li>• <code>value="Medium"</code> - The data sent to JavaScript when this option is selected</li>
-                        <li>• <code>selected</code> - Makes "Medium Priority" the default choice when page loads</li>
-                        <li>• <code>required</code> - Forces user to make a selection (though one is pre-selected)</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">&lt;select&gt;</code> - Container that creates the dropdown functionality</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">&lt;option&gt;</code> - Each choice available in the dropdown</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">value="Medium"</code> - The data sent to JavaScript when this option is selected</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">selected</code> - Makes "Medium Priority" the default choice when page loads</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">required</code> - Forces user to make a selection (though one is pre-selected)</li>
                       </ul>
                     </div>
                   </div>
@@ -289,10 +289,10 @@ export default function Chapter3() {
                       <p><strong>What it does:</strong> Creates a date picker that opens a calendar widget when clicked</p>
                       <p><strong>HTML breakdown:</strong></p>
                       <ul className="text-xs space-y-1 ml-4">
-                        <li>• <code>type="date"</code> - Special input type that creates calendar functionality</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">type="date"</code> - Special input type that creates calendar functionality</li>
                         <li>• Browser automatically shows a calendar popup when user clicks the field</li>
                         <li>• Validates that user enters a properly formatted date (YYYY-MM-DD)</li>
-                        <li>• <code>required</code> - User must pick a date before form can be submitted</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">required</code> - User must pick a date before form can be submitted</li>
                         <li>• Returns date in format "2025-07-25" that JavaScript can easily work with</li>
                       </ul>
                     </div>
@@ -310,9 +310,9 @@ export default function Chapter3() {
                       <p><strong>What it does:</strong> Creates a clickable button that triggers JavaScript to process all form data</p>
                       <p><strong>HTML breakdown:</strong></p>
                       <ul className="text-xs space-y-1 ml-4">
-                        <li>• <code>&lt;button&gt;</code> - Creates an interactive element users can click</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">&lt;button&gt;</code> - Creates an interactive element users can click</li>
                         <li>• "Add Task" is the visible text displayed on the button</li>
-                        <li>• <code>id="addTaskBtn"</code> - JavaScript uses this to "listen" for click events</li>
+                        <li>• <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-mono">id="addTaskBtn"</code> - JavaScript uses this to "listen" for click events</li>
                         <li>• When clicked, triggers the JavaScript function that creates new tasks</li>
                       </ul>
                     </div>
