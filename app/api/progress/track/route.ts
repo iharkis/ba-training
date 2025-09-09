@@ -97,6 +97,11 @@ export async function POST(request: NextRequest) {
 
     const user = data.users[userId]
 
+    // Ensure stepTimestamps exists for existing users
+    if (!user.stepTimestamps) {
+      user.stepTimestamps = {}
+    }
+
     // Update user data
     user.lastStep = stepId
     user.lastActivity = timestamp
@@ -141,11 +146,11 @@ export async function GET(request: NextRequest) {
     const data = await loadProgressData()
     
     // Transform data for admin view
-    const users = Object.entries(data.users).map(([userId, user]) => {
+    const users = data.users ? Object.entries(data.users).map(([userId, user]) => {
       // Sort steps by timestamp (most recent first)
-      const stepDetails = Object.entries(user.stepTimestamps)
+      const stepDetails = user.stepTimestamps ? Object.entries(user.stepTimestamps)
         .map(([stepId, timestamp]) => ({ stepId, timestamp }))
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) : []
 
       return {
         id: userId,
@@ -153,13 +158,13 @@ export async function GET(request: NextRequest) {
         lastStep: user.lastStep,
         lastChapter: user.lastChapter,
         lastActivity: user.lastActivity,
-        stepsCompleted: user.stepsCompleted.length,
-        chaptersStartedCount: Object.keys(user.chaptersStarted).length,
-        firstChapterStart: Object.values(user.chaptersStarted)[0] || user.lastActivity,
+        stepsCompleted: user.stepsCompleted ? user.stepsCompleted.length : 0,
+        chaptersStartedCount: user.chaptersStarted ? Object.keys(user.chaptersStarted).length : 0,
+        firstChapterStart: user.chaptersStarted ? (Object.values(user.chaptersStarted)[0] || user.lastActivity) : user.lastActivity,
         stepDetails,
-        chaptersStarted: user.chaptersStarted
+        chaptersStarted: user.chaptersStarted || {}
       }
-    })
+    }) : []
 
     // Sort by last activity (most recent first)
     users.sort((a, b) => new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime())
